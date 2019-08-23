@@ -1,5 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { DateAdapter } from '@angular/material';
+import { CategoriaService } from '../../services/categoria.service';
 
 
 declare const require: any;
@@ -34,9 +35,23 @@ export class ExtendedFormsComponent implements OnInit {
       {value: 'barcelona-5', viewValue: 'Barcelona'},
       {value: 'moscow-6', viewValue: 'Moscow'},
     ];
+    constructor(
+      private categoriaService: CategoriaService,
+      ) {
 
-    ngOnInit() {}
+      }
+    ngOnInit() {
+      this.categoriaService.getCategoria().subscribe(
+        response => {
+          console.log('prueba lista categoria: ', response);
+        },
+        error => {
+          console.log('Error al probar lista categoria', 'ERROR!');
+        }
+      );
+    }
         myFunc(val: any) {
           // code here
         }
+
 }
