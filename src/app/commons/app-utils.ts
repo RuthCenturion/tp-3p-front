@@ -7,6 +7,16 @@ export const SERVICE_REST = REST_HOST;
 export const VARGLOBALRESPONSE = -1;
 export const ID_ROL_ADMIN = 2;
 
+// COLORES PARA LA NOTIFICACIÓN
+export const NOTIFY = {
+  PRIMARY: 6,
+  ROSE: 5,
+  DANGER: 4,
+  WARNING: 3,
+  SUCCESS: 2,
+  INFO: 1
+};
+
 export function deleteEmptyData(data) {
     for (const key in data) {
         if (data[key] === '' || data[key] == null) {

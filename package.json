@@ -60,6 +60,7 @@
     "ng2-select": "2.0.0",
     "ngx-chips": "1.9.8",
     "ngx-cookie-service": "^2.2.0",
+    "ngx-toastr": "^10.1.0",
     "nouislider": "9.2.0",
     "perfect-scrollbar": "1.1.0",
     "popper.js": "1.15.0",

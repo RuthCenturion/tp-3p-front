@@ -19,10 +19,18 @@ export class CategoriaService {
   constructor(private http: HttpClient) { }
 
   getCategoria(): Observable<any> {
-    return this.http.get(this.categoriaUrl); /*
-      .pipe(
-        //tap(_ => this.log('Se obtuvo tipos de usuarios')),
-        catchError(this.handleError<>(`Get tipos de usuarios`,[]))
-      )*/
+    return this.http.get(this.categoriaUrl);
+  }
+
+  obtenerCategoria(idCategoria): Observable<any> {
+    if (idCategoria) {
+      return this.http.get(this.categoriaUrl + '/' + idCategoria);
+    } else {
+      return this.http.get(this.categoriaUrl);
+    }
+  }
+
+  agregarCategoria(categoria: any): Observable<any> {
+    return this.http.post(this.categoriaUrl, categoria/*, httpOptions*/);
   }
 }

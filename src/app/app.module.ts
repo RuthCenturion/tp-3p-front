@@ -4,8 +4,9 @@ import { RouterModule } from '@angular/router';
 import {  HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { APP_BASE_HREF } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';
+import {ToastrModule} from 'ngx-toastr';
 import {
   MatAutocompleteModule,
   MatButtonModule,
@@ -46,10 +47,14 @@ import { SidebarModule } from './sidebar/sidebar.module';
 import { FooterModule } from './shared/footer/footer.module';
 import { NavbarModule} from './shared/navbar/navbar.module';
 import { FixedpluginModule} from './shared/fixedplugin/fixedplugin.module';
+// import { AdministracionModule } from './administracion/administracion.module';
 import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
 import { AppRoutes } from './app.routing';
+// import { AdministracionComponent } from './administracion/administracion.component';
+// import { CategoriaComponent } from './categoria/categoria.component';
+
 
 @NgModule({
   exports: [
@@ -84,7 +89,8 @@ import { AppRoutes } from './app.routing';
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule
-  ]
+  ],
+  declarations: []
 })
 export class MaterialModule {}
 
@@ -103,12 +109,18 @@ export class MaterialModule {}
         SidebarModule,
         NavbarModule,
         FooterModule,
-        FixedpluginModule
+        FixedpluginModule,
+        ToastrModule.forRoot({
+          timeOut: 8000,
+          preventDuplicates: true,
+        })
+        // AdministracionModule
     ],
     declarations: [
         AppComponent,
         AdminLayoutComponent,
         AuthLayoutComponent
+      //  AdministracionComponent
     ],
     bootstrap:    [ AppComponent ]
 })

@@ -26,7 +26,47 @@ export const ROUTES: RouteInfo[] = [{
         title: 'Dashboard',
         type: 'link',
         icontype: 'dashboard'
-    },{
+    }, {
+        path: '/administracion',
+        title: 'Administración',
+        type: 'sub',
+        icontype: 'apps',
+        collapse: 'administracion',
+        children: [
+            {path: 'categoria', title: 'Categoría', ab: 'C'},
+            {path: 'grid', title: 'Sub-Categoria', ab: 'SC'},
+            {path: 'panels', title: 'Servicios', ab: 'S'},
+            {path: 'sweet-alert', title: 'Pacientes', ab: 'P'}
+        ]
+    }, {
+        path: '/components',
+        title: 'Horarios',
+        type: 'sub',
+        icontype: 'schedule',
+        collapse: 'horario',
+        children: [
+            {path: 'buttons', title: 'Horario Atención', ab: 'HA'},
+            {path: 'grid', title: 'Horario Excepción', ab: 'HE'}
+        ]
+    }, {
+        path: '/widgets',
+        title: 'Ficha Clínica',
+        type: 'link',
+        icontype: 'description'
+
+    }, {
+        path: '/widgets',
+        title: 'Reserva',
+        type: 'link',
+        icontype: 'date_range'
+
+    }, {
+        path: '/widgets',
+        title: 'Facturación',
+        type: 'link',
+        icontype: 'monetization_on'
+
+    }, {
         path: '/components',
         title: 'Components',
         type: 'sub',
@@ -41,7 +81,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}
         ]
-    },{
+    }, {
         path: '/forms',
         title: 'Forms',
         type: 'sub',
