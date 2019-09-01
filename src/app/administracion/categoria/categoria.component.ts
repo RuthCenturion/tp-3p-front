@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA,MatDialogConfig} from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 import { TableData } from '../../md/md-table/md-table.component';
 import { CategoriaService } from '../../services/categoria.service';
 import { NOTIFY } from '../../commons/app-utils';
+import {ModalComponent} from '../modal/modal.component';
 
 declare interface DataTable {
   headerRow: string[];
@@ -24,6 +25,16 @@ export class CategoriaComponent implements OnInit {
   public dataTable: DataTable;
   idCategoria: any;
   descripcion: any;
+  modificarId: any;
+  modificarDescripcion: any;
+
+  eliminarId: any;
+  eliminarDescripcion: any;
+
+  editarCategoria: true;
+
+  animal: string;
+  name: string;
 
   listaAtributos: Array<any>;
   listaCategoria: Array<any>;
@@ -44,12 +55,12 @@ export class CategoriaComponent implements OnInit {
       dataRows: this.listaCategoria
     };
   }
-
+ 
   /*-------------------------------------------------------------------------*/
   ngOnInit() {
     this.listarCategorias();
-    
   }
+
   /*-------------------------------------------------------------------------*/
   ngAfterViewInit() {
     $('#datatables').DataTable({
@@ -66,18 +77,25 @@ export class CategoriaComponent implements OnInit {
 
     });
     const table = $('#datatables').DataTable();
+   
     // Edit record
+    // EDITAR 
     table.on('click', '.edit', function (e) {
       let $tr = $(this).closest('tr');
-      if ($($tr).hasClass('child')) {
-        $tr = $tr.prev('.parent');
-      }
-      let data = table.row($tr).data();
-      console.log('data ', data);
-      alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
-      e.preventDefault();
+      let id=$tr[0].cells[0].innerText;
+      let desc=$tr[0].cells[1].innerText;
+      console.log('fila seleccionada: ', id, '---', desc);
+      alert('You press on Row: ' + id + ' ' + desc + ' ' +  '\'s row.');
+      prompt("Please enter preferred tenure in years", "15");
+      
+      this.modificarDescripcion = new String(desc);
+      // this.modificarDescripcion = desc;
+       $('#exampleModal2').modal('show');
+       e.preventDefault();
     });
+
     // Delete a record
+    //ELIMINAR
     table.on('click', '.remove', function (e) {
       const $tr = $(this).closest('tr');
       table.row($tr).remove().draw();
@@ -90,6 +108,11 @@ export class CategoriaComponent implements OnInit {
     });
 
     $('.card .material-datatables label').addClass('form-group');
+
+
+
+    // ----
+   
   }
 
   /*-------------------------------------------------------------------------*/
@@ -104,13 +127,13 @@ export class CategoriaComponent implements OnInit {
     } else {
       this.listarCategorias();
     }
+    this.descripcion= "hola";
   }
   /*-------------------------------------------------------------------------*/
   obtenerCategoria(id) {
     this.categoriaService.obtenerCategoria(id).subscribe(
       cat => {
         this.listaCategoria = new Array<any>();
-
         this.listaAtributos = new Array<any>();
         this.listaAtributos.push(cat.idCategoria);
         this.listaAtributos.push(cat.descripcion);
@@ -124,16 +147,21 @@ export class CategoriaComponent implements OnInit {
           headerRow: ['Id', 'Descripción', 'Acciones'],
           dataRows: this.listaCategoria
         };
-
       },
       error => {
-        console.log('Error al probar lista categoria', 'ERROR!');
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
       }
     );
   }
+
   /*-------------------------------------------------------------------------*/
   listarCategorias() {
-    this.categoriaService.obtenerCategoria(this.idCategoria).subscribe(
+    this.listaCategoria=[['1','2'],['a','b'],['1','2']];
+    this.tableData1 = {
+      headerRow: ['Id', 'Descripción', 'Acciones'],
+      dataRows: this.listaCategoria
+    };
+ /*   this.categoriaService.obtenerCategoria(this.idCategoria).subscribe(
       response => {
         this.listaCategoria = new Array<any>();
         this.lista = new Array<any>();
@@ -155,16 +183,17 @@ export class CategoriaComponent implements OnInit {
         });
       },
       error => {
-        console.log('Error al listar todas las categorías', 'ERROR!');
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
       }
-    );
+    );*/
   }
+
   /*-------------------------------------------------------------------------*/
   limpiar() {
     this.idCategoria = null;
     this.tableData1.dataRows = [];
-   // this.showNotification('prueba de toast', NOTIFY.DANGER);
   }
+
   /*-------------------------------------------------------------------------*/
  agregar() {
    let dato = {
@@ -179,12 +208,6 @@ export class CategoriaComponent implements OnInit {
  }
   /*-------------------------------------------------------------------------*/
   showNotification( mensaje: any, color: any) {
-    /*color:  6 type[color]:  primary lila
-      color:  5 type[color]:  rose    fucsia
-      color:  4 type[color]:  danger rojo
-      color:  3 type[color]:  warning anaranjado
-      color:  2 type[color]:  success verde
-      color:  1 type[color]:  info celeste*/
     const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
     $.notify({
         icon: 'notifications',
@@ -211,8 +234,37 @@ export class CategoriaComponent implements OnInit {
     });
 }
   /*-------------------------------------------------------------------------*/
+  openDialog() {
+    console.log('name: ', this.modificarDescripcion);
+   // this.dialog = new MatDialog();
+    const dialogRef = this.dialog.open(ModalComponent, {
+      width: '250px',
+      data: {name: this.modificarDescripcion, animal: this.animal}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.animal = result;
+    });
+  }
   /*-------------------------------------------------------------------------*/
-
-
-
+  abrirModalModificar(id, desc) {
+    console.log('fila seleccionada: ', id, ' ', desc);
+    this.modificarId = id;
+    this.modificarDescripcion = desc;
+    $('#exampleModal2').modal('show');
+  }
+  /*-------------------------------------------------------------------------*/
+  modificar(){
+    console.log('fila datos a modificar: ', this.modificarId, ' ', this.modificarDescripcion);
+    this.showNotification('Los datos se han modificado con éxito. ', NOTIFY.SUCCESS);
+  }
+  confirmarEliminar(id, desc) {
+    $('#exampleModal3').modal('show');
+    this.eliminarId = id;
+    this.eliminarDescripcion = desc;
+  }
+  eliminar() {
+    this.showNotification('Los datos se han eliminado con éxito. ', NOTIFY.SUCCESS);
+  }
 }

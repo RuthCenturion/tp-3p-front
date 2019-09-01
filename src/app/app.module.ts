@@ -54,6 +54,7 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 import { AppRoutes } from './app.routing';
 // import { AdministracionComponent } from './administracion/administracion.component';
 // import { CategoriaComponent } from './categoria/categoria.component';
+// import {ModalComponent} from './administracion/modal/modal.component';
 
 
 @NgModule({

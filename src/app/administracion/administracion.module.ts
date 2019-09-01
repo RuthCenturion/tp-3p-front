@@ -6,6 +6,7 @@ import { MaterialModule } from '../app.module';
 
 import { CategoriaComponent } from './categoria/categoria.component';
 import { AdministracionRoutes } from './administracion.routing';
+import { ModalComponent } from './modal/modal.component';
 /*import { GridSystemComponent } from './grid/grid.component';
 import { IconsComponent } from './icons/icons.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -22,13 +23,15 @@ import { TypographyComponent } from './typography/typography.component';*/
   ],
   declarations: [
       CategoriaComponent,
+      ModalComponent,
       /*GridSystemComponent,
       IconsComponent,
       NotificationsComponent,
       PanelsComponent,
       SweetAlertComponent,
       TypographyComponent*/
-  ]
+  ],
+  entryComponents: [ModalComponent],
 })
 
 export class AdministracionModule {}
