@@ -34,7 +34,7 @@ export const ROUTES: RouteInfo[] = [{
         collapse: 'administracion',
         children: [
             {path: 'categoria', title: 'Categoría', ab: 'C'},
-            {path: 'grid', title: 'Sub-Categoria', ab: 'SC'},
+            {path: 'subcategoria', title: 'Sub-Categoria', ab: 'SC'},
             {path: 'panels', title: 'Servicios', ab: 'S'},
             {path: 'sweet-alert', title: 'Pacientes', ab: 'P'}
         ]

@@ -12,9 +12,13 @@ import 'rxjs/add/observable/throw';
 })
 
 
+
 export class CategoriaService {
   private urlBase = 'https://gy7228.myfoscam.org:8443/stock-pwfe/';
   private categoriaUrl = SERVICE_REST + 'categoria';
+  private subCategoriaUrl = SERVICE_REST + 'tipoProducto';
+  
+  
 
   constructor(private http: HttpClient) { }
 
@@ -22,9 +26,9 @@ export class CategoriaService {
     return this.http.get(this.categoriaUrl);
   }
 
-  obtenerCategoria(idCategoria): Observable<any> {
-    if (idCategoria) {
-      return this.http.get(this.categoriaUrl + '/' + idCategoria);
+  obtenerCategoria(descripion): Observable<any> {
+    if (descripion) {
+      return this.http.get(this.categoriaUrl  + descripion);
     } else {
       return this.http.get(this.categoriaUrl);
     }
@@ -32,5 +36,13 @@ export class CategoriaService {
 
   agregarCategoria(categoria: any): Observable<any> {
     return this.http.post(this.categoriaUrl, categoria/*, httpOptions*/);
+  }
+  agregarSubCategoria(subCategoria: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post(this.subCategoriaUrl, subCategoria, httpOptions);
   }
 }
