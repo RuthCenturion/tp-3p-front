@@ -60,22 +60,22 @@
             <div class="modal-body">
               <!--*******************-->
               <div class="row">
-                <div class="col-md-4">
-                  <label>Id</label>
-                </div>
-                <div class="col-md-8">
-                  <input type="text" class="form-control form-control-sm" name="modificarId" id="modificarId"
-                    [(ngModel)]="modificarId" disabled>
-                </div>
-              </div>
+                  <label class="col-sm-3 col-form-label">Id</label>
+                  <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="text" class="form-control form-control-sm" name="modificarId" 
+                          id="modificarId" [(ngModel)]="modificarId" disabled>
+                    </mat-form-field>
+                  </div>
+                </div>  
               <!--*******************-->
               <div class="row">
-                <div class="col-md-4">
-                  <label>Descripción</label>
-                </div>
-                <div class="col-md-8">
-                  <input type="text" class="form-control form-control-sm" name="modificarDescripcion"
-                    id="modificarDescripcion" [(ngModel)]="modificarDescripcion" required>
+                <label class="col-sm-3 col-form-label">Descripción</label>
+                <div class="col-sm-9">
+                    <mat-form-field>
+                        <input matInput type="text" class="form-control form-control-sm" name="modificarDescripcion" 
+                          id="modificarDescripcion" [(ngModel)]="modificarDescripcion" required>
+                    </mat-form-field>
                 </div>
               </div>
               <!--*******************-->

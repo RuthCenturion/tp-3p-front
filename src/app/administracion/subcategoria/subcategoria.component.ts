@@ -155,15 +155,15 @@ export class SubCategoriaComponent implements OnInit {
 
   /*-------------------------------------------------------------------------*/
   listarCategorias() {
-    this.listaCategoria = [ ['1', 'cat1'],
+  /*  this.listaCategoria = [ ['1', 'cat1'],
       ['2', 'cat2'],
       ['3', 'cat3'],
       ['4', 'cat4'],
       ['5', 'cat5'],
       ['6', 'cat6']
-    ];
+    ];*/
 
- /*   this.categoriaService.obtenerCategoria(this.idCategoria).subscribe(
+   this.categoriaService.obtenerCategoria(this.idCategoria).subscribe(
       response => {
         this.listaCategoria = new Array<any>();
         this.lista = new Array<any>();
@@ -173,7 +173,7 @@ export class SubCategoriaComponent implements OnInit {
           this.listaAtributos.push(cat.idCategoria);
           this.listaAtributos.push(cat.descripcion);
           this.listaCategoria.push(this.listaAtributos);
-          this.dataTable = {
+         /* this.dataTable = {
             headerRow: ['Id', 'Descripción', 'Acciones'],
             footerRow: ['Id', 'Descripción', 'Acciones'],
             dataRows: this.listaCategoria
@@ -181,30 +181,47 @@ export class SubCategoriaComponent implements OnInit {
           this.tableData1 = {
             headerRow: ['Id', 'Descripción', 'Acciones'],
             dataRows: this.listaCategoria
+          };*/
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  listarSubCategorias() {
+    this.categoriaService.getSubCategoria().subscribe(
+      response => {
+        this.listaSubCategoria = new Array<any>();
+        this.lista = new Array<any>();
+        response.lista.forEach(cat => {
+          this.lista.push(cat);
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(cat.idTipoProducto);
+          this.listaAtributos.push(cat.descripcion);
+          this.listaAtributos.push(cat.idCategoria.descripcion);
+          this.listaAtributos.push(cat.idCategoria.idCategoria);
+          this.listaSubCategoria.push(this.listaAtributos);
+         /* this.dataTable = {
+            headerRow: ['Id', 'Descripción', 'Acciones'],
+            footerRow: ['Id', 'Descripción', 'Acciones'],
+            dataRows: this.listaCategoria
+          };*/
+          this.tableData1 = {
+            headerRow: ['Id', 'Descripción', 'Categoría', 'idCategoria', 'Acciones'],
+            dataRows: this.listaSubCategoria
           };
         });
       },
       error => {
         this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
       }
-    );*/
-  }
-  /*-------------------------------------------------------------------------*/
-  listarSubCategorias() {
-    // listar las subcategorias desde el back
-    // ejemplo de subcategoria
-    this.listaSubCategoria = [
-      ['1', 'sub10', 'cat1', '1'],
-      ['2', 'sub20', 'cat2', '2'],
-      ['3', 'sub30', 'cat3', '3'],
-      ['4', 'sub40', 'cat4', '4'],
-      ['5', 'sub50', 'cat5', '5'],
-      ['6', 'sub60', 'cat6', '6']
-    ];
-    this.tableData1 = {
+    );
+   /* this.tableData1 = {
       headerRow: ['Id', 'Descripción', 'Categoría', 'Id Categoria', 'Acciones'],
       dataRows: this.listaSubCategoria
-    };
+    };*/
   }
   /*-------------------------------------------------------------------------*/
   limpiar() {
@@ -286,6 +303,7 @@ export class SubCategoriaComponent implements OnInit {
     console.log('fila seleccionada: ', id, ' ', desc, ' ', cat, ' ', idCat);
     this.modificarId = id;
     this.modificarDescripcion = desc;
+    //this.modificarCategoria = idCat;
     this.modificarCategoria = idCat;
     $('#exampleModal2').modal('show');
   }
@@ -294,6 +312,31 @@ export class SubCategoriaComponent implements OnInit {
     console.log('fila datos a modificar: ', this.modificarId, ' ', this.modificarDescripcion, ' ', this.modificarCategoria );
     // llamar al service
     this.showNotification('FALTA IMPLEMENTAR LLAMADO AL BACK ', NOTIFY.WARNING);
+    console.log('datos a modificar: ');
+    console.log('modificarCategoria: ', this.modificarCategoria);
+    console.log('modificarDescripcion: ', this.modificarDescripcion);
+    let dato = {
+      idTipoProducto: this.modificarId,
+      descripcion: this.modificarDescripcion,
+      idCategoria: {
+        idCategoria: this.modificarCategoria
+      }
+    };
+    console.log('dato: ', dato);
+    this.categoriaService.modificarSubCategoria(dato).subscribe(
+      response => {
+        console.log('lo creado: ', response);
+        this.showNotification('Categoría creada con éxito!', NOTIFY.SUCCESS);
+        this.listarSubCategorias();
+        this.descripcion = null;
+        this.idCategoria = null;
+      },
+      error => {
+       this.showNotification('Error al agregar SubCategoría', NOTIFY.DANGER);
+       this.descripcion = null;
+        this.idCategoria = null;
+     }
+    );
     //this.showNotification('Los datos se han modificado con éxito. ', NOTIFY.SUCCESS);
   }
   confirmarEliminar(id, desc) {
@@ -302,9 +345,16 @@ export class SubCategoriaComponent implements OnInit {
     this.eliminarDescripcion = desc;
   }
   eliminar() {
-    // llamar al service
-    // this.showNotification('Los datos se han eliminado con éxito. ', NOTIFY.SUCCESS);
-    this.showNotification('FALTA IMPLEMENTAR LLAMADO AL BACK ', NOTIFY.WARNING);
+    //  this.showNotification('FALTA IMPLEMENTAR LLAMADO AL BACK ', NOTIFY.WARNING);
+    this.categoriaService.eliminarSubCategoria(this.eliminarId).subscribe(
+      response => {
+        this.showNotification('Sub-Categoría eliminada con éxito!', NOTIFY.SUCCESS);
+        this.listarSubCategorias();
+      },
+      error => {
+        this.showNotification('Error al eliminar SubCategoría', NOTIFY.DANGER);
+      }
+    );
   }
 
 }

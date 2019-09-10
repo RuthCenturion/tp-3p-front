@@ -37,6 +37,16 @@ export class CategoriaService {
   agregarCategoria(categoria: any): Observable<any> {
     return this.http.post(this.categoriaUrl, categoria/*, httpOptions*/);
   }
+  getSubCategoria(): Observable<any> {
+    return this.http.get(this.subCategoriaUrl);
+  }
+  obtenerSubCategoria(descripion): Observable<any> {
+    if (descripion) {
+      return this.http.get(this.subCategoriaUrl  + descripion);
+    } else {
+      return this.http.get(this.subCategoriaUrl);
+    }
+  }
   agregarSubCategoria(subCategoria: any): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
@@ -44,5 +54,20 @@ export class CategoriaService {
       })
     };
     return this.http.post(this.subCategoriaUrl, subCategoria, httpOptions);
+  }
+  modificarSubCategoria(subCategoria: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post(this.subCategoriaUrl, subCategoria, httpOptions);
+  }
+  eliminarSubCategoria(id): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(id).forEach( function(key) {
+      httpParams = httpParams.append(key, id[key]);
+    });
+    return this.http.delete(this.subCategoriaUrl + '/' + id);
   }
 }
