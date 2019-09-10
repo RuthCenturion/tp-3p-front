@@ -8,6 +8,7 @@ import { CategoriaComponent } from './categoria/categoria.component';
 import { AdministracionRoutes } from './administracion.routing';
 import { ModalComponent } from './modal/modal.component';
 import { SubCategoriaComponent } from './subcategoria/subcategoria.component';
+import { ServicioComponent } from './servicio/servicio.component';
 /*import { GridSystemComponent } from './grid/grid.component';
 import { IconsComponent } from './icons/icons.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -26,6 +27,7 @@ import { TypographyComponent } from './typography/typography.component';*/
       CategoriaComponent,
       ModalComponent,
       SubCategoriaComponent,
+      ServicioComponent,
       /*GridSystemComponent,
       IconsComponent,
       NotificationsComponent,

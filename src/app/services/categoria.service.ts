@@ -17,15 +17,16 @@ export class CategoriaService {
   private urlBase = 'https://gy7228.myfoscam.org:8443/stock-pwfe/';
   private categoriaUrl = SERVICE_REST + 'categoria';
   private subCategoriaUrl = SERVICE_REST + 'tipoProducto';
+  private servicioUrl = SERVICE_REST + 'presentacionProducto';
+  private productoUrl = SERVICE_REST + 'producto';
   
   
 
   constructor(private http: HttpClient) { }
-
+  // --------------------- CATEGORIAS ---------------------
   getCategoria(): Observable<any> {
     return this.http.get(this.categoriaUrl);
   }
-
   obtenerCategoria(descripion): Observable<any> {
     if (descripion) {
       return this.http.get(this.categoriaUrl  + descripion);
@@ -33,10 +34,10 @@ export class CategoriaService {
       return this.http.get(this.categoriaUrl);
     }
   }
-
   agregarCategoria(categoria: any): Observable<any> {
     return this.http.post(this.categoriaUrl, categoria/*, httpOptions*/);
   }
+  // --------------------- SUB-CATEGORIAS ---------------------
   getSubCategoria(): Observable<any> {
     return this.http.get(this.subCategoriaUrl);
   }
@@ -69,5 +70,27 @@ export class CategoriaService {
       httpParams = httpParams.append(key, id[key]);
     });
     return this.http.delete(this.subCategoriaUrl + '/' + id);
+  }
+// --------------------- SRVICIOS ---------------------
+  getServicios(): Observable<any> {
+    return this.http.get(this.servicioUrl);
+  }
+  listarProductos(): Observable<any> {
+    return this.http.get(this.productoUrl);
+  }
+  agregarServicio(servicio: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post(this.servicioUrl, servicio, httpOptions);
+  }
+  eliminarServicio(id): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(id).forEach( function(key) {
+      httpParams = httpParams.append(key, id[key]);
+    });
+    return this.http.delete(this.servicioUrl + '/' + id);
   }
 }

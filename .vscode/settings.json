@@ -4,6 +4,15 @@
         "categoria",
         "dato",
         "descripcion",
-        "seleccionada"
+        "existencia",
+        "id",
+        "listar",
+        "nombre",
+        "precio",
+        "presentacion",
+        "producto",
+        "productos",
+        "seleccionada",
+        "venta"
     ]
 }

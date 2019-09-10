@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { CategoriaComponent } from './categoria/categoria.component';
 import { SubCategoriaComponent } from './subcategoria/subcategoria.component';
+import { ServicioComponent } from './servicio/servicio.component';
 /*import { GridSystemComponent } from './grid/grid.component';
 import { IconsComponent } from './icons/icons.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -23,14 +24,14 @@ export const AdministracionRoutes: Routes = [
       path: 'subcategoria',
       component: SubCategoriaComponent
     }]
-    }/*,
+    },
     {
       path: '',
       children: [ {
-        path: 'icons',
-        component: IconsComponent
+        path: 'servicio',
+        component: ServicioComponent
         }]
-    },
+    }/*,
     {
         path: '',
         children: [ {

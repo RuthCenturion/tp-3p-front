@@ -311,10 +311,6 @@ export class SubCategoriaComponent implements OnInit {
   modificar() {
     console.log('fila datos a modificar: ', this.modificarId, ' ', this.modificarDescripcion, ' ', this.modificarCategoria );
     // llamar al service
-    this.showNotification('FALTA IMPLEMENTAR LLAMADO AL BACK ', NOTIFY.WARNING);
-    console.log('datos a modificar: ');
-    console.log('modificarCategoria: ', this.modificarCategoria);
-    console.log('modificarDescripcion: ', this.modificarDescripcion);
     let dato = {
       idTipoProducto: this.modificarId,
       descripcion: this.modificarDescripcion,
@@ -322,7 +318,6 @@ export class SubCategoriaComponent implements OnInit {
         idCategoria: this.modificarCategoria
       }
     };
-    console.log('dato: ', dato);
     this.categoriaService.modificarSubCategoria(dato).subscribe(
       response => {
         console.log('lo creado: ', response);
@@ -337,7 +332,7 @@ export class SubCategoriaComponent implements OnInit {
         this.idCategoria = null;
      }
     );
-    //this.showNotification('Los datos se han modificado con éxito. ', NOTIFY.SUCCESS);
+    // this.showNotification('Los datos se han modificado con éxito. ', NOTIFY.SUCCESS);
   }
   confirmarEliminar(id, desc) {
     $('#exampleModal3').modal('show');
@@ -356,5 +351,5 @@ export class SubCategoriaComponent implements OnInit {
       }
     );
   }
-
+ 
 }
