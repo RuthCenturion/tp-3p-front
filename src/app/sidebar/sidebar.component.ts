@@ -39,13 +39,13 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'paciente', title: 'Pacientes', ab: 'P'}
         ]
     }, {
-        path: '/components',
+        path: '/horario',
         title: 'Horarios',
         type: 'sub',
         icontype: 'schedule',
         collapse: 'horario',
         children: [
-            {path: 'buttons', title: 'Horario Atención', ab: 'HA'},
+            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},
             {path: 'grid', title: 'Horario Excepción', ab: 'HE'}
         ]
     }, {
@@ -73,6 +73,7 @@ export const ROUTES: RouteInfo[] = [{
         icontype: 'apps',
         collapse: 'components',
         children: [
+            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},
             {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
             {path: 'panels', title: 'Panels', ab:'P'},
