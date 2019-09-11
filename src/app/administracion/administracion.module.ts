@@ -9,6 +9,7 @@ import { AdministracionRoutes } from './administracion.routing';
 import { ModalComponent } from './modal/modal.component';
 import { SubCategoriaComponent } from './subcategoria/subcategoria.component';
 import { ServicioComponent } from './servicio/servicio.component';
+import { PacienteComponent } from './paciente/paciente.component';
 /*import { GridSystemComponent } from './grid/grid.component';
 import { IconsComponent } from './icons/icons.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -28,6 +29,7 @@ import { TypographyComponent } from './typography/typography.component';*/
       ModalComponent,
       SubCategoriaComponent,
       ServicioComponent,
+      PacienteComponent,
       /*GridSystemComponent,
       IconsComponent,
       NotificationsComponent,
