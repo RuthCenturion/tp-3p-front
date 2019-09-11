@@ -161,14 +161,14 @@
           </div>
         </div>
       </div>
-      <!-------------------------END MODIFICAR SUB-CATEGORIA--------------------------->
-      <!------------------------- ELIMINAR SUB-CATEGORÍA--------------------------->
+      <!-------------------------END MODIFICAR PACIENTE--------------------------->
+      <!------------------------- ELIMINAR PACIENTE--------------------------->
       <div class="modal fade modal-warning" id="exampleModal3" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar esta sub-categoría?</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar este paciente?</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -237,7 +237,7 @@
                       <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
                         (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5])"><i class="material-icons">dvr</i></a>
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
-                        (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">close</i></a>
+                        (click)="confirmarEliminar(row[0])"><i class="material-icons">delete</i></a>
                     </td>
                   </tr>
                 </tbody>

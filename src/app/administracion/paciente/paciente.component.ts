@@ -23,6 +23,7 @@ export class PacienteComponent implements OnInit {
   tipoPersona: any;
   fechaNacimiento: any;
 
+  eliminarId: any;
   public tableData1: TableData;
   listaAtributos: Array<any>;
   listaPacientes: Array<any>;
@@ -111,6 +112,24 @@ export class PacienteComponent implements OnInit {
         this.ruc = null;
         this.cedula = null;
         this.fechaNacimiento = null;
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  confirmarEliminar(id) {
+    $('#exampleModal3').modal('show');
+    this.eliminarId = id;
+  }
+  /*-------------------------------------------------------------------------*/
+  eliminar() {
+    //  this.showNotification('FALTA IMPLEMENTAR LLAMADO AL BACK ', NOTIFY.WARNING);
+    this.service.eliminarPaciente(this.eliminarId).subscribe(
+      response => {
+        this.showNotification('Paciente eliminado con éxito!', NOTIFY.SUCCESS);
+        this.listarPacientes();
+      },
+      error => {
+        this.showNotification('Error al eliminar paceinte', NOTIFY.DANGER);
       }
     );
   }
