@@ -23,6 +23,16 @@ export class PacienteComponent implements OnInit {
   tipoPersona: any;
   fechaNacimiento: any;
 
+  modificarId: any;
+  modificarNombre: any;
+  modificarApellido: any;
+  modificarEmail: any;
+  modificarTelefono: any;
+  modificarRuc: any;
+  modificarCedula: any;
+  modificarTipoPersona: any;
+  modificarFechaNacimiento: any;
+
   eliminarId: any;
   public tableData1: TableData;
   listaAtributos: Array<any>;
@@ -30,7 +40,7 @@ export class PacienteComponent implements OnInit {
 
   constructor(private service: CategoriaService) {
     this.tableData1 = {
-      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Email', 'Teléfono', 'Acciones'],
+      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'RUC', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
       dataRows: this.listaPacientes
     };
   }
@@ -47,11 +57,13 @@ export class PacienteComponent implements OnInit {
             this.listaAtributos.push(paciente.nombre); // 1
             this.listaAtributos.push(paciente.apellido); // 2
             this.listaAtributos.push(paciente.cedula); // 3
-            this.listaAtributos.push(paciente.email); // 4
+            this.listaAtributos.push(paciente.ruc); // 4
             this.listaAtributos.push(paciente.telefono); // 5
+            this.listaAtributos.push(paciente.email); // 6
+            this.listaAtributos.push(paciente.fechaNacimiento); // 7
             this.listaPacientes.push(this.listaAtributos);
             this.tableData1 = {
-              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Email', 'Teléfono', 'Acciones'],
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'RUC', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
               dataRows: this.listaPacientes
             };
           });
@@ -63,22 +75,10 @@ export class PacienteComponent implements OnInit {
   agregar() {
     let d = new Date(this.fechaNacimiento);
     d = new Date(d.getTime() - 3000000);
-    // tslint:disable-next-line: max-line-length
-  /*  let date_format_str = d.getFullYear().toString() + '-' 
-      + ((d.getMonth() + 1).toString().length === 2 ? (d.getMonth() + 1).toString() : '0' 
-      + (d.getMonth() + 1).toString()) + '-' 
-      + (d.getDate().toString().length === 2 ? d.getDate().toString() : '0' + d.getDate().toString()) + ' ' 
-      + (d.getHours().toString().length === 2 ? d.getHours().toString() : '0' + d.getHours().toString()) + ':' 
-      + ((parseInt(d.getMinutes()/5)*5).toString().length === 2 ? (parseInt(d.getMinutes()/5)*5).toString() : '0' 
-      + (parseInt(d.getMinutes()/5)*5).toString()) + ':00';*/
-
-
-      let year= d.getFullYear();
-      let mes = d.getMonth() + 1;
-      let dia = d.getDate() + 1;
-      let fechaString = year + '-' + mes + '-' + dia + ' 00:00:00';
-    console.log('********',fechaString );
-  
+    let year = d.getFullYear();
+    let mes = d.getMonth() + 1;
+    let dia = d.getDate() + 1;
+    let fechaString = year + '-' + mes + '-' + dia + ' 00:00:00';
     let dato = {
       nombre: this.nombre,
       apellido: this.apellido,
@@ -89,31 +89,71 @@ export class PacienteComponent implements OnInit {
       tipoPersona: 'FISICA',
       fechaNacimiento: fechaString
     };
-    console.log('paciente a agregar: ', dato);
     this.service.agregarPaciente(dato).subscribe(
       response => {
         console.log('lo creado: ', response);
         this.showNotification('Paciente creado con éxito!', NOTIFY.SUCCESS);
         this.listarPacientes();
-        this.nombre = null;
-        this.apellido = null;
-        this.email = null;
-        this.telefono = null;
-        this.ruc = null;
-        this.cedula = null;
-        this.fechaNacimiento = null;
+        this.limpiarAgregar();
       },
       error => {
         this.showNotification('Error al agregar paciente', NOTIFY.DANGER);
-        this.nombre = null;
-        this.apellido = null;
-        this.email = null;
-        this.telefono = null;
-        this.ruc = null;
-        this.cedula = null;
-        this.fechaNacimiento = null;
+        this.limpiarAgregar();
       }
     );
+  }
+  /*-------------------------------------------------------------------------*/
+  abrirModalModificar(id, nombre, apellido, documento, ruc, telefono, mail, fechaNac) {
+    // console.log('fila seleccionada: ', id, ' ', nombre, ' ', apellido, ' ', documento, '', ruc, ' ', telefono, '', mail, '', fechaNac);
+    this.modificarId = id;
+    this.modificarNombre = nombre;
+    this.modificarApellido = apellido;
+    this.modificarCedula = documento;
+    this.modificarRuc = ruc;
+    this.modificarTelefono = telefono;
+    this.modificarEmail = mail;
+    let fecha = new Date(fechaNac);
+    let dia = fecha.getDate() + 1;
+    let yy = fecha.getFullYear();
+    let mm = fecha.getMonth() + 1;
+    let fechaFinal = yy + '-' + mm + '-' + dia;
+    this.modificarFechaNacimiento = new Date(fechaFinal);
+    $('#exampleModal2').modal('show');
+  }
+  /*-------------------------------------------------------------------------*/
+  modificar() {
+    //  console.log('fila datos a modificar: ', this.modificarId, ' ', this.modificarDescripcion, ' ', this.modificarCategoria );
+    let d = new Date(this.modificarFechaNacimiento);
+    d = new Date(d.getTime() - 3000000);
+    let year = d.getFullYear();
+    let mes = d.getMonth() + 1;
+    let dia = d.getDate() + 1;
+    let fechaString = year + '-' + mes + '-' + dia + ' 00:00:00';
+    let dato = {
+      idPersona: this.modificarId,
+      nombre: this.modificarNombre,
+      apellido: this.modificarApellido,
+      email: this.modificarEmail,
+      telefono: this.modificarTelefono,
+      ruc: this.modificarRuc,
+      cedula: this.modificarCedula,
+      tipoPersona: 'FISICA',
+      fechaNacimiento: fechaString
+    };
+
+    this.service.modificarPaciente(dato).subscribe(
+      response => {
+        console.log('lo creado: ', response);
+        this.showNotification('Paciente creada con éxito!', NOTIFY.SUCCESS);
+        this.listarPacientes();
+        this.limpiarModificar();
+      },
+      error => {
+        this.showNotification('Error al agregar paciente', NOTIFY.DANGER);
+        this.limpiarModificar();
+      }
+    );
+    // this.showNotification('Los datos se han modificado con éxito. ', NOTIFY.SUCCESS);
   }
   /*-------------------------------------------------------------------------*/
   confirmarEliminar(id) {
@@ -134,35 +174,54 @@ export class PacienteComponent implements OnInit {
     );
   }
   /*-------------------------------------------------------------------------*/
-  showNotification( mensaje: any, color: any) {
+  showNotification(mensaje: any, color: any) {
     const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
     $.notify({
-        icon: 'notifications',
-        message: mensaje
+      icon: 'notifications',
+      message: mensaje
     }, {
-        type: type[color],
-        timer: 3000,
-        placement: {
-            from: 'top',
-            align: 'right'
-        },
-        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0} alert-with-icon" role="alert">' +
-          // tslint:disable-next-line: max-line-length
-          '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
-          '<i class="material-icons" data-notify="icon">notifications</i> ' +
-          '<span data-notify="title">{1}</span> ' +
-          '<span data-notify="message">{2}</span>' +
-          '<div class="progress" data-notify="progressbar">' +
-          // tslint:disable-next-line: max-line-length
-            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-          '</div>' +
-          '<a href="{3}" target="{4}" data-notify="url"></a>' +
+      type: type[color],
+      timer: 3000,
+      placement: {
+        from: 'top',
+        align: 'right'
+      },
+      template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0} alert-with-icon" role="alert">' +
+        // tslint:disable-next-line: max-line-length
+        '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
+        '<i class="material-icons" data-notify="icon">notifications</i> ' +
+        '<span data-notify="title">{1}</span> ' +
+        '<span data-notify="message">{2}</span>' +
+        '<div class="progress" data-notify="progressbar">' +
+        // tslint:disable-next-line: max-line-length
+        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+        '</div>' +
+        '<a href="{3}" target="{4}" data-notify="url"></a>' +
         '</div>'
     });
-}
+  }
   /*-------------------------------------------------------------------------*/
-
-
+  limpiarAgregar() {
+    this.nombre = null;
+    this.apellido = null;
+    this.email = null;
+    this.telefono = null;
+    this.ruc = null;
+    this.cedula = null;
+    this.fechaNacimiento = null;
+  }
+  /*-------------------------------------------------------------------------*/
+  limpiarModificar() {
+    this.modificarId = null;
+    this.modificarNombre = null;
+    this.modificarApellido = null;
+    this.modificarCedula = null;
+    this.modificarRuc = null;
+    this.modificarTelefono = null;
+    this.modificarEmail = null;
+    this.modificarFechaNacimiento = null;
+  }
+  /*-------------------------------------------------------------------------*/
   ngOnInit() {
     this.listarPacientes();
   }
