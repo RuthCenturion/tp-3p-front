@@ -140,6 +140,13 @@ export class ServicioComponent implements OnInit {
     );
   }
   /*-------------------------------------------------------------------------*/
+  cancelarAgregar() {
+    this.codigo = null;
+    this.idProducto = null;
+    this.nombre = null;
+    this.existenciaProducto = null;
+  }
+  /*-------------------------------------------------------------------------*/
   abrirModalModificar(id, nombre, desc, evento, idProducto, descProducto, idTipoProducto,
     descTipoProducto, idCat, descCat) {
     console.log('fila seleccionada: ', id, ' ', nombre, '', desc, ' ', descCat, ' ', idCat);
