@@ -19,6 +19,7 @@ export class CategoriaService {
   private subCategoriaUrl = SERVICE_REST + 'tipoProducto';
   private servicioUrl = SERVICE_REST + 'presentacionProducto';
   private productoUrl = SERVICE_REST + 'producto';
+  private pacienteUrl = SERVICE_REST + 'persona';
   
   
 
@@ -71,7 +72,7 @@ export class CategoriaService {
     });
     return this.http.delete(this.subCategoriaUrl + '/' + id);
   }
-// --------------------- SRVICIOS ---------------------
+// --------------------- SERVICIOS ---------------------
   getServicios(): Observable<any> {
     return this.http.get(this.servicioUrl);
   }
@@ -92,5 +93,32 @@ export class CategoriaService {
       httpParams = httpParams.append(key, id[key]);
     });
     return this.http.delete(this.servicioUrl + '/' + id);
+  }
+  // --------------------- PACIENTES ---------------------
+  listarPacientes(): Observable<any> {
+    return this.http.get(this.pacienteUrl);
+  }
+  agregarPaciente(paciente: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post(this.pacienteUrl, paciente, httpOptions);
+  }
+  modificarPaciente(paciente: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post(this.pacienteUrl, paciente, httpOptions);
+  }
+  eliminarPaciente(id): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(id).forEach( function(key) {
+      httpParams = httpParams.append(key, id[key]);
+    });
+    return this.http.delete(this.pacienteUrl + '/' + id);
   }
 }

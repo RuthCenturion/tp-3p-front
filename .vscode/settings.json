@@ -1,18 +1,28 @@
 {
     "cSpell.words": [
         "Toastr",
+        "apellido",
         "categoria",
+        "cedula",
         "dato",
         "descripcion",
+        "documento",
         "existencia",
+        "fecha",
         "id",
+        "lista",
         "listar",
+        "modificar",
+        "nacimiento",
         "nombre",
+        "paciente",
+        "pacientes",
         "precio",
         "presentacion",
         "producto",
         "productos",
         "seleccionada",
+        "telefono",
         "venta"
     ]
 }

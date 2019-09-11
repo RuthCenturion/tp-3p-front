@@ -36,7 +36,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'categoria', title: 'Categoría', ab: 'C'},
             {path: 'subcategoria', title: 'Sub-Categoria', ab: 'SC'},
             {path: 'servicio', title: 'Servicios', ab: 'S'},
-            {path: 'sweet-alert', title: 'Pacientes', ab: 'P'}
+            {path: 'paciente', title: 'Pacientes', ab: 'P'}
         ]
     }, {
         path: '/components',
