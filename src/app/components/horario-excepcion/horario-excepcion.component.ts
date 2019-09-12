@@ -25,6 +25,8 @@ export class HorarioExcepcionComponent implements OnInit {
 
   mostrarHoras: any;
 
+  eliminarId: any;
+
   listaAtributos: Array<any>;
   listaEmpleados: Array<any>;
   listaHorarios: Array<any>;
@@ -150,6 +152,23 @@ export class HorarioExcepcionComponent implements OnInit {
       },
       error => {
         this.showNotification('Error al crear horario de excepcion!', NOTIFY.DANGER);
+      }
+    );
+  }
+   /*-------------------------------------------------------------------------*/
+   confirmarEliminar(id, desc) {
+    $('#exampleModal3').modal('show');
+    this.eliminarId = id;
+  }
+  /*-------------------------------------------------------------------------*/
+  eliminar() {
+    this.service.eliminarHorarioExcepcion(this.eliminarId).subscribe(
+      response => {
+        this.showNotification('Horario de excepción eliminado con éxito!', NOTIFY.SUCCESS);
+        this.listarHorarioExcepcion();
+      },
+      error => {
+        this.showNotification('Error al eliminar horario', NOTIFY.DANGER);
       }
     );
   }
