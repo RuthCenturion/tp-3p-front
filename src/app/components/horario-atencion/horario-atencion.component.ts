@@ -68,7 +68,7 @@ export class HorarioAtencionComponent implements OnInit {
           });
         }
       }
-    );    
+    );
   }
   /*-------------------------------------------------------------------------*/
   listarHorarioAtencion() {

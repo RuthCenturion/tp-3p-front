@@ -13,6 +13,7 @@ import { PanelsComponent } from './panels/panels.component';
 import { SweetAlertComponent } from './sweetalert/sweetalert.component';
 import { TypographyComponent } from './typography/typography.component';
 import { HorarioAtencionComponent } from './horario-atencion/horario-atencion.component';
+import { HorarioExcepcionComponent } from './horario-excepcion/horario-excepcion.component';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { HorarioAtencionComponent } from './horario-atencion/horario-atencion.co
       PanelsComponent,
       SweetAlertComponent,
       TypographyComponent,
-      HorarioAtencionComponent
+      HorarioAtencionComponent,
+      HorarioExcepcionComponent
   ]
 })
 

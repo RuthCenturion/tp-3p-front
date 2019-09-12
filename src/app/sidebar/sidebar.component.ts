@@ -68,13 +68,31 @@ export const ROUTES: RouteInfo[] = [{
 
     }, {
         path: '/components',
+        title: 'Horarios',
+        type: 'sub',
+        icontype: 'apps',
+        collapse: 'components',
+        children: [
+            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},            
+            {path: 'horario-excepcion', title: 'Horario Excepción', ab: 'HE'},
+           /* {path: 'buttons', title: 'Buttons', ab:'B'},
+            {path: 'grid', title: 'Grid System', ab:'GS'},
+            {path: 'panels', title: 'Panels', ab:'P'},
+            {path: 'sweet-alert', title: 'Sweet Alert', ab:'SA'},
+            {path: 'notifications', title: 'Notifications', ab:'N'},
+            {path: 'icons', title: 'Icons', ab:'I'},
+            {path: 'typography', title: 'Typography', ab:'T'}*/
+        ]
+    },{
+        path: '/components',
         title: 'Components',
         type: 'sub',
         icontype: 'apps',
         collapse: 'components',
         children: [
-            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},
-            {path: 'buttons', title: 'Buttons', ab:'B'},
+          /*  {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},            
+            {path: 'horario-excepcion', title: 'Horario Excepción', ab: 'HE'},
+          */  {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
             {path: 'panels', title: 'Panels', ab:'P'},
             {path: 'sweet-alert', title: 'Sweet Alert', ab:'SA'},
@@ -82,7 +100,8 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}
         ]
-    }, {
+    }, 
+    {
         path: '/forms',
         title: 'Forms',
         type: 'sub',
