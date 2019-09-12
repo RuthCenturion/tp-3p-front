@@ -115,63 +115,68 @@
             <div class="modal-body">
               <!--*******************-->
               <div class="row">
-                <label class="col-sm-3 col-form-label">Id</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" name="modificarIdEmpleado" id="modificarIdEmpleado"
-                      [(ngModel)]="modificarIdEmpleado" disabled>
-                  </mat-form-field>
+                  <label class="col-sm-3 col-form-label">Especialista</label>
+                  <div class="col-sm-9">
+                    <mat-form-field>
+                      <input matInput type="text" [(ngModel)]="modificarNombreEmpleado" disabled>
+                      <!--mat-select placeholder="Seleccionar" name="dia" [(ngModel)]="idEmpleado" required>
+                        <mat-option *ngFor="let l of listaEmpleados" [value]="l.idPersona">
+                          {{l.nombreEmpleado}}
+                        </mat-option>
+                      </mat-select-->
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Especialista</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" name="modificarNombreEmpleado" [(ngModel)]="modificarNombreEmpleado"
-                      disabled>
-                  </mat-form-field>
+                <!--*******************-->
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Fecha </label>
+                  <div class="col-sm-9">
+                    <mat-form-field>
+                      <input matInput type="text" [(ngModel)]="modificarFecha" disabled>
+                      <!--input matInput [matDatepicker]="pickerTo"  (click)="picker.open()"
+                        [(ngModel)]="modificarFecha" required disabled>
+                      <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                      <mat-datepicker #pickerTo></mat-datepicker-->
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Día</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" [(ngModel)]="modificarDia" disabled>
-                  </mat-form-field>
+                <!--*******************-->
+                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+                  [(ngModel)]="modificarFlagEsHabilitar"(ngModelChange)="onChangeHabilitarModificar()">
+                  <mat-radio-button class="example-radio-button" *ngFor="let op of opciones" [value]="op.value">
+                    {{op.viewValue}}
+                  </mat-radio-button>
+                </mat-radio-group>
+                <!--*******************-->
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Hora apertura</label>
+                  <div class="col-sm-9">
+                    <mat-form-field>
+                      <!--input matInput type="text" [(ngModel)]="descripcion" required-->
+                      <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" 
+                        required [(ngModel)]="modificarHoraApertura" [disabled]="!mostrarHoras">
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Hora apertura</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <!--input matInput type="text" [(ngModel)]="descripcion" required-->
-                    <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" required
-                      [(ngModel)]="modificarHoraApertura">
-                  </mat-form-field>
+                <!--*******************-->
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Hora cierre</label>
+                  <div class="col-sm-9">
+                    <mat-form-field>
+                      <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" 
+                          [(ngModel)]="modificarHoraCierre" required [disabled]="!mostrarHoras">
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Hora cierre</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00"
-                      [(ngModel)]="modificarHoraCierre" required>
-                  </mat-form-field>
+                <!--*******************-->
+                <div class="row">
+                  <label class="col-sm-3 col-form-label">Intervalo</label>
+                  <div class="col-sm-9">
+                    <mat-form-field>
+                      <input matInput type="number" [(ngModel)]="modificarIntervalo" required>
+                    </mat-form-field>
+                  </div>
                 </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Intervalo</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="number" [(ngModel)]="modificarIntervalo" required>
-                  </mat-form-field>
-                </div>
-              </div>
               <!--*******************-->
             </div>
             <div class="modal-footer">
@@ -246,7 +251,8 @@
                     <th>{{ tableData1.headerRow[4] }}</th>
                     <th>{{ tableData1.headerRow[5] }}</th>
                     <th>{{ tableData1.headerRow[6] }}</th>
-                    <th class="disabled-sorting text-right">{{ tableData1.headerRow[7] }}</th>
+                    <th>{{ tableData1.headerRow[7] }}</th>
+                    <th class="disabled-sorting text-right">{{ tableData1.headerRow[8] }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -258,9 +264,10 @@
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
                     <td>{{row[6]}}</td>
+                    <td>{{row[7]}}</td>
                     <td class="text-right">
                       <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
-                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6])"><i
+                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])"><i
                           class="material-icons">dvr</i></a>
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
                         (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>

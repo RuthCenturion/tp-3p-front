@@ -13,7 +13,7 @@ declare const $: any;
 export class HorarioExcepcionComponent implements OnInit {
 
   public tableData1: TableData;
-  
+
   idHorarioExcepcion: any;
   idEmpleado: any;
   nombreEmpleado: any;
@@ -25,6 +25,17 @@ export class HorarioExcepcionComponent implements OnInit {
 
   mostrarHoras: any;
 
+  aperturaSeleccionada: any;
+  cierreSeleccionado: any;
+  modificarIdHorarioExcepcion: any;
+  modificarIdEmpleado: any;
+  modificarNombreEmpleado: any;
+  modificarFecha: any;
+  modificarHoraApertura: any;
+  modificarHoraCierre: any;
+  modificarFlagEsHabilitar: any;
+  modificarIntervalo: any;
+
   eliminarId: any;
 
   listaAtributos: Array<any>;
@@ -33,7 +44,7 @@ export class HorarioExcepcionComponent implements OnInit {
 
   constructor(private service: HorarioService, ) {
     this.tableData1 = {
-      headerRow: ['Id', 'Id Esp.', 'Especialista', 'Fecha', 'Apertura', 'Cierre', 'Habilitado', 'Acciones'],
+      headerRow: ['Id', 'Id Esp.', 'Especialista', 'Fecha', 'Apertura', 'Cierre', 'Habilitado', 'Intervalo', 'Acciones'],
       dataRows: this.listaHorarios
     };
   }
@@ -80,11 +91,12 @@ export class HorarioExcepcionComponent implements OnInit {
             this.listaAtributos.push(horario.horaApertura); // 4
             this.listaAtributos.push(horario.horaCierre); // 5
             this.listaAtributos.push(horario.flagEsHabilitar); // 6
+            this.listaAtributos.push(horario.intervaloMinutos); // 7
 
             this.listaHorarios.push(this.listaAtributos);
 
             this.tableData1 = {
-              headerRow: ['Id', 'Id Esp.', 'Especialista', 'Fecha', 'Apertura', 'Cierre', 'Habilitado', 'Acciones'],
+              headerRow: ['Id', 'Id Esp.', 'Especialista', 'Fecha', 'Apertura', 'Cierre', 'Habilitado', 'Intervalo', 'Acciones'],
               dataRows: this.listaHorarios
             };
           });
@@ -114,7 +126,7 @@ export class HorarioExcepcionComponent implements OnInit {
     d = new Date(d.getTime());
     let year = d.getFullYear();
     let mes = d.getMonth() + 1;
-    let dia = d.getDate() ;
+    let dia = d.getDate();
     let mesCadena = '';
     let diaCadena = '';
     if (mes.toString().length == 1) {
@@ -127,7 +139,7 @@ export class HorarioExcepcionComponent implements OnInit {
     } else {
       diaCadena = dia.toString();
     }
-    let fechaString = year.toString()  + mesCadena + diaCadena ;
+    let fechaString = year.toString() + mesCadena + diaCadena;
     let aperturaString = this.horaApertura.toString();
     let aperturaCadena = aperturaString.split(':').join('');
     let cierreString = this.horaCierre.toString();
@@ -155,8 +167,102 @@ export class HorarioExcepcionComponent implements OnInit {
       }
     );
   }
-   /*-------------------------------------------------------------------------*/
-   confirmarEliminar(id, desc) {
+  /*-------------------------------------------------------------------------*/
+  abrirModalModificar(idHorario, idEmpleado, nombre, fecha, apertura, cierre, flag, minutos) {
+    let fechaHoy = new Date();
+    let fechaSeleccionada = new Date(fecha);
+    fechaSeleccionada.setDate(fechaSeleccionada.getDate() + 1); // se le debe sumar un dia a la fecha
+    // si la fecha seleccionada es anterior o igual a la fecha del dia  no se puede modificar
+    if (fechaHoy.getTime() >= fechaSeleccionada.getTime()) {
+      console.log('fecha hoy > fechaSeleccionada');
+      this.showNotification('No se puede modificar un registro con fecha anterior a la fecha actual', NOTIFY.WARNING);
+    } else {
+      console.log('fila seleccionada: ', idHorario, '', idEmpleado, nombre, ' ', fecha, ' ', apertura, ' ', cierre, '', minutos);
+      this.modificarIdHorarioExcepcion = idHorario;
+      this.modificarIdEmpleado = idEmpleado;
+      this.modificarNombreEmpleado = nombre;
+      this.modificarFecha = fecha /*fechaSeleccionada.getFullYear() + '-' + fechaSeleccionada.getMonth();*/;
+      this.modificarHoraApertura = apertura;
+      this.modificarHoraCierre = cierre;
+      this.modificarFlagEsHabilitar = flag;
+      this.modificarIntervalo = minutos;
+
+      this.aperturaSeleccionada = apertura;
+      this.cierreSeleccionado = cierre;
+      this.onChangeHabilitarModificar();
+      $('#exampleModal2').modal('show');
+    }
+  }
+  /*-------------------------------------------------------------------------*/
+  onChangeHabilitarModificar() {
+    if (this.modificarFlagEsHabilitar === 'S') {
+      this.mostrarHoras = true;
+      this.modificarHoraApertura = this.aperturaSeleccionada;
+      this.modificarHoraCierre = this.cierreSeleccionado;
+      console.log('mostrarHoras: ', this.mostrarHoras);
+    } else {
+      this.mostrarHoras = false;
+      this.modificarHoraApertura = '00:00';
+      this.modificarHoraCierre = '23:59';
+      console.log('mostrarHoras: ', this.mostrarHoras);
+    }
+  }
+  /*-------------------------------------------------------------------------*/  
+  modificar() {
+    let d = new Date(this.modificarFecha);
+    d = new Date(d.getTime());
+    let year = d.getFullYear();
+    let mes = d.getMonth() + 1;
+    let dia = d.getDate();
+    let mesCadena = '';
+    let diaCadena = '';
+    if (mes.toString().length == 1) {
+      mesCadena = '0' + mes;
+    } else {
+      mesCadena = mes.toString();
+    }
+    if (dia.toString().length == 1) {
+      diaCadena = '0' + dia;
+    } else {
+      diaCadena = dia.toString();
+    }
+    let fechaString = year.toString() + mesCadena + diaCadena;
+
+
+    let aperturaString = this.modificarHoraApertura.toString();
+    let aperturaCadena = aperturaString.split(':').join('');
+    let cierreString = this.modificarHoraCierre.toString();
+    let cierreCadena = cierreString.split(':').join('');
+    console.log('horaAperturaCadena: ', aperturaCadena);
+    console.log('horaCierreCadena: ', cierreCadena);
+    let dato = {
+      idHorarioExcepcion: this.modificarIdHorarioExcepcion,
+      fechaCadena: fechaString,
+      horaAperturaCadena: aperturaCadena,
+      horaCierreCadena: cierreCadena,
+      intervaloMinutos: this.modificarIntervalo,
+      idEmpleado: {
+        idPersona: this.modificarIdEmpleado
+      }
+    };
+    console.log('dato a modificar: ', dato);
+    this.service.modificarHorarioExcepcion(dato).subscribe(
+      response => {
+        console.log('lo creado: ', response);
+        this.showNotification('Horario modificado con éxito!', NOTIFY.SUCCESS);
+        this.listarHorarioExcepcion();
+        this.limpiarModificar();
+      },
+      error => {
+        this.showNotification('Error al modificar horario', NOTIFY.DANGER);
+        this.limpiarModificar();
+      }
+    );
+  }
+
+
+  /*-------------------------------------------------------------------------*/
+  confirmarEliminar(id, desc) {
     $('#exampleModal3').modal('show');
     this.eliminarId = id;
   }
@@ -182,6 +288,17 @@ export class HorarioExcepcionComponent implements OnInit {
     this.horaCierre = null;
     this.flagEsHabilitar = null;
     this.intervalo = null;
+  }
+  /*-------------------------------------------------------------------------*/
+  limpiarModificar() {
+    this.modificarIdHorarioExcepcion = null;
+    this.modificarIdEmpleado = null;
+    this.modificarNombreEmpleado = null;
+    this.modificarFecha = null;
+    this.modificarHoraApertura = null;
+    this.modificarHoraCierre = null;
+    this.modificarFlagEsHabilitar = null;
+    this.modificarIntervalo = null;
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
