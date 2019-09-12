@@ -120,8 +120,6 @@ export class HorarioExcepcionComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   agregar() {
-    // tslint:disable-next-line: max-line-length
-    console.log('horario a agregar: ', this.idEmpleado, '', this.fecha, '', this.horaApertura, '', this.horaCierre, '', this.intervalo, '', this.flagEsHabilitar);
     let d = new Date(this.fecha);
     d = new Date(d.getTime());
     let year = d.getFullYear();
