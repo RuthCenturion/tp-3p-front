@@ -12,7 +12,7 @@ import 'rxjs/add/observable/throw';
 })
 
 export class HorarioService {
-
+    private empleadoUrl = SERVICE_REST + 'persona';
     private horarioAtencionUrl = SERVICE_REST + 'personaHorarioAgenda';
 
     constructor(private http: HttpClient) { }
@@ -22,4 +22,33 @@ export class HorarioService {
         return this.http.get(this.horarioAtencionUrl);
     }
 
+    listarEmpleados(): Observable<any> {
+        return this.http.get(this.empleadoUrl);
+    }
+
+    agregarHorarioAtencion(horarioAtencion: any): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'usuario': 'gustavo'
+            })
+        };
+        return this.http.post(this.horarioAtencionUrl, horarioAtencion, httpOptions);
+    }
+    modificarHorarioAtencion(horarioAtencion: any): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json'/*,
+              'usuario': 'gustavo'*/
+            })
+        };
+        return this.http.post(this.horarioAtencionUrl, horarioAtencion, httpOptions);
+    }
+    eliminarHorarioAtencion(id): Observable<any> {
+        let httpParams = new HttpParams();
+        Object.keys(id).forEach(function (key) {
+            httpParams = httpParams.append(key, id[key]);
+        });
+        return this.http.delete(this.horarioAtencionUrl + '/' + id);
+    }
 }
