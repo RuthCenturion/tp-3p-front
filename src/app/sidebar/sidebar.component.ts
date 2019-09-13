@@ -55,11 +55,10 @@ export const ROUTES: RouteInfo[] = [{
         icontype: 'description'
 
     }, {
-        path: '/widgets',
+        path: '/reserva',
         title: 'Reserva',
         type: 'link',
-        icontype: 'date_range'
-
+        icontype: 'date_range' 
     }, {
         path: '/widgets',
         title: 'Facturación',

@@ -25,6 +25,10 @@ export const AppRoutes: Routes = [
         path: 'components',
         loadChildren: './components/components.module#ComponentsModule'
     }, {
+        path: 'reserva',
+        loadChildren: './reserva/reserva.module#ReservaModule'
+    },
+     {
         path: 'forms',
         loadChildren: './forms/forms.module#Forms'
     }, {
