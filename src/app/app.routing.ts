@@ -27,6 +27,9 @@ export const AppRoutes: Routes = [
     }, {
         path: 'reserva',
         loadChildren: './reserva/reserva.module#ReservaModule'
+    }, {
+        path: 'ficha-clinica',
+        loadChildren: './ficha-clinica/ficha-clinica.module#FichaClinicaModule'
     },
      {
         path: 'forms',

@@ -49,7 +49,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'grid', title: 'Horario Excepción', ab: 'HE'}
         ]
     },*/ {
-        path: '/widgets',
+        path: '/ficha-clinica',
         title: 'Ficha Clínica',
         type: 'link',
         icontype: 'description'
