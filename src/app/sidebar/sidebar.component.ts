@@ -82,7 +82,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}*/
         ]
-    },/*{
+    }, {
         path: '/components',
         title: 'Components',
         type: 'sub',
@@ -99,7 +99,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}
         ]
-    }, */
+    }, 
     {
         path: '/forms',
         title: 'Forms',

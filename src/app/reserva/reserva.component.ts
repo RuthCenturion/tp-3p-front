@@ -418,7 +418,12 @@ export class ReservaComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
 
   ngOnInit() {
-    this.listarReservas();
+    // this.listarReservas();
+    // al iniciar busca las reservas del dia actual
+    console.log(new Date());
+    this.fechaDesde = new Date();
+    this.fechaHasta = new Date();
+    this.buscar();
     this.listaClienteSeleccionado = new Array<any> ();
     this.dataSource.paginator = this.paginator;
     this.mostrarAceptar = false;
