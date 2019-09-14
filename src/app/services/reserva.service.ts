@@ -48,4 +48,13 @@ export class ReservaService {
         };
         return this.http.post(this.reservaUrl, reserva, httpOptions);
     }
+    modificarReserva(reserva: any): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'/*,
+                'usuario': 'gustavo'*/
+            })
+        };
+        return this.http.put(this.reservaUrl, reserva, httpOptions);
+    }
 }

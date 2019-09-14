@@ -7,6 +7,7 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 
+declare const $: any;
 
 declare interface TableWithCheckboxes {
   ischecked?: boolean;
@@ -70,6 +71,23 @@ export class ReservaComponent implements OnInit {
   clienteSeleccionadoId: any;
   clienteSeleccionadoNombre: any;
   mostrarAceptar: any;
+  // datos modal modificar
+  
+  modificarIdReserva: any;
+  modificarFechaReserva: any;
+  modificarInicio: any;
+  modificarFin: any;
+  modificarIdEmpleado: any;
+  modificarNombreEmpleado: any;
+  modificarIdCliente: any;
+  modificarNombreCliente: any;
+  modificarAsistio: any;
+  modificarObservacion: any;
+  asistencia: any;
+  opciones: any = [
+    {value: 'S', viewValue: 'SI'},
+    {value: 'N', viewValue: 'NO'}
+  ];
   // panelOpenState = false;
   listaAtributos: Array<any>;
   listaBuscarEmpleados: Array<any>;
@@ -86,7 +104,7 @@ export class ReservaComponent implements OnInit {
   constructor(private service: ReservaService,
     private router: Router ) {
     this.tableData1 = {
-      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Acciones'],
+      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Observación', 'Acciones'],
       dataRows: this.listaReservas
     };
     this.tableBuscarEmpleado = {
@@ -310,18 +328,21 @@ export class ReservaComponent implements OnInit {
             // cliente
             this.listaAtributos.push(reserva.idCliente.idPersona); // 6
             this.listaAtributos.push(reserva.idCliente.nombreCompleto); // 7
+            // flagAsistio
+            this.listaAtributos.push(reserva.flagAsistio === 'S' ? 'SI' : 'NO'); // 8
+            this.listaAtributos.push(reserva.observacion); // 9
 
             this.listaReservas.push(this.listaAtributos);
 
             this.tableData1 = {
-              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Acciones'],
+              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Observación', 'Acciones'],
               dataRows: this.listaReservas
             };
           });
         } else {
           this.listaReservas = [];
           this.tableData1 = {
-            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Acciones'],
+            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Observación', 'Acciones'],
             dataRows: this.listaReservas
           };
         }
@@ -354,20 +375,90 @@ export class ReservaComponent implements OnInit {
   limpiar() {
     this.empleadoId = null;
     this.empleadoNombre = null;
-    this.fechaHasta = null;
-    this.fechaDesde = null;
+    
     this.clienteId = null;
     this.clienteNombre = null;
     // los list de los buscadores
     this.listaBuscarEmpleados = [];
     this.ELEMENT_DATA = [];
+    
     this.paginator.pageIndex = 0;
     this.dataSource.paginator = this.paginator;
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
+    // se cargan las reservas de la fecha actual
+    this.fechaHasta = new Date();
+    this.fechaDesde = new Date();
+    this.buscar();
   }
   /*-------------------------------------------------------------------------*/
   agregarReserva() {
     this.router.navigate(['reserva/agregar-reserva']);
+  }
+  /*-------------------------------------------------------------------------*/
+  
+  abrirModalModificar(idReserva, fechaReserva, inicio, fin, idEmpleado,
+    nombreEmpleado, idCliente, nombreCliente, asistio, observacion) {
+      this.modificarIdReserva = idReserva;
+      this.modificarFechaReserva = fechaReserva;
+      this.modificarInicio = inicio;
+      this.modificarFin = fin;
+      this.modificarIdEmpleado = idEmpleado;
+      this.modificarNombreEmpleado = nombreEmpleado;
+      this.modificarIdCliente = idCliente;
+      this.modificarNombreCliente = nombreCliente;
+     // this.asistencia = (asistio === 'SI' ? true : false);
+      this.modificarAsistio =  (asistio === 'SI' ? true : false);// (asistio === 'SI' ? 'S' : 'N');
+      this.modificarObservacion = observacion;
+    $('#exampleModal5').modal('show');
+  }
+  /*-------------------------------------------------------------------------*/
+  modificar() {
+    console.log('para modificar: ');
+    console.log('asistencia: ', this.modificarAsistio);
+    console.log('observacion: ', this.modificarObservacion);
+    let dato = {
+      idReserva: this.modificarIdReserva,
+      observacion: (this.modificarObservacion ? this.modificarObservacion : ''),
+      flagAsistio: (this.modificarAsistio ? 'S' : 'N')
+    };
+    console.log('datos para modificar: ', dato);
+    this.service.modificarReserva(dato).subscribe(
+      response => {
+        console.log('modificarReserva(): ', response);
+        this.showNotification('Modificación de la reserva con éxito!', NOTIFY.SUCCESS);
+        this.buscar();
+      },
+      error => {
+        this.showNotification('Error al modificar la reserva. Consulte con soporte', NOTIFY.WARNING);
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  showNotification(mensaje: any, color: any) {
+    const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
+    $.notify({
+      icon: 'notifications',
+      message: mensaje
+    }, {
+      type: type[color],
+      timer: 3000,
+      placement: {
+        from: 'top',
+        align: 'right'
+      },
+      template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0} alert-with-icon" role="alert">' +
+        // tslint:disable-next-line: max-line-length
+        '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
+        '<i class="material-icons" data-notify="icon">notifications</i> ' +
+        '<span data-notify="title">{1}</span> ' +
+        '<span data-notify="message">{2}</span>' +
+        '<div class="progress" data-notify="progressbar">' +
+        // tslint:disable-next-line: max-line-length
+        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+        '</div>' +
+        '<a href="{3}" target="{4}" data-notify="url"></a>' +
+        '</div>'
+    });
   }
   /*-------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------*/
