@@ -57,4 +57,11 @@ export class ReservaService {
         };
         return this.http.put(this.reservaUrl, reserva, httpOptions);
     }
+    eliminarReserva(id): Observable<any> {
+        let httpParams = new HttpParams();
+        Object.keys(id).forEach( function(key) {
+          httpParams = httpParams.append(key, id[key]);
+        });
+        return this.http.delete(this.reservaUrl + '/' + id);
+      }
 }

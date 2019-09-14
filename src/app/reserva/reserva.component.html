@@ -218,13 +218,13 @@
         </div>
       </div>
       <!-------------------------END BUSCAR CLIENTE--------------------------->
-      <!------------------------- ELIMINAR RESERVA--------------------------->
+      <!------------------------- CANCELAR RESERVA--------------------------->
       <div class="modal fade modal-warning" id="exampleModal4" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar este horario de atención?
+              <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea cancelar esta reserva?
               </h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -234,14 +234,14 @@
               <!--*******************-->
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-primary" (click)="eliminar()" data-dismiss="modal">
-                Eliminar</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+              <button type="button" class="btn btn-primary" (click)="cancelarReserva()" data-dismiss="modal">
+                Aceptar</button>
             </div>
           </div>
         </div>
       </div>
-      <!-------------------------END ELIMINAR RESERVA--------------------------->
+      <!-------------------------END CANCELAR RESERVA--------------------------->
     </div>
     <!--<div class="container-fluid">-->
     <div class="row">
@@ -330,7 +330,8 @@
                     <th>{{ tableData1.headerRow[7] }}</th>
                     <th>{{ tableData1.headerRow[8] }}</th>
                     <th>{{ tableData1.headerRow[9] }}</th>
-                    <th class="disabled-sorting text-right">{{ tableData1.headerRow[10]}}</th>
+                    <th>{{ tableData1.headerRow[10] }}</th>
+                    <th class="disabled-sorting text-right">{{ tableData1.headerRow[11]}}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -345,12 +346,13 @@
                     <td>{{row[7]}}</td>
                     <td>{{row[8]}}</td>
                     <td>{{row[9]}}</td>
+                    <td>{{row[10]}}</td>
                     <td class="text-right">
                       <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
                         (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9])"><i
                           class="material-icons" matTooltip="Modificar">dvr</i></a>
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
-                        (click)="confirmarEliminar(row[0],row[1])" matTooltip="Cancelar"><i
+                        (click)="confirmarCancelar(row[0])" matTooltip="Cancelar"><i
                           class="material-icons">delete</i></a>
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
                         (click)="nuevaFicha(row[0],row[1])" matTooltip="Nueva ficha"><i

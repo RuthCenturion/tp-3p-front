@@ -34,18 +34,7 @@ export interface PeriodicElement {
 })
 export class ReservaComponent implements OnInit {
 
- ELEMENT_DATA: PeriodicElement[] = [/*
-    {position:1, idCliente: 1, name: 'Hydrogen', email: 'H'},
-    {position:2, idCliente: 2, name: 'Helium',  email: 'He'},
-    {position:3, idCliente: 3, name: 'Lithium', email: 'Li'},
-    {position:4, idCliente: 4, name: 'Beryllium',  email: 'Be'},
-    {position:5, idCliente: 5, name: 'Boron', email: 'B'},
-    {position:6, idCliente: 6, name: 'Carbon', email: 'C'},
-    {position:7, idCliente: 7, name: 'Nitrogen', email: 'N'},
-    {position:8, idCliente: 8, name: 'Oxygen', email: 'O'},
-    {position:9, idCliente: 9, name: 'Fluorine', email: 'F'},
-    {position:10, idCliente: 10, name: 'Neon', email: 'Ne'},*/
-  ];
+ ELEMENT_DATA: PeriodicElement[] = [];
 
   public tableData1: TableData;
   public tableBuscarEmpleado: TableData;
@@ -71,8 +60,8 @@ export class ReservaComponent implements OnInit {
   clienteSeleccionadoId: any;
   clienteSeleccionadoNombre: any;
   mostrarAceptar: any;
-  // datos modal modificar
   
+  // datos modal modificar  
   modificarIdReserva: any;
   modificarFechaReserva: any;
   modificarInicio: any;
@@ -88,6 +77,8 @@ export class ReservaComponent implements OnInit {
     {value: 'S', viewValue: 'SI'},
     {value: 'N', viewValue: 'NO'}
   ];
+  // cancelarReserva
+  cancelarId: any;
   // panelOpenState = false;
   listaAtributos: Array<any>;
   listaBuscarEmpleados: Array<any>;
@@ -104,7 +95,7 @@ export class ReservaComponent implements OnInit {
   constructor(private service: ReservaService,
     private router: Router ) {
     this.tableData1 = {
-      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Observación', 'Acciones'],
+      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
       dataRows: this.listaReservas
     };
     this.tableBuscarEmpleado = {
@@ -330,19 +321,20 @@ export class ReservaComponent implements OnInit {
             this.listaAtributos.push(reserva.idCliente.nombreCompleto); // 7
             // flagAsistio
             this.listaAtributos.push(reserva.flagAsistio === 'S' ? 'SI' : 'NO'); // 8
-            this.listaAtributos.push(reserva.observacion); // 9
+            this.listaAtributos.push(reserva.flagEstado === 'R' ? 'Reservado' : 'Cancelado'); // 9
+            this.listaAtributos.push(reserva.observacion); // 10
 
             this.listaReservas.push(this.listaAtributos);
 
             this.tableData1 = {
-              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Observación', 'Acciones'],
+              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
               dataRows: this.listaReservas
             };
           });
         } else {
           this.listaReservas = [];
           this.tableData1 = {
-            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Observación', 'Acciones'],
+            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
             dataRows: this.listaReservas
           };
         }
@@ -395,7 +387,6 @@ export class ReservaComponent implements OnInit {
     this.router.navigate(['reserva/agregar-reserva']);
   }
   /*-------------------------------------------------------------------------*/
-  
   abrirModalModificar(idReserva, fechaReserva, inicio, fin, idEmpleado,
     nombreEmpleado, idCliente, nombreCliente, asistio, observacion) {
       this.modificarIdReserva = idReserva;
@@ -413,9 +404,6 @@ export class ReservaComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   modificar() {
-    console.log('para modificar: ');
-    console.log('asistencia: ', this.modificarAsistio);
-    console.log('observacion: ', this.modificarObservacion);
     let dato = {
       idReserva: this.modificarIdReserva,
       observacion: (this.modificarObservacion ? this.modificarObservacion : ''),
@@ -432,6 +420,23 @@ export class ReservaComponent implements OnInit {
         this.showNotification('Error al modificar la reserva. Consulte con soporte', NOTIFY.WARNING);
       }
     );
+  }
+  /*-------------------------------------------------------------------------*/
+  confirmarCancelar(idReserva) {
+    $('#exampleModal4').modal('show');
+    this.cancelarId = idReserva;
+  }
+  /*-------------------------------------------------------------------------*/
+  cancelarReserva() {
+   this.service.eliminarReserva(this.cancelarId).subscribe(
+     response => {
+       this.showNotification('Reserva cancelada con éxito!', NOTIFY.SUCCESS);
+     },
+     error => {
+      this.showNotification('Error al cancelar la reserva. Consulte con soporte', NOTIFY.DANGER);
+     }
+   );
+    
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
