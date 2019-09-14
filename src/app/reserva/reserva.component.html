@@ -309,14 +309,12 @@
                   <!--*******************-->
                 </mat-expansion-panel>
               </mat-accordion>
-
             </div>
             <!--*******************--->
             <div class="row">
               <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()">Buscar</button>
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
-              <button mat-raised-button class="btn btn-fill btn-rose" data-toggle="modal"
-                data-target="#exampleModal">Agregar</button>
+              <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()" >Agregar</button>                
             </div>
             <div class="table-responsive">
               <table class="table">
@@ -356,7 +354,7 @@
                 </tbody>
               </table>
             </div>
-            <div *ngIf="listaReservas.length === 0">Sin datos</div>
+            <!--div *ngIf="listaReservas.length === 0">Sin datos</div-->
           </div>
         </div>
         <!--end tabla sin buscador integrado-->

@@ -13,8 +13,6 @@ import 'rxjs/add/observable/throw';
 export class ReservaService {
     private empleadoUrl = SERVICE_REST + 'persona';
     private clienteUrl = SERVICE_REST + 'persona';
-    private horarioAtencionUrl = SERVICE_REST + 'personaHorarioAgenda';
-    private horarioExcepcionUrl = SERVICE_REST + 'horarioExcepcion';
     private reservaUrl = SERVICE_REST + 'reserva';
 
     constructor(private http: HttpClient) { }
@@ -37,5 +35,17 @@ export class ReservaService {
     }
     buscarReservas(descripcion): Observable<any> {
         return this.http.get(this.reservaUrl + descripcion);
+    }
+    buscarAgenda(descripcion): Observable<any> {
+        return this.http.get(this.empleadoUrl + descripcion);
+    }
+    agregarReserva(reserva: any): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'usuario': 'gustavo'
+            })
+        };
+        return this.http.post(this.reservaUrl, reserva, httpOptions);
     }
 }

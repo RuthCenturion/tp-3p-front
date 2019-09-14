@@ -38,7 +38,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'servicio', title: 'Servicios', ab: 'S'},
             {path: 'paciente', title: 'Pacientes', ab: 'P'}
         ]
-    }, {
+    },/* {
         path: '/horario',
         title: 'Horarios',
         type: 'sub',
@@ -48,7 +48,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},
             {path: 'grid', title: 'Horario Excepción', ab: 'HE'}
         ]
-    }, {
+    },*/ {
         path: '/widgets',
         title: 'Ficha Clínica',
         type: 'link',
@@ -69,10 +69,10 @@ export const ROUTES: RouteInfo[] = [{
         path: '/components',
         title: 'Horarios',
         type: 'sub',
-        icontype: 'apps',
+        icontype: 'schedule',
         collapse: 'components',
         children: [
-            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},            
+            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},
             {path: 'horario-excepcion', title: 'Horario Excepción', ab: 'HE'},
            /* {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
@@ -82,16 +82,16 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}*/
         ]
-    },{
+    },/*{
         path: '/components',
         title: 'Components',
         type: 'sub',
         icontype: 'apps',
         collapse: 'components',
         children: [
-          /*  {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},            
+            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},            
             {path: 'horario-excepcion', title: 'Horario Excepción', ab: 'HE'},
-          */  {path: 'buttons', title: 'Buttons', ab:'B'},
+            {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
             {path: 'panels', title: 'Panels', ab:'P'},
             {path: 'sweet-alert', title: 'Sweet Alert', ab:'SA'},
@@ -99,7 +99,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}
         ]
-    }, 
+    }, */
     {
         path: '/forms',
         title: 'Forms',

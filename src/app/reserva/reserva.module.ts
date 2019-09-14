@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../app.module';
 
 import { ReservaComponent } from './reserva.component';
+import { AgregarReservaComponent } from './agregar-reserva.component';
 import { ReservaRoutes } from './reserva.routing';
 
 @NgModule({
@@ -14,7 +15,10 @@ import { ReservaRoutes } from './reserva.routing';
         FormsModule,
         MaterialModule
     ],
-    declarations: [ReservaComponent]
+    declarations: [
+        ReservaComponent,
+        AgregarReservaComponent
+    ]
 })
 
 export class ReservaModule {}

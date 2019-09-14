@@ -1,0 +1,297 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <!--*********************-->
+        <div class="card">
+            <div class="card-header card-header-icon card-header-rose">
+                <div class="card-icon">
+                    <i class="material-icons">assignment</i>
+                </div>
+                <h4 class="card-title ">Agregar Reserva</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="picker" (click)="picker.open()" [(ngModel)]="fechaAgenda"
+                                placeholder="Fecha">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" value=""
+                                  [(ngModel)]="mostrarYaReservados"> Mostrar ya reservados
+                                <span class="form-check-sign">
+                                    <span class="check"></span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <!--*******************-->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group no-border">
+                            <input type="text" value="" class="form-control" [(ngModel)]="empleadoNombre"
+                                placeholder="Empleado">
+                            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                                <i class="material-icons" data-toggle="modal" data-target="#exampleModal1">search</i>
+                                <div class="ripple-container"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!--*******************-->
+                <div class="row">
+                    <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscarAgenda()"
+                    [disabled]="((empleadoId && fechaAgenda))?false:true">
+                    Buscar</button>
+                    <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
+                </div>
+                <!--*******GRILLA AGREGAR RESERVA************-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <table mat-table [dataSource]="dataSourceAgenda" >
+                          <!-- Checkbox Column -->
+                          <ng-container matColumnDef="select">
+                            <th mat-header-cell *matHeaderCellDef>
+                              <mat-checkbox (change)="$event ? masterToggle() : null"
+                                [checked]="selectionAgenda.hasValue() && isAllSelected()"
+                                [indeterminate]="selectionAgenda.hasValue() && !isAllSelected()" 
+                                [aria-label]="checkboxLabel()">
+                              </mat-checkbox>
+                            </th>
+                            <td mat-cell *matCellDef="let row">
+                              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionAgenda.toggle(row) : null"
+                                [checked]="selectionAgenda.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                              </mat-checkbox>
+                            </td>
+                          </ng-container>  
+                          <!-- Position Column -->
+                          <ng-container matColumnDef="position">
+                            <th mat-header-cell *matHeaderCellDef> Posición </th>
+                            <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                          </ng-container>
+                          <!-- horaInicio Column -->
+                          <ng-container matColumnDef="horaInicio">
+                            <th mat-header-cell *matHeaderCellDef> Inicio </th>
+                            <td mat-cell *matCellDef="let element"> {{element.horaInicio}} </td>
+                          </ng-container>
+                
+                          <!-- horaFin Column -->
+                          <ng-container matColumnDef="horaFin">
+                            <th mat-header-cell *matHeaderCellDef> Fin </th>
+                            <td mat-cell *matCellDef="let element"> {{element.horaFin}} </td>
+                          </ng-container>
+                
+                          <!-- cliente Column -->
+                          <ng-container matColumnDef="cliente">
+                            <th mat-header-cell *matHeaderCellDef> cliente </th>
+                            <td mat-cell *matCellDef="let element"> {{element.cliente}} </td>
+                          </ng-container>  
+                          <tr mat-header-row *matHeaderRowDef="displayedColumnsAgenda"></tr>
+                          <tr mat-row *matRowDef="let row; columns: displayedColumnsAgenda;" (click)="selectionAgenda.toggle(row)">
+                          </tr>
+                        </table>
+                        <!--mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator-->
+                      </div> 
+                </div>
+                <!--*******CLIENTE Y OBSERVACION************-->
+                <div class="row">                        
+                    <div class="col-md-6">
+                        <div class="input-group no-border">
+                            <input type="text" value="" class="form-control" [(ngModel)]="clienteNombre"
+                                placeholder="Cliente">
+                            <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                                <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
+                                <div class="ripple-container"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group no-border">
+                            <input type="text" value="" class="form-control" [(ngModel)]="observacion"
+                                placeholder="Observación">
+                        </div>
+                    </div>
+                    </div>
+                <!--*******BOTON GUARDAR RESERVA************-->                
+                <div class="row">
+                    <!--button mat-raised-button class="btn btn-primary btn-sm" (click)="buscarAgenda()"
+                    [disabled]="((empleadoId && fechaAgenda))?false:true">
+                    Buscar</button-->
+                    <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()" 
+                      [disabled]="!(selectionAgenda.selected.length == 1 && empleadoId && fechaAgenda && clienteId)"  >Agregar</button>                
+                </div>
+                <!--*******************-->
+            </div><!--en card-body-->
+        </div> <!--end card-->
+    </div>
+</div>
+<!------------------------- BUSCAR EMPLEADO--------------------------->
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!--*******************-->
+      <div class="row">
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" [(ngModel)]="buscarEmpleadoNombre"
+            placeholder="Nombre Empleado">
+          <button type="button" class="btn btn-info"
+            (click)="listarEmpleadosBuscador(buscarEmpleadoNombre)">Buscar</button>
+        </div>
+      </div>
+      <!--*******GRILLA************-->
+      <div class="col-md-12">
+        <table mat-table [dataSource]="dataSourceEmpleado" class="mat-elevation-z8">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggleEmpleado() : null"
+                [checked]="selectionEmpleado.hasValue() && isAllSelectedEmpleado()"
+                [indeterminate]="selectionEmpleado.hasValue() && !isAllSelectedEmpleado()" 
+                [aria-label]="checkboxLabelEmpleado()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selectionEmpleado.toggle(row) : null"
+                [checked]="selectionEmpleado.isSelected(row)" [aria-label]="checkboxLabelEmpleado(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>  
+          <!-- Position Column -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef> Posición </th>
+            <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+          </ng-container>
+          <!-- id Column -->
+          <ng-container matColumnDef="idEmpleado">
+            <th mat-header-cell *matHeaderCellDef> Id </th>
+            <td mat-cell *matCellDef="let element"> {{element.idEmpleado}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <!-- email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          </ng-container>  
+          <!-- local Column -->
+          <ng-container matColumnDef="local">
+            <th mat-header-cell *matHeaderCellDef> Local </th>
+            <td mat-cell *matCellDef="let element"> {{element.local}} </td>
+          </ng-container> 
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsEmpleado"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsEmpleado;" (click)="selectionEmpleado.toggle(row)">
+          </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div> 
+      <!--*******************-->
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal"
+        (click)="cancelarBuscarEmpleado()">Cancelar</button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarEmpleado()"
+        [disabled]="!mostrarAceptarEmpleado">
+        Aceptar</button>
+    </div>
+  </div>
+</div>
+</div>
+<!---------------------------------------------END BUSCAR EMPLEADO--------------------------------------->
+<!---------------------------------------------- BUSCAR CLIENTE ------------------------------------->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!--*******************-->
+      <div class="row">
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
+            placeholder="Nombre Empleado">
+          <button type="button" class="btn btn-info"
+            (click)="listarClientesBuscador(buscarClienteNombre)">Buscar</button>
+        </div>
+      </div>
+      <!--*******************-->
+      <div class="col-md-12">
+        <table mat-table [dataSource]="dataSourceCliente" class="mat-elevation-z8">
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()" 
+                [aria-label]="checkboxLabel()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>  
+          <!-- Position Column -->
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef> Posición </th>
+            <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+          </ng-container>
+          <!-- Position Column -->
+          <ng-container matColumnDef="idCliente">
+            <th mat-header-cell *matHeaderCellDef> Id </th>
+            <td mat-cell *matCellDef="let element"> {{element.idCliente}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef> Email </th>
+            <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+          </ng-container>  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+          </tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>                     
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal"
+        (click)="cancelarBuscarCliente()">Cancelar</button>
+      <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarCliente()"
+        [disabled]="!mostrarAceptar">
+        Aceptar</button>
+    </div>
+  </div>
+</div>
+</div>
+<!-------------------------END BUSCAR CLIENTE--------------------------->
+

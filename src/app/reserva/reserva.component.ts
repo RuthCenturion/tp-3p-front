@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableData } from '../md/md-table/md-table.component';
+import { Router } from '@angular/router';
 import { NOTIFY } from '../commons/app-utils';
 import { ReservaService } from '../services/reserva.service';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -82,7 +83,8 @@ export class ReservaComponent implements OnInit {
   selection = new SelectionModel<PeriodicElement>(true, []);
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  constructor(private service: ReservaService, ) {
+  constructor(private service: ReservaService,
+    private router: Router ) {
     this.tableData1 = {
       headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Acciones'],
       dataRows: this.listaReservas
@@ -246,6 +248,8 @@ export class ReservaComponent implements OnInit {
       headerRow: ['', 'Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
     };
+    this.paginator.pageIndex = 0;
+    this,this.dataSource.paginator = this.paginator;
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   }
@@ -362,6 +366,9 @@ export class ReservaComponent implements OnInit {
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   }
   /*-------------------------------------------------------------------------*/
+  agregarReserva() {
+    this.router.navigate(['reserva/agregar-reserva']);
+  }
   /*-------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------*/
   /*clienteSeleccionado(id, nombre, evento ) {
@@ -414,7 +421,6 @@ export class ReservaComponent implements OnInit {
     this.listarReservas();
     this.listaClienteSeleccionado = new Array<any> ();
     this.dataSource.paginator = this.paginator;
-    console.log('paginator: ', this.paginator);
     this.mostrarAceptar = false;
     // this.listarEmpleadosBuscador();
   }
