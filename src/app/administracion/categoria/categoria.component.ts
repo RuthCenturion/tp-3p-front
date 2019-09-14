@@ -122,46 +122,64 @@ export class CategoriaComponent implements OnInit {
 
   /*-------------------------------------------------------------------------*/
   buscar() {
-    if (this.idCategoria) {
-      this.obtenerCategoria(this.idCategoria);
+    if (this.descripcion) { //  if (this.idCategoria) {
+      this.obtenerCategoria(this.descripcion);
     } else {
       this.listarCategorias();
     }
-    this.descripcion= "hola";
+   // this.descripcion= "hola";
   }
   /*-------------------------------------------------------------------------*/
-  obtenerCategoria(id) {
-    this.categoriaService.obtenerCategoria(id).subscribe(
-      cat => {
-        this.listaCategoria = new Array<any>();
-        this.listaAtributos = new Array<any>();
-        this.listaAtributos.push(cat.idCategoria);
-        this.listaAtributos.push(cat.descripcion);
-        this.listaCategoria.push(this.listaAtributos);
-        this.dataTable = {
-          headerRow: ['Id', 'Descripción', 'Acciones'],
-          footerRow: ['Id', 'Descripción', 'Acciones'],
-          dataRows: this.listaCategoria
-        };
+  obtenerCategoria(descripcion) {
+    let filtroLike = '?like=S&ejemplo=%7B%22descripcion%22%3A%22' + descripcion + '%22%7D';
+    this.categoriaService.obtenerCategoria(filtroLike).subscribe(
+      response => {
+        if (response.lista.length > 0) {
+          this.listaCategoria = new Array<any>();
+          this.lista = new Array<any>();
+          response.lista.forEach(cat => {
+            this.lista.push(cat);
+            this.listaAtributos = new Array<any>();
+            this.listaAtributos.push(cat.idCategoria);
+            this.listaAtributos.push(cat.descripcion);
+            this.listaCategoria.push(this.listaAtributos);
+            this.dataTable = {
+              headerRow: ['Id', 'Descripción', 'Acciones'],
+              footerRow: ['Id', 'Descripción', 'Acciones'],
+              dataRows: this.listaCategoria
+            };
+            this.tableData1 = {
+              headerRow: ['Id', 'Descripción', 'Acciones'],
+              dataRows: this.listaCategoria
+            };
+          });
+        }  else {
+          this.listaCategoria = [];
+          this.tableData1 = {
+            headerRow: ['Id', 'Descripción', 'Acciones'],
+            dataRows: this.listaCategoria
+          };
+        }      
+      },
+      error => {
+       // this.showNotification('Error al obtener categorias' + error, NOTIFY.DANGER);
+        this.listaCategoria = [];
         this.tableData1 = {
           headerRow: ['Id', 'Descripción', 'Acciones'],
           dataRows: this.listaCategoria
         };
-      },
-      error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
       }
     );
   }
 
   /*-------------------------------------------------------------------------*/
   listarCategorias() {
-    this.listaCategoria=[['1','2'],['a','b'],['1','2']];
+   /* this.listaCategoria=[['1','2'],['a','b'],['1','2']];
     this.tableData1 = {
       headerRow: ['Id', 'Descripción', 'Acciones'],
       dataRows: this.listaCategoria
-    };
- /*   this.categoriaService.obtenerCategoria(this.idCategoria).subscribe(
+    };*/
+    this.categoriaService.obtenerCategoria(this.idCategoria).subscribe(
       response => {
         this.listaCategoria = new Array<any>();
         this.lista = new Array<any>();
@@ -185,12 +203,12 @@ export class CategoriaComponent implements OnInit {
       error => {
         this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
       }
-    );*/
+    );
   }
 
   /*-------------------------------------------------------------------------*/
   limpiar() {
-    this.idCategoria = null;
+    this.descripcion = null;
     this.tableData1.dataRows = [];
   }
 

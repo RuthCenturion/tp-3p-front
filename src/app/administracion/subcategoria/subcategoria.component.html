@@ -1,0 +1,203 @@
+<div class="main-content">
+  <div class="container-fluid"> 
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="card-body ">
+            <div class="row">
+              <div class="col-md-9">
+                <button mat-raised-button type="submit" class="btn btn-fill btn-rose" data-toggle="modal"
+                  data-target="#exampleModal">Agregar nueva sub-categoría</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!------------------------- AGREGAR SUB-CATEGORÍA--------------------------->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Agregar Sub-Categoría</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Descripción</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" [(ngModel)]="descripcion" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Categoría</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <mat-select placeholder="Seleccionar" name="city" [(ngModel)]="idCategoria" required>
+                      <mat-option *ngFor="let l of listaCategoria" [value]="l[0]">
+                        {{l[1]}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                (click)="cancelarAgregar()">Cancelar</button>
+              <button type="button" class="btn btn-primary" (click)="agregar()" data-dismiss="modal"
+                [disabled]="((descripcion && idCategoria))?false:true">
+                Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-------------------------END AGREGAR SUB-CATEGORIA--------------------------->
+      <!------------------------- MODIFICAR SUB-CATEGORÍA--------------------------->
+      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modificar SUB-categoría</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Id</label>
+                <div class="col-sm-9">
+                    <mat-form-field>
+                      <input matInput type="text" class="form-control form-control-sm" name="modificarId" 
+                        id="modificarId" [(ngModel)]="modificarId" disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Descripción</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" name="modificarDescripcion"
+                      id="modificarDescripcion" [(ngModel)]="modificarDescripcion" required>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Categoría</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <mat-select placeholder="Seleccionar" name="city" [(ngModel)]="modificarCategoria" required>
+                      <mat-option *ngFor="let l of listaCategoria" [value]="l[0]">
+                        {{l[1]}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal"
+                [disabled]="((modificarDescripcion ))?false:true">
+                Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-------------------------END MODIFICAR SUB-CATEGORIA--------------------------->
+      <!------------------------- ELIMINAR SUB-CATEGORÍA--------------------------->
+      <div class="modal fade modal-warning" id="exampleModal3" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar esta sub-categoría?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" (click)="eliminar()" data-dismiss="modal">
+                Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-------------------------END ELIMINAR SUB-CATEGORIA--------------------------->
+    </div>
+    <!--<div class="container-fluid">-->
+    <div class="row">
+      <div class="col-md-12">
+        <!--tabla sin buscador integrado-->
+        <div class="card">
+          <div class="card-header card-header-icon card-header-rose">
+            <div class="card-icon">
+              <i class="material-icons">assignment</i>
+            </div>
+            <h4 class="card-title ">Lista de sub-categorías</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-8 col-sm-4">
+                <mat-form-field>
+                  <mat-select placeholder="Seleccionar" name="city" [(ngModel)]="idCategoria"
+                    (ngModelChange)="changeDescripcion()">
+                    <mat-option *ngFor="let city of lista" [value]="city.idCategoria">
+                      {{ city.descripcion }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()">Buscar</button>
+              <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>{{ tableData1.headerRow[0] }}</th>
+                    <th>{{ tableData1.headerRow[1] }}</th>
+                    <th>{{ tableData1.headerRow[2] }}</th>
+                    <th class="disabled-sorting text-right">{{ tableData1.headerRow[4] }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of tableData1.dataRows">
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td class="text-right">
+                      <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3])"><i class="material-icons">dvr</i></a>
+                      <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                        (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!--end tabla sin buscador integrado-->
+      </div>
+      <!-- end col-md-12 -->
+    </div>
+    <!-- end row -->
+  </div>
+</div>

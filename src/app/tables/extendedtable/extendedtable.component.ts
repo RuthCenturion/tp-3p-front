@@ -40,7 +40,7 @@ export class ExtendedTableComponent implements OnInit {
                 ['5', 'Paul Dickens', 'Communication', '2015', '69,201', '']
             ]
          };
-         this.tableData2 = {
+         this.tableData2 = { 
              headerRow: [ '#', '', 'Product Name', 'Type', 'Qty', 'Price', 'Amount'],
              dataRows: [
                  {id: 1, ischecked: true, product_name: 'Moleskine Agenda', type: 'Office', quantity: 25, price: 49, amount: '1,225'},

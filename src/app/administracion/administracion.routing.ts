@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
 
 import { CategoriaComponent } from './categoria/categoria.component';
+import { SubCategoriaComponent } from './subcategoria/subcategoria.component';
+import { ServicioComponent } from './servicio/servicio.component';
+import { PacienteComponent } from './paciente/paciente.component';
 /*import { GridSystemComponent } from './grid/grid.component';
 import { IconsComponent } from './icons/icons.component';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -15,28 +18,28 @@ export const AdministracionRoutes: Routes = [
       children: [ {
         path: 'categoria',
         component: CategoriaComponent
-    }]}/*,
+    }]},
     {
     path: '',
     children: [ {
-      path: 'grid',
-      component: GridSystemComponent
+      path: 'subcategoria',
+      component: SubCategoriaComponent
     }]
     },
     {
       path: '',
       children: [ {
-        path: 'icons',
-        component: IconsComponent
+        path: 'servicio',
+        component: ServicioComponent
         }]
     },
     {
         path: '',
         children: [ {
-            path: 'notifications',
-            component: NotificationsComponent
+            path: 'paciente',
+            component: PacienteComponent
         }]
-    }, {
+    }, /*{
         path: '',
         children: [ {
             path: 'panels',
