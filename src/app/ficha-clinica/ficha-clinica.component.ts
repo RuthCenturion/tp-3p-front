@@ -27,6 +27,21 @@ export interface PeriodicElement {
   email: string;
   position: number;
 }
+declare interface DatoModificar {
+  idFicha: string;
+  fechaFicha: string;
+  idEmpleado: string;
+  nombreEmpleado: string;
+  idCliente: string;
+  nombreCliente: string;
+  idCategoria: string;
+  descripcionCategoria: string;
+  idSubCategoria: string;
+  descripcionSubCategoria: string;
+  motivo: string;
+  diagnostico: string;
+  observacion: string;
+}
 
 @Component({
   selector: 'app-ficha-clinica',
@@ -115,7 +130,8 @@ export class FichaClinicaComponent implements OnInit {
       dataRows: this.listaBuscarClientes
     };
     this.tableDataFicha = {
-      headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+      headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 
+          'Sub-Categoria', 'Motivo', 'Diagnóstico', 'Observación', 'Acciones'],
       dataRows: this.listaFichaClinica
     };
   }
@@ -143,12 +159,16 @@ export class FichaClinicaComponent implements OnInit {
             // sub-categoria === tipoProducto
             this.listaAtributos.push(ficha.idTipoProducto.idTipoProducto); // 8
             this.listaAtributos.push(ficha.idTipoProducto.descripcion); // 9
+            // de la ficha
+            this.listaAtributos.push(ficha.motivoConsulta); // 10
+            this.listaAtributos.push(ficha.diagnostico); // 11
+            this.listaAtributos.push(ficha.observacion); // 12
 
             this.listaFichaClinica.push(this.listaAtributos);
 
             this.tableDataFicha = {
-              headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat',
-                'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+              headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 
+              'Sub-Categoria', 'Motivo', 'Diagnóstico', 'Observación', 'Acciones'],
               dataRows: this.listaFichaClinica
             };
           });
@@ -374,8 +394,8 @@ export class FichaClinicaComponent implements OnInit {
             this.listaFichaClinica.push(this.listaAtributos);
 
             this.tableDataFicha = {
-              headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat',
-                'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+              headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 
+                 'Sub-Categoria', 'Motivo', 'Diagnóstico', 'Observación', 'Acciones'],
               dataRows: this.listaFichaClinica
             };
           });
@@ -429,10 +449,32 @@ export class FichaClinicaComponent implements OnInit {
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   }
   /*-------------------------------------------------------------------------*/
-  agregarReserva() {
+  agregarFicha() {
     this.router.navigate(['ficha-clinica/agregar-ficha']);
   }
   /*-------------------------------------------------------------------------*/
+  modificarFicha(idFicha, fechaFicha, idEmpleado, nombreEmpleado,
+    idCliente, nombreCliente, idCategoria, descripcionCategoria, idSubCategoria,
+    descripcionSubCategoria, motivo, diagnostico, observacion) {
+    let dato: DatoModificar;
+    dato = {
+      idFicha: idFicha,
+      fechaFicha: fechaFicha,
+      idEmpleado: idEmpleado,
+      nombreEmpleado: nombreEmpleado,
+      idCliente: idCliente,
+      nombreCliente: nombreCliente,
+      idCategoria: idCategoria,
+      descripcionCategoria: descripcionCategoria,
+      idSubCategoria: idSubCategoria,
+      descripcionSubCategoria: descripcionSubCategoria,
+      motivo: motivo,
+      diagnostico: diagnostico,
+      observacion: observacion
+    };
+    this.router.navigate(['ficha-clinica/modificar-ficha', dato]);
+  }
+  /**/
   abrirModalModificar(idReserva, fechaReserva, inicio, fin, idEmpleado,
     nombreEmpleado, idCliente, nombreCliente, asistio, observacion) {
     this.modificarIdReserva = idReserva;

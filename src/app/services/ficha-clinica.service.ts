@@ -49,16 +49,16 @@ export class FichaClinicaService {
         };
         return this.http.post(this.fichaClinicaUrl, ficha, httpOptions);
     }
- /*   modificarReserva(reserva: any): Observable<any> {
+      modificarFicha(ficha: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json'/*,
-                'usuario': 'gustavo'*/
-           /* })
+                'Content-Type': 'application/json',
+                'usuario': 'gustavo'
+            })
         };
-        return this.http.put(this.reservaUrl, reserva, httpOptions);
+        return this.http.put(this.fichaClinicaUrl, ficha, httpOptions);
     }
-    eliminarReserva(id): Observable<any> {
+    /*eliminarReserva(id): Observable<any> {
         let httpParams = new HttpParams();
         Object.keys(id).forEach( function(key) {
           httpParams = httpParams.append(key, id[key]);

@@ -8,6 +8,7 @@ import { FichaClinicaComponent } from './ficha-clinica.component';
 // import { AgregarReservaComponent } from './agregar-reserva.component';
 import { FichaClinicaRoutes } from './ficha-clinica.routing';
 import { AgregarFichaComponent } from './agregar-ficha.component';
+import { ModificarFichaComponent } from './modificar-ficha.component';
 
 @NgModule({
     imports: [
@@ -19,6 +20,7 @@ import { AgregarFichaComponent } from './agregar-ficha.component';
     declarations: [
         FichaClinicaComponent,
         AgregarFichaComponent,
+        ModificarFichaComponent,
        // AgregarReservaComponent
     ]
 })

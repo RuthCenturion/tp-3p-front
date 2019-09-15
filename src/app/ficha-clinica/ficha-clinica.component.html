@@ -229,7 +229,7 @@
               <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()"
               [disabled]="!(fechaDesde || fechaHasta || empleadoId || clienteId || (idCategoria && idProducto))">Buscar</button>
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
-              <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar Ficha</button>
+              <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarFicha()">Agregar Ficha</button>
             </div>
             <div class="table-responsive">
               <table class="table">
@@ -245,7 +245,10 @@
                     <th>{{ tableDataFicha.headerRow[7] }}</th>
                     <!--th>{{ tableDataFicha.headerRow[8] }}</th-->
                     <th>{{ tableDataFicha.headerRow[9] }}</th>
-                    <th class="disabled-sorting text-right">{{ tableDataFicha.headerRow[10]}}</th>
+                    <th>{{ tableDataFicha.headerRow[10] }}</th>
+                    <th>{{ tableDataFicha.headerRow[11] }}</th>
+                    <th>{{ tableDataFicha.headerRow[12] }}</th>
+                    <th class="disabled-sorting text-right">{{ tableDataFicha.headerRow[13]}}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -260,13 +263,19 @@
                     <td>{{row[7]}}</td>
                     <!--td>{{row[8]}}</td-->
                     <td>{{row[9]}}</td>
+                    <td>{{row[10]}}</td>
+                    <td>{{row[11]}}</td>
+                    <td>{{row[12]}}</td>
                     <td class="text-right">
-                      <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                      <!--a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
                         (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9])"><i
                           class="material-icons" matTooltip="Modificar ficha">dvr</i></a>
-                      <!--a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                      <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
                         (click)="confirmarCancelar(row[0])" matTooltip="Cancelar"><i
                           class="material-icons">delete</i></a-->
+                          <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                        (click)="modificarFicha(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12])"><i
+                          class="material-icons" matTooltip="Modificar ficha">dvr</i></a>
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
                         (click)="nuevaFicha(row[0],row[1])" matTooltip="Crear servicio"><i
                           class="material-icons">add</i></a>

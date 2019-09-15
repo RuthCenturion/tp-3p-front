@@ -58,7 +58,7 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal"
                   (click)="cancelarBuscarEmpleado()">Cancelar</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" 
-                  (click)="aceptarEmpleado()"[disabled]="!fila"> Aceptar</button>
+                (click)="aceptarEmpleado()"[disabled]="!fila"> Aceptar</button>
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@
                 <div class="col-md-6">
                   <mat-form-field>
                     <input matInput [matDatepicker]="pickerTr" (click)="picker.open()" [(ngModel)]="fechaDesde"
-                      placeholder="Fecha" disabled>
+                      placeholder="Fecha">
                     <mat-datepicker-toggle matSuffix [for]="pickerTr"></mat-datepicker-toggle>
                     <mat-datepicker #pickerTr></mat-datepicker>
                   </mat-form-field>
