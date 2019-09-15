@@ -3,6 +3,8 @@ import { TableData } from '../md/md-table/md-table.component';
 import { Router } from '@angular/router';
 import { NOTIFY } from '../commons/app-utils';
 import { ReservaService } from '../services/reserva.service';
+import { CategoriaService } from '../services/categoria.service';
+import { FichaClinicaService } from '../services/ficha-clinica.service';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -79,10 +81,25 @@ export class ReservaComponent implements OnInit {
   ];
   // cancelarReserva
   cancelarId: any;
+  // datos del modal de nuevaFicha
+  fichaFecha: any;
+  fichaIdEmpleado: any;
+  fichaNombreEmpleado: any;
+  fichaIdCliente; any;
+  fichaNombreCliente: any;
+  fichaIdCategoria: any;
+  fichaDescripcionCategoria: any;
+  fichaidProducto: any;
+  fichaDescripcionSubCategoria: any;
+  fichaMotivo: any;
+  fichaDiagnostico: any;
+  fichaObservacion: any;
   // panelOpenState = false;
   listaAtributos: Array<any>;
   listaBuscarEmpleados: Array<any>;
   listaBuscarClientes: Array<any>;
+  listaCategoria: Array<any>;
+  listaSubCategoria: Array<any>;
   listaReservas: Array<any>;
   listaHorarios: Array<any>;
 
@@ -93,9 +110,12 @@ export class ReservaComponent implements OnInit {
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private service: ReservaService,
+    private categoriaService: CategoriaService,
+    private fichaService: FichaClinicaService,
     private router: Router ) {
     this.tableData1 = {
-      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
+      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 
+        'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
       dataRows: this.listaReservas
     };
     this.tableBuscarEmpleado = {
@@ -247,7 +267,6 @@ export class ReservaComponent implements OnInit {
     console.log('cliente seleccionado: ', this.selection.selected[0]);
     this.clienteId = this.selection.selected[0].idCliente;
     this.clienteNombre = this.selection.selected[0].name;
-
   }
   /*-------------------------------------------------------------------------*/
   cancelarBuscarCliente() {
@@ -327,18 +346,19 @@ export class ReservaComponent implements OnInit {
             this.listaReservas.push(this.listaAtributos);
 
             this.tableData1 = {
-              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
+              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
+                 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
               dataRows: this.listaReservas
             };
           });
         } else {
           this.listaReservas = [];
           this.tableData1 = {
-            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
+            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
+               'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
             dataRows: this.listaReservas
           };
         }
-
       }
     );
   }
@@ -403,7 +423,7 @@ export class ReservaComponent implements OnInit {
     $('#exampleModal5').modal('show');
   }
   /*-------------------------------------------------------------------------*/
-  modificar() {
+  modificar(origen) {
     let dato = {
       idReserva: this.modificarIdReserva,
       observacion: (this.modificarObservacion ? this.modificarObservacion : ''),
@@ -413,7 +433,9 @@ export class ReservaComponent implements OnInit {
     this.service.modificarReserva(dato).subscribe(
       response => {
         console.log('modificarReserva(): ', response);
-        this.showNotification('Modificación de la reserva con éxito!', NOTIFY.SUCCESS);
+        if (!origen) {
+          this.showNotification('Modificación de la reserva con éxito!', NOTIFY.SUCCESS);
+        }
         this.buscar();
       },
       error => {
@@ -436,8 +458,103 @@ export class ReservaComponent implements OnInit {
       this.showNotification('Error al cancelar la reserva. Consulte con soporte', NOTIFY.DANGER);
      }
    );
-    
   }
+  /*-------------------------------------------------------------------------*/
+  // modalFicha
+  abrirModalNuevaFicha(row) {
+    console.log('fila seleccionada para agregar nuevaFicha a la reserva: ');
+    console.log(row);
+    this.modificarIdReserva = row[0]; // se debe marcar como asistido
+    this.fichaFecha = new Date();
+    this.fichaIdEmpleado = row[4];
+    this.fichaNombreEmpleado = row[5];
+    this.fichaIdCliente = row[6];
+    this.fichaNombreCliente = row[7];
+    /*this.fichaIdCategoria = row[4];
+    this.fichaDescripcionCategoria = row[4];
+    this.fichaidProducto = row[4];
+    this.fichaDescripcionSubCategoria = row[4];
+    this.fichaMotivo = null;
+    this.fichaDiagnostico = null;
+    this.fichaObservacion = null;*/
+
+    $('#modalFicha').modal('show');
+  }
+  /*-------------------------------------------------------------------------*/
+  agregarNuevaFicha() {
+    console.log('agregar nuevaFicha: ');
+    this.showNotification('MARCAR COMO ASISTIDA LA RESERVA', NOTIFY.WARNING);
+    let dato = {
+      motivoConsulta: this.fichaMotivo,
+      diagnostico: this.fichaDiagnostico,
+      observacion: this.fichaObservacion,
+      idEmpleado: {
+        idPersona: this.fichaIdEmpleado
+      },
+      idCliente: {
+        idPersona: this.fichaIdCliente
+      },
+      idTipoProducto: {
+        idTipoProducto: this.fichaidProducto
+      }
+    };
+    this.fichaService.agregarFicha(dato).subscribe(
+      response => {
+        console.log('postFicha(): ', response);
+        this.showNotification('Ficha creada con éxito!', NOTIFY.SUCCESS);
+        this.limpiar();
+        this.asistencia = 'S';
+        // this.modificarIdReserva
+        this.modificarAsistio = 'S';
+        this.modificar('NF');
+      },
+      error => {
+        this.modificarIdReserva = null;
+        this.showNotification('Ocurrió un error al agregar ficha. Consulte con soporte', NOTIFY.DANGER);
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  listarCategorias() {
+    this.categoriaService.getCategoria().subscribe(
+      response => {
+        this.listaCategoria = new Array<any>();
+        response.lista.forEach(cat => {
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(cat.idCategoria);
+          this.listaAtributos.push(cat.descripcion);
+          this.listaCategoria.push(this.listaAtributos);
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  listarSubCategorias(idCategoria) {
+    console.log('categoriaSeleccionada: ', this.fichaIdCategoria);
+    let url = '{"idCategoria":{"idCategoria":' + idCategoria + '}}';
+    url = '?ejemplo=' + encodeURIComponent(url);
+    this.categoriaService.obtenerSubCategoria(url).subscribe(
+      response => {
+        this.listaAtributos = new Array<any>();
+        this.listaSubCategoria = new Array<any>();
+        response.lista.forEach(subCat => {
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(subCat.idTipoProducto);
+          this.listaAtributos.push(subCat.descripcion);
+          this.listaSubCategoria.push(this.listaAtributos);
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener sub-categorias', NOTIFY.DANGER);
+      }
+    );
+
+  }
+  /*-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
     const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
@@ -483,8 +600,7 @@ export class ReservaComponent implements OnInit {
       console.log('no se seleccionó fila');
     }
   }*/
-  /*-------------------------------------------------------------------------*/  
- 
+  /*-------------------------------------------------------------------------*/ 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -514,6 +630,8 @@ export class ReservaComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
 
   ngOnInit() {
+    this.listarCategorias();
+    this.listaSubCategoria = new Array<any>();
     // this.listarReservas();
     // al iniciar busca las reservas del dia actual
     console.log(new Date());

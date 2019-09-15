@@ -48,6 +48,27 @@
               <div class="col-md-6">
                 <div class="input-group no-border">
                   <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="descripcionCategoria"
+                      placeholder="Categoría" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="descripcionSubCategoria"
+                      placeholder="Sub-Categoría" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
                     <textarea matInput placeholder="Motivo" [(ngModel)]="motivo" disabled></textarea>
                   </mat-form-field>
                 </div>

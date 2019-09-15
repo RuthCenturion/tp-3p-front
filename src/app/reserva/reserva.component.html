@@ -355,7 +355,7 @@
                         (click)="confirmarCancelar(row[0])" matTooltip="Cancelar"><i
                           class="material-icons">delete</i></a>
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
-                        (click)="nuevaFicha(row[0],row[1])" matTooltip="Nueva ficha"><i
+                        (click)="abrirModalNuevaFicha(row)" matTooltip="Nueva ficha"><i
                           class="material-icons">add</i></a>
                     </td>
                   </tr>
@@ -462,5 +462,114 @@
       </div>
     </div>
     <!-------------------------END MODIFICAR CATEGORIA--------------------------->
+    <!------------------------- AGREGAR FICHA--------------------------->
+    <div class="modal fade" id="modalFicha" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar ficha a reserva</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="fichaFecha"
+                    placeholder="Fecha" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="fichaNombreEmpleado"
+                      placeholder="Empleado" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="fichaNombreCliente"
+                      placeholder="Cliente" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <mat-select placeholder="Seleccionar Categoría" name="fichaIdCategoria" 
+                      [(ngModel)]="fichaIdCategoria" (ngModelChange)="listarSubCategorias(fichaIdCategoria)" >
+                      <mat-option *ngFor="let l of listaCategoria" [value]="l[0]">
+                        {{l[1]}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <mat-select placeholder="Seleccionar Sub-Categoría" name="fichaidProducto" 
+                      [(ngModel)]="fichaidProducto" [disabled]="!(listaSubCategoria.length > 0)">
+                      <mat-option *ngFor="let l of listaSubCategoria" [value]="l[0]">
+                        {{l[1]}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <textarea matInput placeholder="Motivo" [(ngModel)]="fichaMotivo" required></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <textarea matInput placeholder="Diagnóstico" [(ngModel)]="fichaDiagnostico" required></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <textarea matInput placeholder="Observación" [(ngModel)]="fichaObservacion"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="agregarNuevaFicha()" data-dismiss="modal"
+            [disabled]="!(fichaIdCategoria && fichaIdProducto && fichaMotivo && fichaDiagnostico) ? false: true">
+              Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-------------------------END AGREGAR FICHA--------------------------->
   </div>
 </div>
