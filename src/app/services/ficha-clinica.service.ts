@@ -15,6 +15,7 @@ export class FichaClinicaService {
     private clienteUrl = SERVICE_REST + 'persona';
     private reservaUrl = SERVICE_REST + 'reserva';
     private fichaClinicaUrl = SERVICE_REST + 'fichaClinica';
+    private servicioUrl = SERVICE_REST + 'servicio';
 
     constructor(private http: HttpClient) { }
 
@@ -57,6 +58,10 @@ export class FichaClinicaService {
             })
         };
         return this.http.put(this.fichaClinicaUrl, ficha, httpOptions);
+    }
+    
+    getServiciosAsociados(descripcion): Observable<any> {
+        return this.http.get(this.servicioUrl  + descripcion);
     }
     /*eliminarReserva(id): Observable<any> {
         let httpParams = new HttpParams();

@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FichaClinicaService } from '../services/ficha-clinica.service';
 import { NOTIFY } from '../commons/app-utils';
+import { TableData } from '../md/md-table/md-table.component';
 
 declare const $: any;
 
@@ -29,6 +30,7 @@ declare interface DatoModificar {
 })
 
 export class ModificarFichaComponent implements OnInit {
+  public tableData3: TableData;
 
   idFicha: string;
   fechaFicha: string;
@@ -43,11 +45,18 @@ export class ModificarFichaComponent implements OnInit {
   motivo: any;
   diagnostico: any;
   observacion: any;
+  listaServicios: Array<any>;
 
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private service: FichaClinicaService ) { }
+    private service: FichaClinicaService ) {
+      this.listaServicios = [];
+      this.tableData3 = {
+        headerRow: [ 'ID', 'Fecha',  'Presupuesto', 'Observacion', 'Acciones' ],
+        dataRows: this.listaServicios
+      };
+     }
    /*-------------------------------------------------------------------------*/
    modificarFicha() {
       let dato: any = {
@@ -68,6 +77,46 @@ export class ModificarFichaComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
   cancelarModificar() {
     this.router.navigate(['ficha-clinica']);
+  }
+   /*-------------------------------------------------------------------------*/
+  verServicio(a, b, c, d) {
+    console.log('lo seleccionado para verServicio: ', a, b, c, d);
+  }
+   /*-------------------------------------------------------------------------*/
+  editarServicio(a, b) {
+    console.log('lo seleccionado para editarServicio: ', a, b);
+  }
+   /*-------------------------------------------------------------------------*/
+   pruebaUnaSolaSeleccion(row) { // se envia toda la fila como array
+    console.log('fila seleccionada: ', row);
+   }
+  /*-------------------------------------------------------------------------*/
+  listarServiciosAsociados() {
+    let url = '{"idFichaClinica":{"idFichaClinica":' + this.idFicha + '}}';
+    let path = encodeURIComponent(url);
+    path = '?ejemplo=' + path;
+      this.service.getServiciosAsociados(path).subscribe(
+        response => {
+          console.log('listaTotal de servicios', response.lista);
+          if(response.totalDatos > 0) {
+            this.listaServicios = new Array<any>();
+            console.log('listaTotal de servicios', response.lista);
+            response.lista.forEach(servicio => {
+              let lista = new Array<any>();
+              lista.push(servicio.idServicio);
+              lista.push(servicio.fechaHora);
+              lista.push(servicio.presupuesto);
+              lista.push(servicio.observacion);
+              this.listaServicios.push(lista);
+
+              this.tableData3 = {
+                headerRow: [ 'ID', 'Fecha',  'Presupuesto', 'Observacion', 'Acciones' ],
+                dataRows: this.listaServicios
+              };
+            });
+          }
+        }
+      );
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
@@ -113,8 +162,11 @@ export class ModificarFichaComponent implements OnInit {
       this.motivo = params.motivo;
       this.diagnostico = params.diagnostico;
       this.observacion = params.observacion;
+      
+    });
+    
+    this.listarServiciosAsociados();
+
     }
-    );
-  }
 
 }
