@@ -1,0 +1,396 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
+        <!------------------------- BUSCAR EMPLEADO--------------------------->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!--*******************-->
+                <div class="row">
+                  <div class="input-group no-border">
+                    <input type="text" value="" class="form-control" [(ngModel)]="buscarEmpleadoNombre"
+                      placeholder="Nombre Empleado">
+                    <button type="button" class="btn btn-info"
+                      (click)="listarEmpleadosBuscador(buscarEmpleadoNombre)">Buscar</button>
+                  </div>
+                </div>
+                <!--*******GRILLA************-->
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>{{ tableBuscarEmpleado.headerRow[1] }}</th>
+                        <th>{{ tableBuscarEmpleado.headerRow[2] }}</th>
+                        <th>{{ tableBuscarEmpleado.headerRow[3] }}</th>
+                        <th>{{ tableBuscarEmpleado.headerRow[4] }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of tableBuscarEmpleado.dataRows">
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td class="text-right">
+                          <div class="form-check" (click)="empleadoSeleccionado(row[1],row[2])">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" [(ngModel)]="fila" value="row[1]">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            </label>
+                          </div>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!--*******************-->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                  (click)="cancelarBuscarEmpleado()">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" 
+                  (click)="aceptarEmpleado()"[disabled]="!fila"> Aceptar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!---------------------------------------------END BUSCAR EMPLEADO--------------------------------------->
+        <!---------------------------------------------- BUSCAR CLIENTE ------------------------------------->
+        <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <!--*******************-->
+                <div class="row">
+                  <div class="input-group no-border">
+                    <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
+                      placeholder="Nombre Empleado">
+                    <button type="button" class="btn btn-info"
+                      (click)="listarClientesBuscador(buscarClienteNombre)">Buscar</button>
+                  </div>
+                </div>
+                <!--*******************-->
+                <div class="col-md-12">
+                  <table mat-table [dataSource]="dataSource" >
+                    <!-- Checkbox Column -->
+                    <ng-container matColumnDef="select">
+                      <th mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                        </mat-checkbox>
+                      </th>
+                      <td mat-cell *matCellDef="let row">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="position">
+                      <th mat-header-cell *matHeaderCellDef> Posición </th>
+                      <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                    </ng-container>
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="idCliente">
+                      <th mat-header-cell *matHeaderCellDef> Id </th>
+                      <td mat-cell *matCellDef="let element"> {{element.idCliente}} </td>
+                    </ng-container>
+  
+                    <!-- Name Column -->
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                    </ng-container>
+  
+                    <!-- Weight Column -->
+                    <ng-container matColumnDef="email">
+                      <th mat-header-cell *matHeaderCellDef> Email </th>
+                      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+                    </tr>
+                  </table>
+                  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                  (click)="cancelarBuscarCliente()">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarCliente()"
+                  [disabled]="!mostrarAceptar">
+                  Aceptar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-------------------------END BUSCAR CLIENTE--------------------------->
+      </div>
+      <!--<div class="container-fluid">-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-icon card-header-rose">
+              <div class="card-icon">
+                <i class="material-icons">assignment</i>
+              </div>
+              <h4 class="card-title ">Agregar Ficha Clínica</h4>
+            </div>
+            <div class="card-body">
+              <!--*********************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <input matInput [matDatepicker]="pickerTr" (click)="picker.open()" [(ngModel)]="fechaDesde"
+                      placeholder="Fecha" disabled>
+                    <mat-datepicker-toggle matSuffix [for]="pickerTr"></mat-datepicker-toggle>
+                    <mat-datepicker #pickerTr></mat-datepicker>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <input type="text" value="" class="form-control" [(ngModel)]="empleadoNombre" placeholder="Empleado" disabled>
+                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                      <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
+                      <div class="ripple-container"></div>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <input type="text" value="" class="form-control" [(ngModel)]="clienteNombre" placeholder="Paciente">
+                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                      <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>
+                      <div class="ripple-container"></div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                      <mat-select placeholder="Seleccionar Categoría" name="idCategoria" 
+                        [(ngModel)]="idCategoria" (ngModelChange)="listarSubCategorias(idCategoria)" >
+                        <mat-option *ngFor="let l of listaCategoria" [value]="l[0]">
+                          {{l[1]}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+  
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                      <mat-select placeholder="Seleccionar Sub-Categoría" name="idProducto" 
+                        [(ngModel)]="idProducto" [disabled]="!idCategoria">
+                        <mat-option *ngFor="let l of listaSubCategoria" [value]="l[0]">
+                          {{l[1]}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                  <div class="col-md-6">
+                    <div class="input-group no-border">
+                        <mat-form-field>
+                          <textarea matInput placeholder="Motivo" [(ngModel)]="motivo"></textarea>
+                        </mat-form-field>    
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="input-group no-border">
+                      <mat-form-field>
+                          <textarea matInput placeholder="Diagnóstico" [(ngModel)]="diagnostico"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <!--*******************-->
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="input-group no-border">
+                      <mat-form-field>
+                        <textarea matInput placeholder="Observación" [(ngModel)]="observacion"></textarea>
+                      </mat-form-field>    
+                  </div>
+                </div>
+              </div>
+              <!--*******************--->
+              <div class="row">
+                <button mat-raised-button class="btn btn-primary btn-sm" (click)="guardarFicha()"
+                [disabled]="!(empleadoId && clienteId && (idCategoria && idProducto) && motivo && diagnostico && observacion)">GUARDAR</button>
+                <button mat-raised-button class="btn btn-fill btn-rose" (click)="limpiar()">Limpiar</button>
+                <button mat-raised-button class="btn btn-info btn-sm" (click)="cancelarAgregar()">CANCELAR</button>
+                <!--button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar Ficha</button-->
+              </div>
+              <!--*******************--->
+              <!--div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>{{ tableDataFicha.headerRow[0] }}</th>
+                      <th>{{ tableDataFicha.headerRow[1] }}</th>
+                      <!-th>{{ tableDataFicha.headerRow[2] }}</th->
+                      <th>{{ tableDataFicha.headerRow[3] }}</th>
+                      <!-th>{{ tableDataFicha.headerRow[4] }}</th->
+                      <th>{{ tableDataFicha.headerRow[5] }}</th>
+                      <!-th>{{ tableDataFicha.headerRow[6] }}</th->
+                      <th>{{ tableDataFicha.headerRow[7] }}</th>
+                      <!-th>{{ tableDataFicha.headerRow[8] }}</th->
+                      <th>{{ tableDataFicha.headerRow[9] }}</th>
+                      <th class="disabled-sorting text-right">{{ tableDataFicha.headerRow[10]}}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of tableDataFicha.dataRows">
+                      <td>{{row[0]}}</td>
+                      <td>{{row[1]}}</td>
+                      <!-td>{{row[2]}}</td->
+                      <td>{{row[3]}}</td>
+                      <!-td>{{row[4]}}</td->
+                      <td>{{row[5]}}</td>
+                      <!-td>{{row[6]}}</td->
+                      <td>{{row[7]}}</td>
+                      <!-td>{{row[8]}}</td->
+                      <td>{{row[9]}}</td>
+                      <td class="text-right">
+                        <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                          (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9])"><i
+                            class="material-icons" matTooltip="Modificar ficha">dvr</i></a>
+                        <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                          (click)="nuevaFicha(row[0],row[1])" matTooltip="Crear servicio"><i
+                            class="material-icons">add</i></a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div-->
+              <!--*******************--->
+              <!--div *ngIf="listaReservas.length === 0">Sin datos</div-->
+            </div>
+          </div>
+          <!--end tabla sin buscador integrado-->
+        </div>
+        <!-- end col-md-12 -->
+      </div>
+      <!-- end row -->
+      
+      <!------------------------- MODIFICAR RESERVA--------------------------->
+      <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modificar reserva</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Fecha reserva</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFechaReserva"
+                      disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Inicio</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarInicio"
+                      disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Fin</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFin" disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Empleado</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreEmpleado"
+                      disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Cliente</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreCliente"
+                      disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Asistió</label>
+                <div class="col-sm-9">
+                  NO
+                  <mat-slide-toggle class="example-margin" [color]="primary" [disabled]="false"
+                    [(ngModel)]="modificarAsistio">
+                  </mat-slide-toggle> SI
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <label class="col-sm-3 col-form-label">Observacion</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarObservacion">
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal">
+                Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-------------------------END MODIFICAR CATEGORIA--------------------------->
+    </div>
+  </div>

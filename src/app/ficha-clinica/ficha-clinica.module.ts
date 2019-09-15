@@ -7,6 +7,7 @@ import { MaterialModule } from '../app.module';
 import { FichaClinicaComponent } from './ficha-clinica.component';
 // import { AgregarReservaComponent } from './agregar-reserva.component';
 import { FichaClinicaRoutes } from './ficha-clinica.routing';
+import { AgregarFichaComponent } from './agregar-ficha.component';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { FichaClinicaRoutes } from './ficha-clinica.routing';
     ],
     declarations: [
         FichaClinicaComponent,
+        AgregarFichaComponent,
        // AgregarReservaComponent
     ]
 })

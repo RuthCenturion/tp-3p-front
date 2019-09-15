@@ -1,81 +1,6 @@
 <div class="main-content">
   <div class="container-fluid">
     <div class="row">
-
-      <!------------------------- AGREGAR RESERVA--------------------------->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Agregar reserva</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!--*********************-->
-              <div class="row">
-                <div class="col-md-6">
-                  <mat-form-field>
-                    <input matInput [matDatepicker]="picker03" (click)="picker.open()" [(ngModel)]="fechaDesde"
-                      placeholder="Fecha desde">
-                    <mat-datepicker-toggle matSuffix [for]="picker03"></mat-datepicker-toggle>
-                    <mat-datepicker #picker03></mat-datepicker>
-                  </mat-form-field>
-                </div>
-                <div class="col-md-6">
-                  <!--mat-form-field>
-                        <input matInput [matDatepicker]="picker04" (click)="picker.open()" [(ngModel)]="fechaHasta"
-                          placeholder="Fecha hasta">
-                        <mat-datepicker-toggle matSuffix [for]="picker04"></mat-datepicker-toggle>
-                        <mat-datepicker #picker04></mat-datepicker>
-                      </mat-form-field-->
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input class="form-check-input" type="checkbox" value=""> Mostrar ya reservados
-                      <span class="form-check-sign">
-                        <span class="check"></span>
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="input-group no-border">
-                    <input type="text" value="" class="form-control" [(ngModel)]="empleado" placeholder="Empleado">
-                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-                      <i class="material-icons" data-toggle="modal" data-target="#exampleModal">search</i>
-                      <div class="ripple-container"></div>
-                    </button>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group no-border">
-                    <input type="text" value="" class="form-control" [(ngModel)]="paciente" placeholder="Paciente">
-                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-                      <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
-                      <div class="ripple-container"></div>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <!--*******************-->
-              <!--*******************-->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                (click)="limpiarAgregar()">Cancelar</button>
-              <button type="button" class="btn btn-primary" (click)="agregar()" data-dismiss="modal"
-                [disabled]="((fecha && idEmpleado) && ( (flagEsHabilitar === 'S' && horaCierre && horaApertura && intervalo) || (flagEsHabilitar === 'N'))) ?false:true">
-                Guardar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-------------------------END AGREGAR RESERVA--------------------------->
       <!------------------------- BUSCAR EMPLEADO--------------------------->
       <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -218,35 +143,10 @@
         </div>
       </div>
       <!-------------------------END BUSCAR CLIENTE--------------------------->
-      <!------------------------- CANCELAR RESERVA--------------------------->
-      <div class="modal fade modal-warning" id="exampleModal4" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea cancelar esta reserva?
-              </h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!--*******************-->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
-              <button type="button" class="btn btn-primary" (click)="cancelarReserva()" data-dismiss="modal">
-                Aceptar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-------------------------END CANCELAR RESERVA--------------------------->
     </div>
     <!--<div class="container-fluid">-->
     <div class="row">
       <div class="col-md-12">
-        <!--tabla sin buscador integrado-->
         <div class="card">
           <div class="card-header card-header-icon card-header-rose">
             <div class="card-icon">
@@ -323,16 +223,13 @@
                 </div>
               </div>
             </div>
-            <!--*******************-->
-            <!--/mat-expansion-panel>
-                </mat-accordion-->
 
             <!--*******************--->
             <div class="row">
               <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()"
               [disabled]="!(fechaDesde || fechaHasta || empleadoId || clienteId || (idCategoria && idProducto))">Buscar</button>
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
-              <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar</button>
+              <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar Ficha</button>
             </div>
             <div class="table-responsive">
               <table class="table">
@@ -366,10 +263,10 @@
                     <td class="text-right">
                       <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
                         (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9])"><i
-                          class="material-icons" matTooltip="Modificar">dvr</i></a>
-                      <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                          class="material-icons" matTooltip="Modificar ficha">dvr</i></a>
+                      <!--a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
                         (click)="confirmarCancelar(row[0])" matTooltip="Cancelar"><i
-                          class="material-icons">delete</i></a>
+                          class="material-icons">delete</i></a-->
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
                         (click)="nuevaFicha(row[0],row[1])" matTooltip="Crear servicio"><i
                           class="material-icons">add</i></a>

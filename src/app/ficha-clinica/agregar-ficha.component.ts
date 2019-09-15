@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { NOTIFY } from '../commons/app-utils';
 import { FichaClinicaService } from '../services/ficha-clinica.service';
 import { CategoriaService } from '../services/categoria.service';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import {SelectionModel} from '@angular/cdk/collections';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 declare const $: any;
 
@@ -18,8 +18,8 @@ declare interface TableWithCheckboxes {
   local: string;
 }
 export interface TableData2 {
-  headerRow: string[];
-  dataRows: TableWithCheckboxes[];
+headerRow: string[];
+dataRows: TableWithCheckboxes[];
 }
 export interface PeriodicElement {
   name: string;
@@ -29,22 +29,19 @@ export interface PeriodicElement {
 }
 
 @Component({
-  selector: 'app-ficha-clinica',
-  templateUrl: './ficha-clinica.component.html',
-  styleUrls: ['./ficha-clinica.component.css']
+  selector: 'app-agregar-ficha',
+  templateUrl: './agregar-ficha.component.html',
+  styleUrls: ['./agregar-ficha.component.css']
 })
-export class FichaClinicaComponent implements OnInit {
+export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicElement[] = [];
 
-  ELEMENT_DATA: PeriodicElement[] = [];
-
-  public tableData1: TableData;
+  
   public tableBuscarEmpleado: TableData;
   public tableBuscarCliente: TableData;
   public tableDataFicha: TableData;
 
-  // filtro de la grilla
+  // datos a guardar
   fechaDesde: any;
-  fechaHasta: any;
   empleadoId: any;
   empleadoNombre: any;
   clienteId: any;
@@ -52,6 +49,9 @@ export class FichaClinicaComponent implements OnInit {
   idCategoria: any;
   idProducto: any;
   tipoProductoNombre: any;
+  motivo: any;
+  diagnostico: any;
+  observacion: any;
   // buscador empleado
   fila: any;
   buscarEmpleadoNombre: any;
@@ -65,7 +65,7 @@ export class FichaClinicaComponent implements OnInit {
   clienteSeleccionadoId: any;
   clienteSeleccionadoNombre: any;
   mostrarAceptar: any;
-
+  
   // datos modal modificar
   modificarIdReserva: any;
   modificarFechaReserva: any;
@@ -79,10 +79,10 @@ export class FichaClinicaComponent implements OnInit {
   modificarObservacion: any;
   asistencia: any;
   opciones: any = [
-    { value: 'S', viewValue: 'SI' },
-    { value: 'N', viewValue: 'NO' }
+    {value: 'S', viewValue: 'SI'},
+    {value: 'N', viewValue: 'NO'}
   ];
-
+  
   // panelOpenState = false;
   listaAtributos: Array<any>;
   listaBuscarEmpleados: Array<any>;
@@ -97,15 +97,11 @@ export class FichaClinicaComponent implements OnInit {
   displayedColumns: string[] = ['select', 'position', 'idCliente', 'name', 'email'];
   dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   selection = new SelectionModel<PeriodicElement>(true, []);
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
   constructor(private service: FichaClinicaService,
     private categoriaService: CategoriaService,
-    private router: Router) {
-    this.tableData1 = {
-      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Estado', 'Observación', 'Acciones'],
-      dataRows: this.listaReservas
-    };
+    private router: Router ) {
     this.tableBuscarEmpleado = {
       headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
@@ -114,48 +110,9 @@ export class FichaClinicaComponent implements OnInit {
       headerRow: ['', 'Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
     };
-    this.tableDataFicha = {
-      headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
-      dataRows: this.listaFichaClinica
-    };
   }
   /*-------------------------------------------------------------------------*/
-  listarFichas() {
-    this.service.getFichas().subscribe(
-      response => {
-        this.listaFichaClinica = new Array<any>();
-        console.log('getFichas():', response);
-        if (response.totalDatos > 0) {
-          response.lista.forEach(ficha => {
-            this.listaAtributos = new Array<any>();
-            // fechas
-            this.listaAtributos.push(ficha.idFichaClinica); // 0
-            this.listaAtributos.push(ficha.fechaHora); // 1
-            // profesional
-            this.listaAtributos.push(ficha.idEmpleado.idPersona); // 2
-            this.listaAtributos.push(ficha.idEmpleado.nombreCompleto); // 3
-            // cliente
-            this.listaAtributos.push(ficha.idCliente.idPersona); // 4
-            this.listaAtributos.push(ficha.idCliente.nombreCompleto); // 5
-            // categoria
-            this.listaAtributos.push(ficha.idTipoProducto.idCategoria.idCategoria); // 6
-            this.listaAtributos.push(ficha.idTipoProducto.idCategoria.descripcion); // 7
-            // sub-categoria === tipoProducto
-            this.listaAtributos.push(ficha.idTipoProducto.idTipoProducto); // 8
-            this.listaAtributos.push(ficha.idTipoProducto.descripcion); // 9
-
-            this.listaFichaClinica.push(this.listaAtributos);
-
-            this.tableDataFicha = {
-              headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat',
-                'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
-              dataRows: this.listaFichaClinica
-            };
-          });
-        }
-      }
-    );
-  }
+ 
   /*-------------------------------------------------------------------------*/
   listarEmpleadosBuscador(buscadorNombre) {
     // let buscadorNombre = 'Gustavo'
@@ -170,12 +127,11 @@ export class FichaClinicaComponent implements OnInit {
     this.service.getEmpleadosBuscador(url).subscribe(
       response => {
         console.log('buscadorEmpleados: ', response);
-        if (response.totalDatos > 0) {
+        if (response.totalDatos > 0 ) {
           response.lista.forEach(
             empleado => {
+              let lista = new Array<any>();
               if (empleado.idLocalDefecto) {
-                let lista = new Array<any>();
-
                 lista.push(false);
                 lista.push(empleado.idPersona); // 0
                 lista.push(empleado.nombreCompleto); // 1
@@ -183,24 +139,21 @@ export class FichaClinicaComponent implements OnInit {
                 // local por defecto
                 lista.push(empleado.idLocalDefecto.nombre); // 3
                 this.listaBuscarEmpleados.push(lista);
-
+  
                 this.tableBuscarEmpleado = {
                   headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
                   dataRows: this.listaBuscarEmpleados
                 };
-              }
-
-
+              }             
             });
-
         }
       }
     );
   }
   /*-------------------------------------------------------------------------*/
-  empleadoSeleccionado(id, nombre, c, d) {
+  empleadoSeleccionado(id, nombre, c, d ) {
     if (!this.fila) {
-      console.log('empleado seleccionado del buscador: ', id, ' ', nombre, '', c, '', d);
+      console.log('empleado seleccionado del buscador: ', id, ' ', nombre,  '', c, '', d);
       this.empleadoSeleccionadoId = id;
       this.empleadoSeleccionadoNombre = nombre;
     } else {
@@ -243,27 +196,27 @@ export class FichaClinicaComponent implements OnInit {
       response => {
         console.log('buscadorClientes: ', response);
         let i: number = 0;
-        if (response.totalDatos > 0) {
+        if (response.totalDatos > 0 ) {
           response.lista.forEach(
             cliente => {
               let lista = new Array<any>();
-              if (cliente.idLocalDefecto === null) {
+              if (cliente.idLocalDefecto === null ) {
                 i = i + 1;
                 lista.push(false);
                 lista.push(cliente.idPersona); // 0
                 lista.push(cliente.nombreCompleto); // 1
                 lista.push(cliente.email); // 2
                 this.listaBuscarClientes.push(lista);
-                /* let nuevo : PeriodicElement;
-                 nuevo.position = i;
-                 nuevo.idCliente = cliente.idPersona;
-                 nuevo.name = cliente.nombreCompleto;
-                 nuevo.email = cliente.email;*/
+               /* let nuevo : PeriodicElement;
+                nuevo.position = i;
+                nuevo.idCliente = cliente.idPersona;
+                nuevo.name = cliente.nombreCompleto;
+                nuevo.email = cliente.email;*/
                 this.ELEMENT_DATA.push({
-                  position: i,
-                  idCliente: cliente.idPersona,
-                  name: cliente.nombreCompleto,
-                  email: cliente.email
+                  position : i,
+                idCliente : cliente.idPersona,
+                name : cliente.nombreCompleto,
+                email : cliente.email
                 });
                 this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
                 this.dataSource.paginator = this.paginator;
@@ -293,103 +246,44 @@ export class FichaClinicaComponent implements OnInit {
       dataRows: this.listaBuscarClientes
     };
     this.paginator.pageIndex = 0;
-    this, this.dataSource.paginator = this.paginator;
+    this,this.dataSource.paginator = this.paginator;
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   }
   /*-------------------------------------------------------------------------*/
-  buscar() {
-    let path = '';
-    let fechaHastaCadena = '';
-    if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-      let fechaDesdeString = this.fechaCadena(this.fechaDesde);
-      path = '{"fechaDesdeCadena":"' + fechaDesdeString + '"';
-      console.log('path: ', path);
-    }
-    if (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null) {
-      fechaHastaCadena = this.fechaCadena(this.fechaHasta);
-      if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-        path = path + ',"fechaHastaCadena":"' + fechaHastaCadena + '"';
-        console.log('path: ', path);
-      } else {
-        path = '{"fechaHastaCadena":"' + fechaHastaCadena + '"';
+  guardarFicha() {
+    let dato = {
+      motivoConsulta: this.motivo,
+      diagnostico: this.diagnostico,
+      observacion: this.observacion,
+      idEmpleado: {
+        idPersona: this.empleadoId
+      },
+      idCliente: {
+        idPersona: this.clienteId
+      },
+      idTipoProducto: {
+        idTipoProducto: this.idProducto
       }
-    }
-    if (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)) {
-        path = path + ',"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      } else {
-        path = '{"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      }
-    }
-    if (typeof this.clienteId !== 'undefined' && this.clienteId !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
-        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)) {
-        path = path + ',"idCliente":{"idPersona":' + this.clienteId + '}';
-      } else {
-        path = '{"idCliente":{"idPersona":' + this.clienteId + '}';
-      }
-    }
-    if (typeof this.idProducto !== 'undefined' && this.idProducto !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
-        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)
-        || (typeof this.clienteId !== 'undefined' && this.clienteId !== null)) {
-        console.log('this.categoriaId: ', this.idCategoria);
-        console.log('this.tipoProductoId: ', this.idProducto);
-        path = path + ',"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
-      } else {
-        path = '{"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
-      }
-    }
-    path = path + '}';
-    console.log('path', path);
-    path = encodeURIComponent(path);
-    path = '?ejemplo=' + path;
-    this.service.buscarFichas(path).subscribe(
+    };
+    this.service.agregarFicha(dato).subscribe(
       response => {
-        this.listaFichaClinica = new Array<any>();
-        console.log('getFichasBuscar():', response);
-        if (response.totalDatos > 0) {
-          response.lista.forEach(ficha => {
-            this.listaAtributos = new Array<any>();
-            // fechas
-            this.listaAtributos.push(ficha.idFichaClinica); // 0
-            this.listaAtributos.push(ficha.fechaHora); // 1
-            // profesional
-            this.listaAtributos.push(ficha.idEmpleado.idPersona); // 2
-            this.listaAtributos.push(ficha.idEmpleado.nombreCompleto); // 3
-            // cliente
-            this.listaAtributos.push(ficha.idCliente.idPersona); // 4
-            this.listaAtributos.push(ficha.idCliente.nombreCompleto); // 5
-            // categoria
-            this.listaAtributos.push(ficha.idTipoProducto.idCategoria.idCategoria); // 6
-            this.listaAtributos.push(ficha.idTipoProducto.idCategoria.descripcion); // 7
-            // sub-categoria === tipoProducto
-            this.listaAtributos.push(ficha.idTipoProducto.idTipoProducto); // 8
-            this.listaAtributos.push(ficha.idTipoProducto.descripcion); // 9
-
-            this.listaFichaClinica.push(this.listaAtributos);
-
-            this.tableDataFicha = {
-              headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat',
-                'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
-              dataRows: this.listaFichaClinica
-            };
-          });
-        } else {
-          this.listaReservas = [];
-          this.tableData1 = {
-            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Estado', 'Observación', 'Acciones'],
-            dataRows: this.listaReservas
-          };
-        }
-
+        console.log('postFicha(): ', response);
+        this.showNotification('Ficha creada con éxito!', NOTIFY.SUCCESS);
+        this.limpiar();
+      },
+      error => {
+        this.showNotification('Ocurrió un error al agregar ficha. Consulte con soporte', NOTIFY.DANGER);
       }
     );
   }
+  /*-------------------------------------------------------------------------*/
+  cancelarAgregar() {
+    // this.router
+    this.router.navigate(['ficha-clinica']);
+  }
+  /*-------------------------------------------------------------------------*/
+  
   /*-------------------------------------------------------------------------*/
   fechaCadena(fecha): any {
     let d = new Date(fecha);
@@ -413,14 +307,16 @@ export class FichaClinicaComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   limpiar() {
-    this.fechaHasta = null;
-    this.fechaDesde = null;
+    this.fechaDesde = new Date();
     this.empleadoId = null;
     this.empleadoNombre = null;
     this.clienteId = null;
     this.clienteNombre = null;
     this.idCategoria = null;
     this.idProducto = null;
+    this.motivo = null;
+    this.diagnostico = null;
+    this.observacion = null;
     // los list de los buscadores
     this.listaBuscarEmpleados = [];
     this.ELEMENT_DATA = [];
@@ -429,27 +325,23 @@ export class FichaClinicaComponent implements OnInit {
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   }
   /*-------------------------------------------------------------------------*/
-  agregarReserva() {
-    this.router.navigate(['ficha-clinica/agregar-ficha']);
-  }
-  /*-------------------------------------------------------------------------*/
   abrirModalModificar(idReserva, fechaReserva, inicio, fin, idEmpleado,
     nombreEmpleado, idCliente, nombreCliente, asistio, observacion) {
-    this.modificarIdReserva = idReserva;
-    this.modificarFechaReserva = fechaReserva;
-    this.modificarInicio = inicio;
-    this.modificarFin = fin;
-    this.modificarIdEmpleado = idEmpleado;
-    this.modificarNombreEmpleado = nombreEmpleado;
-    this.modificarIdCliente = idCliente;
-    this.modificarNombreCliente = nombreCliente;
-    // this.asistencia = (asistio === 'SI' ? true : false);
-    this.modificarAsistio = (asistio === 'SI' ? true : false);// (asistio === 'SI' ? 'S' : 'N');
-    this.modificarObservacion = observacion;
+      this.modificarIdReserva = idReserva;
+      this.modificarFechaReserva = fechaReserva;
+      this.modificarInicio = inicio;
+      this.modificarFin = fin;
+      this.modificarIdEmpleado = idEmpleado;
+      this.modificarNombreEmpleado = nombreEmpleado;
+      this.modificarIdCliente = idCliente;
+      this.modificarNombreCliente = nombreCliente;
+     // this.asistencia = (asistio === 'SI' ? true : false);
+      this.modificarAsistio =  (asistio === 'SI' ? true : false);// (asistio === 'SI' ? 'S' : 'N');
+      this.modificarObservacion = observacion;
     $('#exampleModal5').modal('show');
   }
   /*-------------------------------------------------------------------------*/
-  /*modificar() {
+/*  modificar() {
     let dato = {
       idReserva: this.modificarIdReserva,
       observacion: (this.modificarObservacion ? this.modificarObservacion : ''),
@@ -502,7 +394,7 @@ export class FichaClinicaComponent implements OnInit {
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
-    if (numSelected === 1) {
+    if (numSelected === 1 ) {
       this.mostrarAceptar = true;
     } else {
       this.mostrarAceptar = false;
@@ -513,8 +405,8 @@ export class FichaClinicaComponent implements OnInit {
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+        this.selection.clear() :
+        this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
   /** The label for the checkbox on the passed row */
@@ -568,17 +460,11 @@ export class FichaClinicaComponent implements OnInit {
 
   ngOnInit() {
     this.listarCategorias();
-    // this.listarSubCategorias();
-    this.listarFichas();
     // al iniciar busca las reservas del dia actual
-    console.log(new Date());
     this.fechaDesde = new Date();
-    this.fechaHasta = new Date();
-    //  this.buscar();
-    this.listaClienteSeleccionado = new Array<any>();
+    this.listaClienteSeleccionado = new Array<any> ();
     this.dataSource.paginator = this.paginator;
     this.mostrarAceptar = false;
-    // this.listarEmpleadosBuscador();
   }
 
 }
