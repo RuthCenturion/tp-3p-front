@@ -60,8 +60,8 @@ export const ROUTES: RouteInfo[] = [{
         type: 'link',
         icontype: 'date_range' 
     }, {
-        path: '/widgets',
-        title: 'Facturación',
+        path: '/servicio',
+        title: 'Facturación de servicios',
         type: 'link',
         icontype: 'monetization_on'
 

@@ -118,7 +118,8 @@ export class FichaClinicaComponent implements OnInit {
     private categoriaService: CategoriaService,
     private router: Router) {
     this.tableData1 = {
-      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Estado', 'Observación', 'Acciones'],
+      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
+       'Id Cliente', 'Cliente', 'Asistió', 'Estado', 'Observación', 'Acciones'],
       dataRows: this.listaReservas
     };
     this.tableBuscarEmpleado = {

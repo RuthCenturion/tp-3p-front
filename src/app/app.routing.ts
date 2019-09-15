@@ -30,6 +30,9 @@ export const AppRoutes: Routes = [
     }, {
         path: 'ficha-clinica',
         loadChildren: './ficha-clinica/ficha-clinica.module#FichaClinicaModule'
+    }, {
+        path: 'servicio',
+        loadChildren: './servicio/servicio.module#ServicioModule'
     },
      {
         path: 'forms',

@@ -1,0 +1,378 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <!------------------------- BUSCAR EMPLEADO--------------------------->
+      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+              <div class="row">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="buscarEmpleadoNombre"
+                    placeholder="Nombre Empleado">
+                  <button type="button" class="btn btn-info"
+                    (click)="listarEmpleadosBuscador(buscarEmpleadoNombre)">Buscar</button>
+                </div>
+              </div>
+              <!--*******GRILLA************-->
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>{{ tableBuscarEmpleado.headerRow[1] }}</th>
+                      <th>{{ tableBuscarEmpleado.headerRow[2] }}</th>
+                      <th>{{ tableBuscarEmpleado.headerRow[3] }}</th>
+                      <th>{{ tableBuscarEmpleado.headerRow[4] }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of tableBuscarEmpleado.dataRows">
+                      <td>{{row[1]}}</td>
+                      <td>{{row[2]}}</td>
+                      <td>{{row[3]}}</td>
+                      <td>{{row[4]}}</td>
+                      <td class="text-right">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value=""
+                              (click)="seleccionarVariosEmpleado(row[1],row[2] )">
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
+                          </label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--*******************-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                (click)="cancelarBuscarEmpleado()">Cancelar</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarEmpleado()"
+                [disabled]="!(listaEmpleadoSeleccionados.length===1)">
+                Aceptar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!---------------------------------------------END BUSCAR EMPLEADO--------------------------------------->
+      <!---------------------------------------------- BUSCAR CLIENTE ------------------------------------->
+      <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+              <div class="row">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
+                    placeholder="Nombre Empleado">
+                  <button type="button" class="btn btn-info"
+                    (click)="listarClientesBuscador(buscarClienteNombre)">Buscar</button>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="col-md-12">
+                <!--*******GRILLA************-->
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>{{ tableBuscarCliente.headerRow[1] }}</th>
+                        <th>{{ tableBuscarCliente.headerRow[2] }}</th>
+                        <th>{{ tableBuscarCliente.headerRow[3] }}</th>
+                        <th>{{ tableBuscarCliente.headerRow[4] }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of tableBuscarCliente.dataRows">
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td class="text-right">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" value=""
+                                (click)="seleccionarVariosCliente(row[1],row[2] )">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!--*******************-->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                (click)="cancelarBuscarCliente()">Cancelar</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarCliente()"
+                [disabled]="!(listaClienteSeleccionados.length === 1)">
+                Aceptar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-------------------------END BUSCAR CLIENTE--------------------------->
+    </div>
+    <!--<div class="container-fluid">-->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon card-header-rose">
+            <div class="card-icon">
+              <i class="material-icons">assignment</i>
+            </div>
+            <h4 class="card-title ">Servicio Listado</h4>
+          </div>
+          <div class="card-body">
+            <!--*********************-->
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="pickerTr" (click)="picker.open()" [(ngModel)]="fechaDesde"
+                    placeholder="Fecha desde">
+                  <mat-datepicker-toggle matSuffix [for]="pickerTr"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTr></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="pickerCu" (click)="pickerCu.open()" [(ngModel)]="fechaHasta"
+                    placeholder="Fecha hasta">
+                  <mat-datepicker-toggle matSuffix [for]="pickerCu"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerCu></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="empleadoNombre" placeholder="Empleado">
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="clienteNombre" placeholder="Cliente">
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <mat-select placeholder="Seleccionar Categoría" name="idCategoria" [(ngModel)]="idCategoria"
+                      (ngModelChange)="listarSubCategorias(idCategoria)">
+                      <mat-option *ngFor="let l of listaCategoria" [value]="l[0]">
+                        {{l[1]}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <mat-select placeholder="Seleccionar Sub-Categoría" name="idProducto" [(ngModel)]="idProducto"
+                      [disabled]="!idCategoria">
+                      <mat-option *ngFor="let l of listaSubCategoria" [value]="l[0]">
+                        {{l[1]}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <!--*******************--->
+            <div class="row">
+              <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()"
+                [disabled]="!(fechaDesde || fechaHasta || empleadoId || clienteId || (idCategoria && idProducto))">Buscar</button>
+              <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
+              <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarServicio()">Agregar
+                Servicio</button>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>{{ tableDataServicio.headerRow[0] }}</th>
+                    <th>{{ tableDataServicio.headerRow[1] }}</th>
+                    <th>{{ tableDataServicio.headerRow[2] }}</th>
+                    <th>{{ tableDataServicio.headerRow[3] }}</th>
+                    <!--th>{{ tableDataServicio.headerRow[4] }}</th-->
+                    <th>{{ tableDataServicio.headerRow[5] }}</th>
+                    <!--th>{{ tableDataServicio.headerRow[6] }}</th-->
+                    <th>{{ tableDataServicio.headerRow[7] }}</th>
+                    <!--th>{{ tableDataServicio.headerRow[8] }}</th-->
+                    <th>{{ tableDataServicio.headerRow[9] }}</th>
+                    <!--th>{{ tableDataServicio.headerRow[10] }}</th-->
+                    <th>{{ tableDataServicio.headerRow[11] }}</th>
+                    <th class="disabled-sorting text-right">{{ tableDataServicio.headerRow[12]}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of tableDataServicio.dataRows">
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <!--td>{{row[4]}}</td-->
+                    <td>{{row[5]}}</td>
+                    <!--td>{{row[6]}}</td-->
+                    <td>{{row[7]}}</td>
+                    <!--td>{{row[8]}}</td-->
+                    <td>{{row[9]}}</td>
+                    <!--ttd>{{row[10]}}</td-->
+                    <td>{{row[11]}}</td>
+                    <td class="text-right">
+                      <!--a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9])"><i
+                          class="material-icons" matTooltip="Modificar ficha">dvr</i></a>
+                      <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                        (click)="confirmarCancelar(row[0])" matTooltip="Cancelar"><i
+                          class="material-icons">delete</i></a-->
+                      <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                        (click)="modificarFicha(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8],row[9],row[10],row[11],row[12])"><i
+                          class="material-icons" matTooltip="Ver servicio">search</i></a>
+                      <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                        (click)="nuevaFicha(row[0],row[1])" matTooltip="Modificar servicio"><i
+                          class="material-icons">edit</i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div *ngIf="listaServicios.length === 0">{{mensajeVacio}}</div>
+          </div>
+        </div>
+        <!--end tabla sin buscador integrado-->
+      </div>
+      <!-- end col-md-12 -->
+    </div>
+    <!-- end row -->
+    <!------------------------- MODIFICAR RESERVA--------------------------->
+    <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modificar reserva</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Fecha reserva</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFechaReserva"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Inicio</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarInicio"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Fin</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFin" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Empleado</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreEmpleado"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Cliente</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreCliente"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Asistió</label>
+              <div class="col-sm-9">
+                NO
+                <mat-slide-toggle class="example-margin" [color]="primary" [disabled]="false"
+                  [(ngModel)]="modificarAsistio">
+                </mat-slide-toggle> SI
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Observacion</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarObservacion">
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal">
+              Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-------------------------END MODIFICAR CATEGORIA--------------------------->
+  </div>
+</div>

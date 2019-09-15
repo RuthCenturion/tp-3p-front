@@ -10,7 +10,7 @@ import 'rxjs/add/observable/throw';
 @Injectable({
     providedIn: 'root'
 })
-export class FichaClinicaService {
+export class ServicioService {
     private empleadoUrl = SERVICE_REST + 'persona';
     private clienteUrl = SERVICE_REST + 'persona';
     private reservaUrl = SERVICE_REST + 'reserva';
@@ -19,8 +19,8 @@ export class FichaClinicaService {
 
     constructor(private http: HttpClient) { }
 
-    getFichas(): Observable<any> {
-        return this.http.get(this.fichaClinicaUrl);
+    getServicios(): Observable<any> {
+        return this.http.get(this.servicioUrl);
     }
     //buscador de empleado
     // -por nombre
@@ -35,9 +35,12 @@ export class FichaClinicaService {
             return this.http.get(this.clienteUrl);
         }
     }
-    buscarFichas(descripcion): Observable<any> {
-        return this.http.get(this.fichaClinicaUrl + descripcion);
-    }
+    buscarServicios(descripcion): Observable<any> {
+        return this.http.get(this.servicioUrl + descripcion);
+    }/*
+    buscarAgenda(descripcion): Observable<any> {
+        return this.http.get(this.empleadoUrl + descripcion);
+    }*/
     agregarFicha(ficha: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
@@ -60,4 +63,11 @@ export class FichaClinicaService {
     getServiciosAsociados(descripcion): Observable<any> {
         return this.http.get(this.servicioUrl  + descripcion);
     }
+    /*eliminarReserva(id): Observable<any> {
+        let httpParams = new HttpParams();
+        Object.keys(id).forEach( function(key) {
+          httpParams = httpParams.append(key, id[key]);
+        });
+        return this.http.delete(this.reservaUrl + '/' + id);
+      }*/
 }
