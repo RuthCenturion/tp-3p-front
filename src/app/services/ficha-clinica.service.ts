@@ -36,25 +36,25 @@ export class FichaClinicaService {
     }
     buscarFichas(descripcion): Observable<any> {
         return this.http.get(this.fichaClinicaUrl + descripcion);
-    }
+    }/*
     buscarAgenda(descripcion): Observable<any> {
         return this.http.get(this.empleadoUrl + descripcion);
-    }
-    agregarReserva(reserva: any): Observable<any> {
+    }*/
+    agregarFicha(ficha: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 'usuario': 'gustavo'
             })
         };
-        return this.http.post(this.reservaUrl, reserva, httpOptions);
+        return this.http.post(this.fichaClinicaUrl, ficha, httpOptions);
     }
-    modificarReserva(reserva: any): Observable<any> {
+ /*   modificarReserva(reserva: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json'/*,
                 'usuario': 'gustavo'*/
-            })
+           /* })
         };
         return this.http.put(this.reservaUrl, reserva, httpOptions);
     }
@@ -64,5 +64,5 @@ export class FichaClinicaService {
           httpParams = httpParams.append(key, id[key]);
         });
         return this.http.delete(this.reservaUrl + '/' + id);
-      }
+      }*/
 }
