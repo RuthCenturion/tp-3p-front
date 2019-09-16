@@ -8,16 +8,16 @@ import { ServicioService } from '../services/servicio.service';
 declare const $: any;
 
 @Component({
-  selector: 'app-servicio',
-  templateUrl: './servicio.component.html',
+  selector: 'app-agregar-servicio',
+  templateUrl: './agregar-servicio.component.html',
   styleUrls: ['./servicio.component.css']
 })
-export class ServicioComponent implements OnInit {
-  public tableDataServicio: TableData;
+export class AgregarServicioComponent implements OnInit {
+  public tableDataFichasAsociadas: TableData;
   public tableBuscarEmpleado: TableData;
   public tableBuscarCliente: TableData;
 
-  // filtro de la grilla
+  // 
   fechaDesde: any;
   fechaHasta: any;
   empleadoId: any;
@@ -26,7 +26,11 @@ export class ServicioComponent implements OnInit {
   clienteNombre: any;
   idCategoria: any;
   idProducto: any;
+  idServicio: any; // id del servicio creados
   tipoProductoNombre: any;
+  observacion: any;
+  // del detalle
+  precio: any;
   // buscador de empleados
   buscarEmpleadoNombre: any;
   // buscador de clientes
@@ -37,6 +41,8 @@ export class ServicioComponent implements OnInit {
   listaBuscarClientes: Array<any>;
   listaCategoria: Array<any>;
   listaSubCategoria: Array<any>;
+  listaTipoServicio: Array<any>; // tipo en el detalle
+  listaIdTipoServicios: Array<any>; // para obtener el precio para el detalle
   listaServicios: Array<any>;
   listaReservas: Array<any>;
   listaFichaClinica: Array<any>;
@@ -46,30 +52,33 @@ export class ServicioComponent implements OnInit {
   listaNombreEmpleadoSeleccionados: Array<any>;
   listaClienteSeleccionados: Array<any>;
   listaNombreClienteSeleccionados: Array<any>;
-  mostrarBoton: any;
+  listaFichaSeleccionada: Array<any>;
+  listaFichasAsociadas = new Array<any>();
+  mostrarDetalles: any;
   mensajeVacio: any;
 
   constructor(
     private service: ServicioService,
     private categoriaService: CategoriaService,
     private router: Router) {
-      this.listaServicios = new Array<any>();
-    this.tableDataServicio = {
-      headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
-        'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
-      dataRows: this.listaServicios
-    };
+      
+      this.listaFichasAsociadas = new Array<any>();
+      this.tableDataFichasAsociadas = {
+        headerRow: ['Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+          'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+        dataRows: this.listaFichasAsociadas
+      };
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarEmpleados
     };
     this.tableBuscarCliente = {
-      headerRow: ['', 'Id', 'Nombre', 'Email'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
     };
   }
   /*-------------------------------------------------------------------------*/
-  listarServicios() {
+  /*listarServicios() {
     this.service.getServicios().subscribe(
       response => {
         console.log('totalServicio(): ', response);
@@ -115,112 +124,9 @@ export class ServicioComponent implements OnInit {
         }
       }
     );
-  }
+  }*/
   /*-------------------------------------------------------------------------*/
-  buscar() {
-    let path = '';
-    let fechaHastaCadena = '';
-    if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-      let fechaDesdeString = this.fechaCadena(this.fechaDesde);
-      path = '{"fechaDesdeCadena":"' + fechaDesdeString + '"';
-      console.log('path: ', path);
-    }
-    if (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null) {
-      fechaHastaCadena = this.fechaCadena(this.fechaHasta);
-      if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-        path = path + ',"fechaHastaCadena":"' + fechaHastaCadena + '"';
-        console.log('path: ', path);
-      } else {
-        path = '{"fechaHastaCadena":"' + fechaHastaCadena + '"';
-      }
-    }
-    if (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)) {
-        path = path + ',"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      } else {
-        path = '{"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      }
-    }
-    if (typeof this.clienteId !== 'undefined' && this.clienteId !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
-        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)) {
-        path = path + ',{"idFichaClinica":"idCliente":{"idPersona":' + this.clienteId + '}}';
-      } else {
-        path = '{"idFichaClinica":{"idCliente":{"idPersona":' + this.clienteId + '}}';
-      }
-    }
-    if (typeof this.idProducto !== 'undefined' && this.idProducto !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
-        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)
-        || (typeof this.clienteId !== 'undefined' && this.clienteId !== null)) {
-        console.log('this.categoriaId: ', this.idCategoria);
-        console.log('this.tipoProductoId: ', this.idProducto);
-        path = path + ',"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
-      } else {
-        path = '{"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
-      }
-    }
-    path = path + '}';
-    console.log('path', path);
-    path = encodeURIComponent(path);
-    path = '?ejemplo=' + path;
-    this.service.buscarServicios(path).subscribe(
-      response => {
-        console.log('buscarServicios(conParametros): ', response);
-        if (response.totalDatos > 0) {
-          this.listaServicios = new Array<any>();
-          response.lista.forEach(
-            servicio => {
-              let lista = new Array<any>();
-              // servicio
-              lista.push(servicio.idServicio); // 0
-              lista.push(servicio.fechaHora); // 1
-              // ficha
-              lista.push(servicio.idFichaClinica.idFichaClinica); // 2
-              lista.push(servicio.idFichaClinica.fechaHora); // 3
-              // profesional
-              lista.push(servicio.idEmpleado.idPersona); // 4
-              lista.push(servicio.idEmpleado.nombreCompleto); // 5
-              // cliente
-              lista.push(servicio.idFichaClinica.idCliente.idPersona); // 6
-              lista.push(servicio.idFichaClinica.idCliente.nombreCompleto); // 7
-              // categoria
-              lista.push(servicio.idFichaClinica.idTipoProducto.idCategoria.idCategoria); // 8
-              lista.push(servicio.idFichaClinica.idTipoProducto.idCategoria.descripcion); // 9
-              // sub-categoria
-              lista.push(servicio.idFichaClinica.idTipoProducto.idTipoProducto); // 10
-              lista.push(servicio.idFichaClinica.idTipoProducto.descripcion); // 11
-              lista.push(false); // 12
-              this.listaServicios.push(lista);
-              this.tableDataServicio = {
-                headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
-                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
-                dataRows: this.listaServicios
-              };
-            },
-            error => {
-              this.listaServicios = [];
-              this.tableDataServicio = {
-                headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
-                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
-                dataRows: this.listaServicios
-              };
-            });
-        } else {
-          this.mensajeVacio = 'Búsqueda sin resultados';
-          this.listaServicios = [];
-          this.tableDataServicio = {
-            headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
-              'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
-            dataRows: this.listaServicios
-          };
-        }
-      }
-    );
-  }
+  
   /*-------------------------------------------------------------------------*/
   fechaCadena(fecha): any {
     let d = new Date(fecha);
@@ -244,8 +150,6 @@ export class ServicioComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   listarEmpleadosBuscador(buscadorNombre) {
-    // let buscadorNombre = 'Gustavo'
-    // let url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
     let url = '';
     if (buscadorNombre) {
       url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
@@ -257,24 +161,20 @@ export class ServicioComponent implements OnInit {
       response => {
         console.log('buscadorEmpleados: ', response);
         if (response.totalDatos > 0) {
+          this.listaBuscarEmpleados = new Array<any>();
           response.lista.forEach(
             empleado => {
-              if (empleado.idLocalDefecto) {
+        //      if (empleado.idLocalDefecto) {
                 let lista = new Array<any>();
-
-                lista.push(false);
                 lista.push(empleado.idPersona); // 0
                 lista.push(empleado.nombreCompleto); // 1
                 lista.push(empleado.email); // 2
-                // local por defecto
-                lista.push(empleado.idLocalDefecto.nombre); // 3
                 this.listaBuscarEmpleados.push(lista);
-
                 this.tableBuscarEmpleado = {
-                  headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+                  headerRow: ['Id', 'Nombre', 'Email'],
                   dataRows: this.listaBuscarEmpleados
                 };
-              }
+        //      }
             });
 
         }
@@ -283,8 +183,6 @@ export class ServicioComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   listarClientesBuscador(buscadorNombre) {
-    // let buscadorNombre = 'Gustavo'
-    // let url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
     let url = '';
     if (buscadorNombre) {
       url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
@@ -301,26 +199,24 @@ export class ServicioComponent implements OnInit {
               if (cliente.idLocalDefecto === null) {
                 let lista = new Array<any>();
 
-                lista.push(false);
                 lista.push(cliente.idPersona); // 0
                 lista.push(cliente.nombreCompleto); // 1
                 lista.push(cliente.email); // 2
                 this.listaBuscarClientes.push(lista);
 
                 this.tableBuscarCliente = {
-                  headerRow: ['', 'Id', 'Nombre', 'Email'],
+                  headerRow: ['Id', 'Nombre', 'Email'],
                   dataRows: this.listaBuscarClientes
                 };
               }
             });
-
         }
       }
     );
   }
   /*-------------------------------------------------------------------------*/
-  agregarServicio() {
-    this.router.navigate(['servicio/agregar-servicio']);
+  cancelar() {
+    this.router.navigate(['servicio']);
   }
   /*-------------------------------------------------------------------------*/
   seleccionarVariosEmpleado(idSeleccionado, nombreEmpleado) {
@@ -356,13 +252,20 @@ export class ServicioComponent implements OnInit {
     this.buscarEmpleadoNombre = null;
     this.listaBuscarEmpleados = [];
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarEmpleados
     };
     $('#exampleModal2').modal('hide');
     // se elimina lo seleccionado
     this.listaEmpleadoSeleccionados = [];
     this.listaNombreEmpleadoSeleccionados = [];
+    /* si ya se seleccionó también un cliente, cargar la grilla de fichas 
+    correspondientes a el cliente y empleado seleccionados */
+    if (this.clienteId) {
+      this.listarFichasAsociadas();
+    } else {
+      this.showNotification('Seleccionar cliente para obtener las fichas', NOTIFY.INFO);
+    }
   }
   /*-------------------------------------------------------------------------*/
   cancelarBuscarEmpleado() {
@@ -372,7 +275,7 @@ export class ServicioComponent implements OnInit {
     this.listaNombreEmpleadoSeleccionados = [];
     this.listaBuscarEmpleados = [];
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarEmpleados
     };
   }
@@ -410,13 +313,20 @@ export class ServicioComponent implements OnInit {
     this.buscarClienteNombre = null;
     this.listaBuscarClientes = [];
     this.tableBuscarCliente = {
-      headerRow: ['', 'Id', 'Nombre', 'Email'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
     };
     $('#exampleModal3').modal('hide');
     // se elimina lo seleccionado
     this.listaClienteSeleccionados = [];
     this.listaNombreClienteSeleccionados = [];
+    /* si ya se seleccionó también un cliente, cargar la grilla de fichas 
+    correspondientes a el cliente y empleado seleccionados */
+    if (this.empleadoId) {
+      this.listarFichasAsociadas();
+    } else {
+      this.showNotification('Seleccionar empleado para obtener las fichas', NOTIFY.INFO);
+    }
   }
    /*-------------------------------------------------------------------------*/
    cancelarBuscarCliente() {
@@ -426,9 +336,67 @@ export class ServicioComponent implements OnInit {
     this.listaNombreClienteSeleccionados = [];
     this.listaBuscarClientes = [];
     this.tableBuscarCliente = {
-      headerRow: ['', 'Id', 'Nombre', 'Email'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
     };
+  }
+  /*-------------------------------------------------------------------------*/
+  listarFichasAsociadas() {
+    let path = '{"idCliente":{"idPersona":' + this.clienteId + '},"idEmpleado":{"idPersona":' + this.empleadoId + '}}';
+    console.log('path', path);
+    path = encodeURIComponent(path);
+    path = '?ejemplo=' + path;
+    this.service.getFichasAsociadas(path).subscribe(
+      response => {
+        console.log('listarServiciosAsociados(): ' + response);
+        if (response.totalDatos > 0) {
+          this.listaFichasAsociadas = new Array<any>();
+          response.lista.forEach(
+            ficha => {
+              let lista = new Array<any>();
+              // ficha
+              lista.push(ficha.idFichaClinica); // 0
+              lista.push(ficha.fechaHora); // 1
+              // profesional
+              lista.push(ficha.idEmpleado.idPersona); // 2
+              lista.push(ficha.idEmpleado.nombreCompleto); // 3
+              // cliente
+              lista.push(ficha.idCliente.idPersona); // 4
+              lista.push(ficha.idCliente.nombreCompleto); // 5
+              // categoria
+              lista.push(ficha.idTipoProducto.idCategoria.idCategoria); // 6
+              lista.push(ficha.idTipoProducto.idCategoria.descripcion); // 7
+              // sub-categoria
+              lista.push(ficha.idTipoProducto.idTipoProducto); // 8
+              lista.push(ficha.idTipoProducto.descripcion); // 9
+              this.listaFichasAsociadas.push(lista);
+              this.tableDataFichasAsociadas = {
+                headerRow: ['Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+                dataRows: this.listaFichasAsociadas
+              };
+            },
+            error => {
+              // this.mensajeVacio = SIN_DATOS;
+              this.listaFichasAsociadas = [];
+              this.tableDataFichasAsociadas = {
+                headerRow: ['Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+                dataRows: this.listaFichasAsociadas
+              };
+            });
+        } else {
+          this.mensajeVacio = 'Búsqueda sin resultados';
+          this.listaFichasAsociadas = [];
+              this.tableDataFichasAsociadas = {
+                headerRow: ['Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+                dataRows: this.listaFichasAsociadas
+              };
+        }
+      }
+    );
+
   }
   /*-------------------------------------------------------------------------*/
   listarCategorias() {
@@ -469,6 +437,90 @@ export class ServicioComponent implements OnInit {
     );
   }
   /*-------------------------------------------------------------------------*/
+  listarTipoServicio() {
+   /* console.log('holaMundo: ', idCategoria);
+    let url = '{"idCategoria":{"idCategoria":' + idCategoria + '}}';
+    url = '?ejemplo=' + encodeURIComponent(url);*/
+    this.categoriaService.getServicios().subscribe(
+      response => {
+        this.listaAtributos = new Array<any>();
+        this.listaTipoServicio = new Array<any>();
+        this.listaIdTipoServicios = new Array<any>();
+        response.lista.forEach(tipo => {
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(tipo.idPresentacionProducto);
+          this.listaAtributos.push(tipo.descripcionGeneral);
+          this.listaAtributos.push(tipo.existenciaProducto);
+          this.listaIdTipoServicios.push(tipo.idPresentacionProducto);
+          this.listaTipoServicio.push(this.listaAtributos);
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener sub-categorias', NOTIFY.DANGER);
+      }
+    );
+  }
+  obtenerPrecio(idPresentacionProducto) {
+    let index = this.listaIdTipoServicios.indexOf(idPresentacionProducto);
+    this.precio = this.listaTipoServicio[index].existenciaProducto ? this.listaTipoServicio[index].existenciaProducto : 0;
+
+    console.log('---',  this.precio ); // { nombre: 'cerezas', cantidad: 5 }
+  }
+  /*-------------------------------------------------------------------------*/
+  seleccionarUnaFicha(idFichaSeleccionada) {
+    console.log('idFichaSeleccionada: ', idFichaSeleccionada);
+    console.log('lista de id seleccionados: ', this.listaFichaSeleccionada);
+
+    // si no hay elementos en la lista --> agregar
+    if (this.listaFichaSeleccionada.length === 0) {
+      this.listaFichaSeleccionada.push(idFichaSeleccionada);
+    } else {
+      // si el id ya está en la lista, no agregar y sacar de la lista, porque des-seleccionó en el check
+      if (this.listaFichaSeleccionada.includes(idFichaSeleccionada)) {
+        let posicion = this.listaFichaSeleccionada.indexOf(idFichaSeleccionada);
+        console.log('se encuentra en la posicion: ', this.listaFichaSeleccionada.indexOf(idFichaSeleccionada));
+        // se elimina de la lista
+        this.listaFichaSeleccionada.splice(posicion, 1);
+      } else {
+        this.listaFichaSeleccionada.push(idFichaSeleccionada);
+      }
+    }
+    // solo si hay un elemento seleccionado se puede habilitar el boton de aceptar
+    console.log('lista de id seleccionados al final: ', this.listaFichaSeleccionada);
+  }
+  /*-------------------------------------------------------------------------*/
+  guardarServicio() {
+    let dato = {
+      observacion: this.observacion,
+      idFichaClinica: {
+        idFichaClinica: this.listaFichaSeleccionada[0]
+      }
+    };
+    this.service.agregarServicio(dato).subscribe(
+      servicio => {
+        console.log('servicio creado: ', servicio);
+        this.mostrarDetalles = true;
+        this.idServicio =  servicio.idServicio;
+        this.showNotification('Servicio creado con éxito!', NOTIFY.SUCCESS);
+      },
+      error => {
+        this.mostrarDetalles = false;
+        this.idServicio =  null;
+        this.showNotification('Error al crear el servicio. Consulte con soporte', NOTIFY.DANGER);
+      }
+    );
+    /*
+        { 
+        "cantidad": 1,
+        "idPresentacionProducto":{
+        "idPresentacionProducto":31
+        },
+        "idServicio":{
+        "idServicio":3
+        }
+        }*/
+  }
+  /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
     const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
     $.notify({
@@ -495,7 +547,7 @@ export class ServicioComponent implements OnInit {
         '</div>'
     });
   }
-  /*-------------------------------------------------------------------------*/
+  
   /*-------------------------------------------------------------------------*/
   limpiar() {
     this.fechaHasta = null;
@@ -514,10 +566,12 @@ export class ServicioComponent implements OnInit {
     this.listaNombreEmpleadoSeleccionados = new Array<any>();
     this.listaClienteSeleccionados = new Array<any>();
     this.listaNombreClienteSeleccionados = new Array<any>();
-    this.mostrarBoton = false;
+    this.listaFichaSeleccionada = new Array<any>();
+    this.mostrarDetalles = false;
     this.listarCategorias();
+    this.listarTipoServicio();
     // this.listarSubCategorias();
-    this.listarServicios();
+  //  this.listarServicios();
     // al iniciar busca las reservas del dia actual
     /* console.log(new Date());
      this.fechaDesde = new Date();

@@ -5,10 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../app.module';
 
 import { ServicioComponent } from './servicio.component';
-// import { AgregarReservaComponent } from './agregar-reserva.component';
 import { ServicioRoutes } from './servicio.routing';
-/*import { AgregarFichaComponent } from './agregar-ficha.component';
-import { ModificarFichaComponent } from './modificar-ficha.component';*/
+import { AgregarServicioComponent } from './agregar-servicio.component';
+/*import { ModificarFichaComponent } from './modificar-ficha.component';*/
 
 @NgModule({
     imports: [
@@ -18,7 +17,8 @@ import { ModificarFichaComponent } from './modificar-ficha.component';*/
         MaterialModule
     ],
     declarations: [
-        ServicioComponent/*,
+        ServicioComponent,
+        AgregarServicioComponent/*,
         AgregarFichaComponent,
         ModificarFichaComponent,
        // AgregarReservaComponent*/

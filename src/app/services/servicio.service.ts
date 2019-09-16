@@ -37,20 +37,17 @@ export class ServicioService {
     }
     buscarServicios(descripcion): Observable<any> {
         return this.http.get(this.servicioUrl + descripcion);
-    }/*
-    buscarAgenda(descripcion): Observable<any> {
-        return this.http.get(this.empleadoUrl + descripcion);
-    }*/
-    agregarFicha(ficha: any): Observable<any> {
+    }
+    agregarServicio(servicio: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'usuario': 'gustavo'
+                'usuario': 'ana'
             })
         };
-        return this.http.post(this.fichaClinicaUrl, ficha, httpOptions);
+        return this.http.post(this.servicioUrl, servicio, httpOptions);
     }
-      modificarFicha(ficha: any): Observable<any> {
+     /* modificarFicha(ficha: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
@@ -58,10 +55,10 @@ export class ServicioService {
             })
         };
         return this.http.put(this.fichaClinicaUrl, ficha, httpOptions);
-    }
+    }*/
     
-    getServiciosAsociados(descripcion): Observable<any> {
-        return this.http.get(this.servicioUrl  + descripcion);
+    getFichasAsociadas(descripcion): Observable<any> {
+        return this.http.get(this.fichaClinicaUrl  + descripcion);
     }
     /*eliminarReserva(id): Observable<any> {
         let httpParams = new HttpParams();
