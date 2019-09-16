@@ -34,6 +34,7 @@ export class ModificarServicioComponent implements OnInit {
   precio: any;
   cantidad: any;
   idTipoServicio: any;
+  eliminarId: any;
   
   // listaServicios: Array<any>;
   listaFichasAsociadas: Array<any>;
@@ -148,10 +149,25 @@ export class ModificarServicioComponent implements OnInit {
         this.listarDetallesDelServicio();
       }
     );
-    
   }
+  /*-------------------------------------------------------------------------*/
   confirmarEliminar(idDetalle) {
-    console.log('confirmar eliminar detalle ', idDetalle);
+    $('#modalEliminar').modal('show');
+    this.eliminarId = idDetalle;
+  }
+  /*-------------------------------------------------------------------------*/
+  eliminarDetalle() {
+    let url = '/' + this.idServicio + '/detalle/' + this.eliminarId;
+    this.service.eliminarDetalle(url).subscribe(
+      response => {
+        this.showNotification('Detalle eliminado con éxito!', NOTIFY.SUCCESS);
+        this.listarDetallesDelServicio();
+      },
+      error => {
+       this.showNotification('Error al eliminar el detalle. Consulte con soporte', NOTIFY.DANGER);
+       this.listarDetallesDelServicio();
+      }
+    );
   }
   /*-------------------------------------------------------------------------*/
   listarTipoServicio() {

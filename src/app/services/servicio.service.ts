@@ -72,11 +72,11 @@ export class ServicioService {
         };
         return this.http.post(this.servicioUrl + url, dato, httpOptions);
     }
-    /*eliminarReserva(id): Observable<any> {
+    eliminarDetalle(descripcion): Observable<any> {
         let httpParams = new HttpParams();
-        Object.keys(id).forEach( function(key) {
-          httpParams = httpParams.append(key, id[key]);
-        });
-        return this.http.delete(this.reservaUrl + '/' + id);
-      }*/
+        /*Object.keys(id).forEach( function(key) {
+            httpParams = httpParams.append(key, id[key]);
+        });*/
+        return this.http.delete(this.servicioUrl + descripcion);
+    }
 }
