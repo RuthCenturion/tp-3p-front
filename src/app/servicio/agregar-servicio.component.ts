@@ -396,7 +396,6 @@ export class AgregarServicioComponent implements OnInit {
         }
       }
     );
-
   }
   /*-------------------------------------------------------------------------*/
   listarCategorias() {
@@ -438,9 +437,6 @@ export class AgregarServicioComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   listarTipoServicio() {
-   /* console.log('holaMundo: ', idCategoria);
-    let url = '{"idCategoria":{"idCategoria":' + idCategoria + '}}';
-    url = '?ejemplo=' + encodeURIComponent(url);*/
     this.categoriaService.getServicios().subscribe(
       response => {
         this.listaAtributos = new Array<any>();
@@ -460,6 +456,7 @@ export class AgregarServicioComponent implements OnInit {
       }
     );
   }
+  /*-------------------------------------------------------------------------*/
   obtenerPrecio(idPresentacionProducto) {
     let index = this.listaIdTipoServicios.indexOf(idPresentacionProducto);
     this.precio = this.listaTipoServicio[index].existenciaProducto ? this.listaTipoServicio[index].existenciaProducto : 0;

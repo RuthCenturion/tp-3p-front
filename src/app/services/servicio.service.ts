@@ -60,6 +60,18 @@ export class ServicioService {
     getFichasAsociadas(descripcion): Observable<any> {
         return this.http.get(this.fichaClinicaUrl  + descripcion);
     }
+    listarDetallesDelServicio(descripcion): Observable<any> {
+        return this.http.get(this.servicioUrl  + descripcion);
+    }
+    agregarDetalle(url, dato): Observable<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'usuario': 'ana'
+            })
+        };
+        return this.http.post(this.servicioUrl + url, dato, httpOptions);
+    }
     /*eliminarReserva(id): Observable<any> {
         let httpParams = new HttpParams();
         Object.keys(id).forEach( function(key) {

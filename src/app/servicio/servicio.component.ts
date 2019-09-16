@@ -56,7 +56,7 @@ export class ServicioComponent implements OnInit {
       this.listaServicios = new Array<any>();
     this.tableDataServicio = {
       headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
-        'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+        'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Observación', 'Acciones'],
       dataRows: this.listaServicios
     };
     this.tableBuscarEmpleado = {
@@ -96,11 +96,11 @@ export class ServicioComponent implements OnInit {
               // sub-categoria
               lista.push(servicio.idFichaClinica.idTipoProducto.idTipoProducto); // 10
               lista.push(servicio.idFichaClinica.idTipoProducto.descripcion); // 11
-              lista.push(false); // 12
+              lista.push(servicio.observacion); // 12 no se muestra
               this.listaServicios.push(lista);
               this.tableDataServicio = {
                 headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
-                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Observacion',  'Acciones'],
                 dataRows: this.listaServicios
               };
             },
@@ -193,11 +193,11 @@ export class ServicioComponent implements OnInit {
               // sub-categoria
               lista.push(servicio.idFichaClinica.idTipoProducto.idTipoProducto); // 10
               lista.push(servicio.idFichaClinica.idTipoProducto.descripcion); // 11
-              lista.push(false); // 12
+              lista.push(servicio.observacion); // 12 no se muestra
               this.listaServicios.push(lista);
               this.tableDataServicio = {
                 headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
-                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Observacion', 'Acciones'],
                 dataRows: this.listaServicios
               };
             },
@@ -321,6 +321,11 @@ export class ServicioComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
   agregarServicio() {
     this.router.navigate(['servicio/agregar-servicio']);
+  }
+  /*-------------------------------------------------------------------------*/
+  modificarServicio(row) {
+    console.log('fila seleccionada a modificar: ', row);
+    this.router.navigate(['servicio/modificar-servicio', row]);
   }
   /*-------------------------------------------------------------------------*/
   seleccionarVariosEmpleado(idSeleccionado, nombreEmpleado) {

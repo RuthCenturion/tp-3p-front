@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { ServicioComponent } from './servicio.component';
 import { AgregarServicioComponent } from './agregar-servicio.component';
-/*import { ModificarFichaComponent } from './modificar-ficha.component';*/
+import { ModificarServicioComponent } from './modificar-servicio.component';
 
 export const ServicioRoutes: Routes = [
   {
@@ -18,11 +18,11 @@ export const ServicioRoutes: Routes = [
       path: 'agregar-servicio',
       component: AgregarServicioComponent
     }]
-  }/*,{
+  },{
     path: '',
     children: [{
-      path: 'modificar-ficha',
-      component: ModificarFichaComponent
+      path: 'modificar-servicio',
+      component: ModificarServicioComponent
     }]
-  }*/
+  }
 ];

@@ -7,7 +7,7 @@ import { MaterialModule } from '../app.module';
 import { ServicioComponent } from './servicio.component';
 import { ServicioRoutes } from './servicio.routing';
 import { AgregarServicioComponent } from './agregar-servicio.component';
-/*import { ModificarFichaComponent } from './modificar-ficha.component';*/
+import { ModificarServicioComponent } from './modificar-servicio.component';
 
 @NgModule({
     imports: [
@@ -18,10 +18,8 @@ import { AgregarServicioComponent } from './agregar-servicio.component';
     ],
     declarations: [
         ServicioComponent,
-        AgregarServicioComponent/*,
-        AgregarFichaComponent,
-        ModificarFichaComponent,
-       // AgregarReservaComponent*/
+        AgregarServicioComponent,
+        ModificarServicioComponent
     ]
 })
 
