@@ -170,6 +170,11 @@ export class ModificarServicioComponent implements OnInit {
     );
   }
   /*-------------------------------------------------------------------------*/
+  cancelar() {
+    this.router.navigate(['servicio']);
+  }
+
+  /*-------------------------------------------------------------------------*/
   listarTipoServicio() {
     this.categoriaService.getServicios().subscribe(
       response => {
