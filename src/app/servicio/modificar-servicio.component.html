@@ -8,7 +8,7 @@
               <div class="card-icon">
                 <i class="material-icons">assignment</i>
               </div>
-              <h4 class="card-title ">Modificar Servicio</h4>
+              <h4 class="card-title ">Modificar Servicio {{idServicio}}</h4>
             </div>
             <div class="card-body">
               <!--*********************-->
@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-6">
                   <mat-form-field>
-                    <input matInput type="text" [(ngModel)]="observacion" placeholder="Observación" required>
+                    <input matInput type="text" [(ngModel)]="observacion" placeholder="Observación">
                   </mat-form-field>
                 </div>
               </div>
@@ -73,12 +73,12 @@
                   </tbody>
                 </table>               
               </div>
-               <!--*******************--->
-              <!--div *ngIf="listaFichasAsociadas.length === 0">{{mensajeVacio}}</div-->
               <!--*******************--->
               <div class="row">
-                <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
-                <button mat-raised-button class="btn btn-fill btn-rose" (click)="cancelar()">Cancelar</button>
+                <div class="col-md-6">
+                    <button mat-raised-button class="btn btn-primary mat-raised-button" (click)="modificarServicio()">Guardar</button>
+                    <button mat-raised-button class="btn btn-warning mat-raised-button" (click)="cancelar()">Cancelar</button>
+                  </div>                  
               </div>
               <!--*******************--->
             </div>
@@ -95,7 +95,7 @@
               <div class="card-icon">
                 <i class="material-icons">assignment</i>
               </div>
-              <h4 class="card-title ">Detalle del servicio</h4>
+              <h4 class="card-title ">Detalles del servicio {{idServicio}}</h4>
             </div>
             <div class="card-body">
               <!--*********************-->
@@ -225,96 +225,5 @@
      </div>
    </div>
    <!-------------------------END ELIMINAR DETALLE--------------------------->
-      <!------------------------- MODIFICAR RESERVA--------------------------->
-      <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modificar reserva</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Fecha reserva</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFechaReserva"
-                      disabled>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Inicio</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarInicio"
-                      disabled>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Fin</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFin" disabled>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Empleado</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreEmpleado"
-                      disabled>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Cliente</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreCliente"
-                      disabled>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Asistió</label>
-                <div class="col-sm-9">
-                  NO
-                  <mat-slide-toggle class="example-margin" [color]="primary" [disabled]="false"
-                    [(ngModel)]="modificarAsistio">
-                  </mat-slide-toggle> SI
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Observacion</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarObservacion">
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal">
-                Guardar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-------------------------END MODIFICAR CATEGORIA--------------------------->
     </div>
   </div>

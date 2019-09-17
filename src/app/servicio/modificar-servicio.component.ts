@@ -60,7 +60,6 @@ export class ModificarServicioComponent implements OnInit {
     };
   }
   /*-------------------------------------------------------------------------*/
-  /*-------------------------------------------------------------------------*/
   listarFichasAsociadasAlServicio() {
     //  if (response.totalDatos > 0) {
     this.listaFichasAsociadas = new Array<any>();
@@ -151,6 +150,23 @@ export class ModificarServicioComponent implements OnInit {
     );
   }
   /*-------------------------------------------------------------------------*/
+  modificarServicio() {
+    let dato: any = {
+      idServicio: this.idServicio,
+      observacion: this.observacion
+    };
+    this.service.modificarServicio(dato).subscribe(
+      response => {
+        console.log('modificarServicio(): ', response);
+        this.showNotification('Modificación del servicio con éxito!', NOTIFY.SUCCESS);
+        // this.cancelarModificar();
+      },
+      error => {
+        this.showNotification('Error al modificar servicio. Consulte con soporte', NOTIFY.WARNING);
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
   confirmarEliminar(idDetalle) {
     $('#modalEliminar').modal('show');
     this.eliminarId = idDetalle;
@@ -173,7 +189,6 @@ export class ModificarServicioComponent implements OnInit {
   cancelar() {
     this.router.navigate(['servicio']);
   }
-
   /*-------------------------------------------------------------------------*/
   listarTipoServicio() {
     this.categoriaService.getServicios().subscribe(

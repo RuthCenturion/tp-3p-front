@@ -47,16 +47,15 @@ export class ServicioService {
         };
         return this.http.post(this.servicioUrl, servicio, httpOptions);
     }
-     /* modificarFicha(ficha: any): Observable<any> {
+    modificarServicio(descripcion: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
-                'usuario': 'gustavo'
+                'usuario': 'ana'
             })
         };
-        return this.http.put(this.fichaClinicaUrl, ficha, httpOptions);
-    }*/
-    
+        return this.http.put(this.servicioUrl, descripcion, httpOptions);
+    }
     getFichasAsociadas(descripcion): Observable<any> {
         return this.http.get(this.fichaClinicaUrl  + descripcion);
     }
