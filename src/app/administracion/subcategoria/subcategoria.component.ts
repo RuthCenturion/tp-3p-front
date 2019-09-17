@@ -6,6 +6,7 @@ import { TableData } from '../../md/md-table/md-table.component';
 import { CategoriaService } from '../../services/categoria.service';
 import { NOTIFY } from '../../commons/app-utils';
 import {ModalComponent} from '../modal/modal.component';
+import { PageEvent } from '@angular/material';
 
 declare interface DataTable {
   headerRow: string[];
@@ -44,6 +45,13 @@ export class SubCategoriaComponent implements OnInit {
   listaSubCategoria: Array<any>;
   lista: Array<any>;
 
+  // MatPaginator Inputs
+  length: number;
+  pageSize = 5;
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
+
 
   constructor(
     private categoriaService: CategoriaService,
@@ -65,7 +73,7 @@ export class SubCategoriaComponent implements OnInit {
     this.idCategoria = null;
     this.descripcion = null;
     this.listarCategorias();
-    this.listarSubCategorias();
+    this.listarSubCategoriasPag(undefined);
   }
 
   /*-------------------------------------------------------------------------*/
@@ -125,7 +133,7 @@ export class SubCategoriaComponent implements OnInit {
     if (this.idCategoria) {
       this.obtenerCategoria(this.idCategoria);
     } else {
-      this.listarCategorias();
+      this.listarSubCategoriasPag(undefined);
     }
   }
   /*-------------------------------------------------------------------------*/
@@ -242,7 +250,7 @@ export class SubCategoriaComponent implements OnInit {
      response => {
        console.log('lo creado: ', response);
        this.showNotification('Categoría creada con éxito!', NOTIFY.SUCCESS);
-       this.listarSubCategorias();
+       this.listarSubCategoriasPag(undefined);
        this.descripcion = null;
        this.idCategoria = null;
      },
@@ -322,7 +330,7 @@ export class SubCategoriaComponent implements OnInit {
       response => {
         console.log('lo creado: ', response);
         this.showNotification('Categoría creada con éxito!', NOTIFY.SUCCESS);
-        this.listarSubCategorias();
+        this.listarSubCategoriasPag(undefined);
         this.descripcion = null;
         this.idCategoria = null;
       },
@@ -344,12 +352,54 @@ export class SubCategoriaComponent implements OnInit {
     this.categoriaService.eliminarSubCategoria(this.eliminarId).subscribe(
       response => {
         this.showNotification('Sub-Categoría eliminada con éxito!', NOTIFY.SUCCESS);
-        this.listarSubCategorias();
+        this.listarSubCategoriasPag(undefined);
       },
       error => {
         this.showNotification('Error al eliminar SubCategoría', NOTIFY.DANGER);
       }
     );
+  }
+
+  /*---------------------Sub Categoria Paginado--------------------------------*/
+  listarSubCategoriasPag(evento: any) {
+    let inicio;
+    if(evento == undefined) {
+      inicio = 0
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    this.categoriaService.obtenerSubCategoriaPag(this.descripcion, inicio, this.pageSize).subscribe(
+      response => {
+        this.listaSubCategoria = new Array<any>();
+        this.lista = new Array<any>();
+        this.length = response.totalDatos;
+        response.lista.forEach(cat => {
+          this.lista.push(cat);
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(cat.idTipoProducto);
+          this.listaAtributos.push(cat.descripcion);
+          this.listaAtributos.push(cat.idCategoria.descripcion);
+          this.listaAtributos.push(cat.idCategoria.idCategoria);
+          this.listaSubCategoria.push(this.listaAtributos);
+         /* this.dataTable = {
+            headerRow: ['Id', 'Descripción', 'Acciones'],
+            footerRow: ['Id', 'Descripción', 'Acciones'],
+            dataRows: this.listaCategoria
+          };*/
+          this.tableData1 = {
+            headerRow: ['Id', 'Descripción', 'Categoría', 'idCategoria', 'Acciones'],
+            dataRows: this.listaSubCategoria
+          };
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+      }
+    );
+   /* this.tableData1 = {
+      headerRow: ['Id', 'Descripción', 'Categoría', 'Id Categoria', 'Acciones'],
+      dataRows: this.listaSubCategoria
+    };*/
   }
  
 }

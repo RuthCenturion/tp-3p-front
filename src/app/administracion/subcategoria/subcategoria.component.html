@@ -189,6 +189,8 @@
                         (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>
                     </td>
                   </tr>
+                  <mat-paginator [length]="length" [pageSize]="pageSize" (page)="pageEvent = listarSubCategoriasPag($event)">
+                  </mat-paginator>
                 </tbody>
               </table>
             </div>

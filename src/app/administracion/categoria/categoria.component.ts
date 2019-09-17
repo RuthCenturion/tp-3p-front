@@ -42,7 +42,7 @@ export class CategoriaComponent implements OnInit {
   lista: Array<any>;
 
   // MatPaginator Inputs
-  length;
+  length: number;
   pageSize = 5;
 
   // MatPaginator Output
@@ -230,7 +230,7 @@ export class CategoriaComponent implements OnInit {
     this.categoriaService.agregarCategoria(dato).subscribe(
       response => {
         this.showNotification('Categoría creada con éxito!', NOTIFY.SUCCESS);
-        this.listarCategorias();
+        this.listarCategoriasPaginado(undefined);
       }
     );
   }
@@ -299,7 +299,7 @@ export class CategoriaComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
   //listaCategorias paginado
   listarCategoriasPaginado(evento: any) {
-    let inicio;
+    let inicio: number;
     if(evento == undefined) {
       inicio = 0
     } else {

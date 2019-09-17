@@ -40,7 +40,7 @@ export class CategoriaService {
     if (descripcion) {
       return this.http.get(this.categoriaUrl  + descripcion);
     } else {
-      return this.http.get(this.categoriaUrl + '?orderBy=idCategoria&orderDir=asc&inicio='+inicio+'&cantidad='+cantidad);
+      return this.http.get(this.categoriaUrl + '?orderBy=descripcion&orderDir=asc&inicio='+inicio+'&cantidad='+cantidad);
     }
   }
 
@@ -56,6 +56,13 @@ export class CategoriaService {
       return this.http.get(this.subCategoriaUrl  + descripion);
     } else {
       return this.http.get(this.subCategoriaUrl);
+    }
+  }
+  obtenerSubCategoriaPag(descripcion: any, inicio: number, cantidad:number): Observable<any> {
+    if (descripcion) {
+      return this.http.get(this.subCategoriaUrl  + descripcion);
+    } else {
+      return this.http.get(this.subCategoriaUrl + '?orderBy=descripcion&orderDir=asc&inicio='+inicio+'&cantidad='+cantidad);
     }
   }
   agregarSubCategoria(subCategoria: any): Observable<any> {
