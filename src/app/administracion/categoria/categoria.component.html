@@ -60,22 +60,22 @@
             <div class="modal-body">
               <!--*******************-->
               <div class="row">
-                  <label class="col-sm-3 col-form-label">Id</label>
-                  <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="text" class="form-control form-control-sm" name="modificarId" 
-                          id="modificarId" [(ngModel)]="modificarId" disabled>
-                    </mat-form-field>
-                  </div>
-                </div>  
+                <label class="col-sm-3 col-form-label">Id</label>
+                <div class="col-sm-9">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" name="modificarId" id="modificarId"
+                      [(ngModel)]="modificarId" disabled>
+                  </mat-form-field>
+                </div>
+              </div>
               <!--*******************-->
               <div class="row">
                 <label class="col-sm-3 col-form-label">Descripción</label>
                 <div class="col-sm-9">
-                    <mat-form-field>
-                        <input matInput type="text" class="form-control form-control-sm" name="modificarDescripcion" 
-                          id="modificarDescripcion" [(ngModel)]="modificarDescripcion" required>
-                    </mat-form-field>
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" name="modificarDescripcion"
+                      id="modificarDescripcion" [(ngModel)]="modificarDescripcion" required>
+                  </mat-form-field>
                 </div>
               </div>
               <!--*******************-->
@@ -217,6 +217,8 @@
                         (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>
                     </td>
                   </tr>
+                  <mat-paginator [length]="length" [pageSize]="pageSize" (page)="pageEvent = listarCategoriasPaginado($event)">
+                  </mat-paginator>
                 </tbody>
               </table>
             </div>
