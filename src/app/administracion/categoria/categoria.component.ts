@@ -305,14 +305,11 @@ export class CategoriaComponent implements OnInit {
     } else {
       inicio  = evento.pageIndex * this.pageSize;
     }
-    console.log(evento);
     this.categoriaService.obtenerCategoriaPaginado(this.descripcion, inicio, this.pageSize).subscribe(
       response => {
         this.listaCategoria = new Array<any>();
         this.lista = new Array<any>();
         this.length = response.totalDatos;
-        console.log(response.lista);
-        console.log(response.totalDatos);
         response.lista.forEach(cat => {
           this.lista.push(cat);
           this.listaAtributos = new Array<any>();
