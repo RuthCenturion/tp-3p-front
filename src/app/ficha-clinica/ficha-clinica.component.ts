@@ -403,11 +403,11 @@ export class FichaClinicaComponent implements OnInit {
         } else {
           this.listaReservas = [];
           this.tableData1 = {
-            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Asistió', 'Estado', 'Observación', 'Acciones'],
+            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 
+            'Cliente', 'Asistió', 'Estado', 'Observación', 'Acciones'],
             dataRows: this.listaReservas
           };
         }
-
       }
     );
   }
@@ -475,7 +475,13 @@ export class FichaClinicaComponent implements OnInit {
     };
     this.router.navigate(['ficha-clinica/modificar-ficha', dato]);
   }
-  /**/
+  /*-------------------------------------------------------------------------*/
+  crearServicio(row) {
+    console.log('filaSeleccionada para crear servicio: ', row);
+    row.push('F');
+    this.router.navigate(['servicio/agregar-servicio', row]);
+  }
+  /*-------------------------------------------------------------------------*/
   abrirModalModificar(idReserva, fechaReserva, inicio, fin, idEmpleado,
     nombreEmpleado, idCliente, nombreCliente, asistio, observacion) {
     this.modificarIdReserva = idReserva;
