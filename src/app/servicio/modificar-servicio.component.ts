@@ -7,6 +7,21 @@ import { CategoriaService } from '../services/categoria.service';
 
 declare const $: any;
 
+declare interface DatoModificar {
+  idFicha: string;
+  fechaFicha: string;
+  idEmpleado: string;
+  nombreEmpleado: string;
+  idCliente: string;
+  nombreCliente: string;
+  idCategoria: string;
+  descripcionCategoria: string;
+  idSubCategoria: string;
+  descripcionSubCategoria: string;
+  motivo: string;
+  diagnostico: string;
+  observacion: string;
+}
 @Component({
   selector: 'app-modificar-servicio',
   templateUrl: './modificar-servicio.component.html',
@@ -31,10 +46,14 @@ export class ModificarServicioComponent implements OnInit {
   idSubCategoria: string;
   descripcionSubCategoria: string;
   observacion: any;
+  motivo: any;
+  diagnostico: any;
+  observacionFicha: any;
   precio: any;
   cantidad: any;
   idTipoServicio: any;
   eliminarId: any;
+  origen: any;
   
   // listaServicios: Array<any>;
   listaFichasAsociadas: Array<any>;
@@ -187,7 +206,27 @@ export class ModificarServicioComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   cancelar() {
-    this.router.navigate(['servicio']);
+    if (this.origen === 'F') {
+      let dato: DatoModificar;
+    dato = {
+      idFicha: this.idFicha,
+      fechaFicha: this.fechaFicha,
+      idEmpleado: this.idEmpleado,
+      nombreEmpleado: this.nombreEmpleado,
+      idCliente: this.idCliente,
+      nombreCliente: this.nombreCliente,
+      idCategoria: this.idCategoria,
+      descripcionCategoria: this.descripcionCategoria,
+      idSubCategoria: this.idSubCategoria,
+      descripcionSubCategoria: this.descripcionSubCategoria,
+      motivo: this.motivo,
+      diagnostico: this.diagnostico,
+      observacion: this.observacionFicha
+    };
+    this.router.navigate(['ficha-clinica/modificar-ficha', dato]);
+   } else {
+      this.router.navigate(['servicio']);
+    }
   }
   /*-------------------------------------------------------------------------*/
   listarTipoServicio() {
@@ -263,6 +302,10 @@ export class ModificarServicioComponent implements OnInit {
       this.idSubCategoria = params[10];
       this.descripcionSubCategoria = params[11];
       this.observacion = params[12];
+      this.motivo = params[13];
+      this.diagnostico = params[14];
+      this.observacionFicha = params[15];
+      this.origen = params[16];
     });
     this.listarFichasAsociadasAlServicio();
     this.listarDetallesDelServicio();

@@ -29,6 +29,7 @@ export class AgregarServicioComponent implements OnInit {
   idServicio: any; // id del servicio creados
   tipoProductoNombre: any;
   observacion: any;
+  modelAgregarDetalle: any;
   // del detalle
   precio: any;
   // buscador de empleados
@@ -55,7 +56,11 @@ export class AgregarServicioComponent implements OnInit {
   listaFichaSeleccionada: Array<any>;
   listaFichasAsociadas = new Array<any>();
   mostrarDetalles: any;
+  mostarAgregarDetalle: any;
   mensajeVacio: any;
+
+  cargado: any;
+  guardado: any;
 
   constructor(
     private service: ServicioService,
@@ -497,11 +502,14 @@ export class AgregarServicioComponent implements OnInit {
       servicio => {
         console.log('servicio creado: ', servicio);
         this.mostrarDetalles = true;
-        this.idServicio =  servicio.idServicio;
+        this.mostarAgregarDetalle = true;
+        this.idServicio =  servicio;
+        this.guardado = true;
         this.showNotification('Servicio creado con éxito!', NOTIFY.SUCCESS);
       },
       error => {
         this.mostrarDetalles = false;
+        this.mostarAgregarDetalle = false;
         this.idServicio =  null;
         this.showNotification('Error al crear el servicio. Consulte con soporte', NOTIFY.DANGER);
       }
@@ -565,8 +573,12 @@ export class AgregarServicioComponent implements OnInit {
     this.listaNombreClienteSeleccionados = new Array<any>();
     this.listaFichaSeleccionada = new Array<any>();
     this.mostrarDetalles = false;
+    this.mostarAgregarDetalle = false;
     this.listarCategorias();
     this.listarTipoServicio();
+    this.idServicio = null;
+    this.cargado = false;
+    this.guardado = false;
     // this.listarSubCategorias();
   //  this.listarServicios();
     // al iniciar busca las reservas del dia actual

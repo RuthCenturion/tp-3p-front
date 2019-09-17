@@ -83,8 +83,28 @@ export class ModificarFichaComponent implements OnInit {
     console.log('lo seleccionado para verServicio: ', a, b, c, d);
   }
    /*-------------------------------------------------------------------------*/
-  editarServicio(a, b) {
-    console.log('lo seleccionado para editarServicio: ', a, b);
+  editarServicio(servicioSeleccionado) {
+    console.log('lo seleccionado para editarServicio: ', servicioSeleccionado);
+    let modificar = new Array<any>();
+    modificar.push(servicioSeleccionado[0]); // idServicio
+    modificar.push(servicioSeleccionado[1]); // fechaServicio
+    modificar.push(this.idFicha); // 2
+    modificar.push(this.fechaFicha); // 3
+    modificar.push(this.idEmpleado); // 4
+    modificar.push(this.nombreEmpleado); // 5
+    modificar.push(this.idCliente); // 6
+    modificar.push(this.nombreCliente); // 7
+    modificar.push(this.idCategoria); // 8
+    modificar.push(this.descripcionCategoria); // 9
+    modificar.push(this.idSubCategoria); // 10
+    modificar.push(this.descripcionSubCategoria); // 11
+    modificar.push(servicioSeleccionado[3]); // 12 observacion del servicio
+    modificar.push(this.motivo); // 13
+    modificar.push(this.diagnostico); // 14
+    modificar.push(this.observacion); // 15 observacion de la ficha
+    modificar.push('F'); // 16 indicador para retornar a modificarFicha()
+    this.router.navigate(['servicio/modificar-servicio', modificar]);
+
   }
    /*-------------------------------------------------------------------------*/
    pruebaUnaSolaSeleccion(row) { // se envia toda la fila como array

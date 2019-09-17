@@ -1,7 +1,11 @@
 .mat-column-select {
     overflow: initial;
   }
-  table {
-    width: 100%;
-  }
+table {
+  width: 100%;
+}
   
+.table > thead > tr:first-child > th {
+  border-top: none;
+  background-color: rgba(201, 131, 241, 0.267);
+}
