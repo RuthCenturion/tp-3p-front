@@ -276,6 +276,8 @@
                         (click)="confirmarEliminar(row[0])"><i class="material-icons">delete</i></a>
                     </td>
                   </tr>
+                  <mat-paginator [length]="length" [pageSize]="pageSize" (page)="pageEvent = listarPacientesPag($event)">
+                  </mat-paginator>
                 </tbody>
               </table>
             </div>

@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { TableData } from '../../md/md-table/md-table.component';
 import { CategoriaService } from '../../services/categoria.service';
 import { NOTIFY } from '../../commons/app-utils';
+import { PageEvent } from '@angular/material';
 
 
 declare const $: any;
@@ -37,6 +38,14 @@ export class PacienteComponent implements OnInit {
   public tableData1: TableData;
   listaAtributos: Array<any>;
   listaPacientes: Array<any>;
+
+  descripcion: any;
+  // MatPaginator Inputs
+  length: number;
+  pageSize = 5;
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
 
   constructor(private service: CategoriaService) {
     this.tableData1 = {
@@ -93,7 +102,7 @@ export class PacienteComponent implements OnInit {
       response => {
         console.log('lo creado: ', response);
         this.showNotification('Paciente creado con éxito!', NOTIFY.SUCCESS);
-        this.listarPacientes();
+        this.listarPacientesPag(undefined);
         this.limpiarAgregar();
       },
       error => {
@@ -145,7 +154,7 @@ export class PacienteComponent implements OnInit {
       response => {
         console.log('lo creado: ', response);
         this.showNotification('Paciente creada con éxito!', NOTIFY.SUCCESS);
-        this.listarPacientes();
+        this.listarPacientesPag(undefined);
         this.limpiarModificar();
       },
       error => {
@@ -166,7 +175,7 @@ export class PacienteComponent implements OnInit {
     this.service.eliminarPaciente(this.eliminarId).subscribe(
       response => {
         this.showNotification('Paciente eliminado con éxito!', NOTIFY.SUCCESS);
-        this.listarPacientes();
+        this.listarPacientesPag(undefined);
       },
       error => {
         this.showNotification('Error al eliminar paceinte', NOTIFY.DANGER);
@@ -223,7 +232,41 @@ export class PacienteComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   ngOnInit() {
-    this.listarPacientes();
+    this.listarPacientesPag(undefined);
+  }
+
+  listarPacientesPag(evento: any) {
+    let inicio: number;
+    if(evento == undefined) {
+      inicio = 0
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    this.service.listarPacientesPag(this.descripcion, inicio, this.pageSize).subscribe(
+      response => {
+        console.log('lista de pacientes: ', response);
+        this.listaPacientes = new Array<any>();
+        this.length = response.totalDatos;
+        if (response.totalDatos > 0) {
+          response.lista.forEach(paciente => {
+            this.listaAtributos = new Array<any>();
+            this.listaAtributos.push(paciente.idPersona); // 0
+            this.listaAtributos.push(paciente.nombre); // 1
+            this.listaAtributos.push(paciente.apellido); // 2
+            this.listaAtributos.push(paciente.cedula); // 3
+            this.listaAtributos.push(paciente.ruc); // 4
+            this.listaAtributos.push(paciente.telefono); // 5
+            this.listaAtributos.push(paciente.email); // 6
+            this.listaAtributos.push(paciente.fechaNacimiento); // 7
+            this.listaPacientes.push(this.listaAtributos);
+            this.tableData1 = {
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'RUC', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+              dataRows: this.listaPacientes
+            };
+          });
+        }
+      }
+    );
   }
 
 }

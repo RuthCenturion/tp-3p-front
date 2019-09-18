@@ -117,6 +117,11 @@ export class CategoriaService {
   listarPacientes(): Observable<any> {
     return this.http.get(this.pacienteUrl);
   }
+
+  listarPacientesPag(descripcion: any, inicio: number, cantidad:number): Observable<any> {
+    return this.http.get(this.pacienteUrl + '?orderBy=apellido&orderDir=asc&inicio='+inicio+'&cantidad='+cantidad);
+  }
+
   agregarPaciente(paciente: any): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
