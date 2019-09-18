@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TableData } from '../../md/md-table/md-table.component';
 import { CategoriaService } from '../../services/categoria.service';
 import { NOTIFY } from '../../commons/app-utils';
+import { PageEvent } from '@angular/material';
 
 declare const $: any;
 @Component({
@@ -44,6 +45,14 @@ export class ServicioComponent implements OnInit {
   listaServicios: Array<any>;
 
   public tableData1: TableData;
+
+  descripcion: any;
+  // MatPaginator Inputs
+  length: number;
+  pageSize = 5;
+
+  // MatPaginator Output
+  pageEvent: PageEvent;
 
   constructor(private service: CategoriaService) {
     this.tableData1 = {
@@ -128,7 +137,7 @@ export class ServicioComponent implements OnInit {
     this.service.agregarServicio(dato).subscribe(
       response => {
         this.showNotification('Servicio creado con éxito!', NOTIFY.SUCCESS);
-        this.listarServicios();
+        this.listarServiciosPag(undefined);
         this.codigo = null;
         this.idProducto = null;
         this.nombre = null;
@@ -174,7 +183,7 @@ export class ServicioComponent implements OnInit {
     this.service.eliminarServicio(this.eliminarId).subscribe(
       response => {
         this.showNotification('Servicio eliminado con éxito!', NOTIFY.SUCCESS);
-        this.listarServicios();
+        this.listarServiciosPag(undefined);
       },
       error => {
         this.showNotification('Error al eliminar Servicio', NOTIFY.DANGER);
@@ -216,7 +225,54 @@ export class ServicioComponent implements OnInit {
     this.nombre = null;
     this.existenciaProducto = null;
     this.listarProductos();
-    this.listarServicios();
+    this.listarServiciosPag(undefined);
   }
 
+  /*-------------------------------------------------------------------------*/
+  listarServiciosPag(evento: any) {
+    let inicio: number;
+    if(evento == undefined) {
+      inicio = 0
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    this.service.getServiciosPag(this.descripcion, inicio, this.pageSize).subscribe(
+      response => {
+        this.listaServicios = new Array<any>();
+        this.listaAtributos = new Array<any>();
+        this.length = response.totalDatos;
+        if (response.totalDatos > 0) {
+          response.lista.forEach(servicio => {
+            this.listaAtributos = new Array<any>();
+            this.listaAtributos.push(servicio.idPresentacionProducto); // 0
+            this.listaAtributos.push(servicio.nombre); // 1
+            this.listaAtributos.push(servicio.descripcionGeneral); // 2
+            this.listaAtributos.push(servicio.existenciaProducto); // 3
+            // producto
+            this.listaAtributos.push(servicio.idProducto.idProducto); // 4
+            this.listaAtributos.push(servicio.idProducto.descripcionGeneral); // 5
+            // idTipoProducto --> subcategoria
+            this.listaAtributos.push(servicio.idProducto.idTipoProducto.idTipoProducto); // 6
+            this.listaAtributos.push(servicio.idProducto.idTipoProducto.descripcion); // 7
+            // categoria
+            this.listaAtributos.push(servicio.idProducto.idTipoProducto.idCategoria.idCategoria); // 8
+            this.listaAtributos.push(servicio.idProducto.idTipoProducto.idCategoria.descripcion); // 9
+            this.listaServicios.push(this.listaAtributos);
+            this.tableData1 = {
+              headerRow: [
+                'Id', 'Nombre', 'Descripción', 'Existencia',
+                'Id Prod', 'Producto',
+                'Id Tipo Prod.', 'Tipo Producto',
+                'Id Cat.', 'Categoria',
+                'Acciones'],
+              dataRows: this.listaServicios
+            };
+          });
+        }
+      },
+      error => {
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+      }
+    );
+  }
 }

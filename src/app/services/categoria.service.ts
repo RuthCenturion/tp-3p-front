@@ -92,6 +92,9 @@ export class CategoriaService {
   getServicios(): Observable<any> {
     return this.http.get(this.servicioUrl);
   }
+  getServiciosPag(descripcion: any, inicio: number, cantidad:number): Observable<any> {
+    return this.http.get(this.servicioUrl + '?orderBy=nombre&orderDir=asc&inicio='+inicio+'&cantidad='+cantidad);
+  }
   listarProductos(): Observable<any> {
     return this.http.get(this.productoUrl);
   }
