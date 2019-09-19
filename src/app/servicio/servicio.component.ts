@@ -4,6 +4,11 @@ import { Router } from '@angular/router';
 import { NOTIFY } from '../commons/app-utils';
 import { CategoriaService } from '../services/categoria.service';
 import { ServicioService } from '../services/servicio.service';
+import { ExcelServiceService } from '../services/excel-service.service';
+import * as jsPdf from 'jspdf';
+import 'jspdf-autotable';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 declare const $: any;
 
@@ -16,6 +21,7 @@ export class ServicioComponent implements OnInit {
   public tableDataServicio: TableData;
   public tableBuscarEmpleado: TableData;
   public tableBuscarCliente: TableData;
+  public tableDataReporte: TableData;
 
   // filtro de la grilla
   fechaDesde: any;
@@ -41,6 +47,7 @@ export class ServicioComponent implements OnInit {
   listaReservas: Array<any>;
   listaFichaClinica: Array<any>;
   listaHorarios: Array<any>;
+  listaServiciosReporte: Array<any>;
 
   listaEmpleadoSeleccionados: Array<any>;
   listaNombreEmpleadoSeleccionados: Array<any>;
@@ -52,6 +59,7 @@ export class ServicioComponent implements OnInit {
   constructor(
     private service: ServicioService,
     private categoriaService: CategoriaService,
+    private excelService:ExcelServiceService,
     private router: Router) {
       this.listaServicios = new Array<any>();
     this.tableDataServicio = {
@@ -66,6 +74,10 @@ export class ServicioComponent implements OnInit {
     this.tableBuscarCliente = {
       headerRow: ['', 'Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
+    };
+    this.tableDataReporte = {
+      headerRow: ['Fecha', 'Profesional', 'Cliente', 'Sub-Categoria', 'Presupuesto'],
+      dataRows: this.listaServiciosReporte
     };
   }
   /*-------------------------------------------------------------------------*/
@@ -146,7 +158,7 @@ export class ServicioComponent implements OnInit {
       if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
         || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
         || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)) {
-        path = path + ',{"idFichaClinica":"idCliente":{"idPersona":' + this.clienteId + '}}';
+        path = path + ',"idFichaClinica":{"idCliente":{"idPersona":' + this.clienteId + '}}';
       } else {
         path = '{"idFichaClinica":{"idCliente":{"idPersona":' + this.clienteId + '}}';
       }
@@ -276,6 +288,7 @@ export class ServicioComponent implements OnInit {
                 };
               }
             });
+            console.log('lista empleado buscador: ', this.listaBuscarEmpleados);
 
         }
       }
@@ -474,6 +487,123 @@ export class ServicioComponent implements OnInit {
     );
   }
   /*-------------------------------------------------------------------------*/
+  obtenerServiciosReporte() {
+    let url = this.crearStringUrl();
+    this.listaServiciosReporte = new Array<any>();
+    this.service.buscarServicios(url).subscribe(
+      response => {
+        if (response.totalDatos > 0) {
+          response.lista.forEach(
+            servicio => {
+              let lista = new Array<any>();
+              lista.push(servicio.fechaHora); // 0
+              lista.push(servicio.idEmpleado.nombreCompleto); // 1
+              lista.push(servicio.idFichaClinica.idCliente.nombreCompleto); // 2
+              lista.push(servicio.idFichaClinica.idTipoProducto.descripcion); // 3
+              lista.push(servicio.observacion); // 4
+              this.listaServiciosReporte.push(lista);
+              this.tableDataReporte = {
+                headerRow: ['Fecha', 'Profesional', 'Cliente', 'Sub-Categoria', 'Presuepuesto'],
+                dataRows: this.listaServiciosReporte
+              };
+            });
+            this.abrirModalReporte();
+            console.log('lista: ', this.listaServiciosReporte);
+        } /*else {
+          this.listaServiciosReporte = [];
+        }*/
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  abrirModalReporte() {
+    $('#modalReporte').modal('show');
+  }
+  /*-------------------------------------------------------------------------*/
+  crearStringUrl() {
+    let path = '';
+    let fechaHastaCadena = '';
+    if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
+      let fechaDesdeString = this.fechaCadena(this.fechaDesde);
+      path = '{"fechaDesdeCadena":"' + fechaDesdeString + '"';
+    }
+    if (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null) {
+      fechaHastaCadena = this.fechaCadena(this.fechaHasta);
+      if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
+        path = path + ',"fechaHastaCadena":"' + fechaHastaCadena + '"';
+      } else {
+        path = '{"fechaHastaCadena":"' + fechaHastaCadena + '"';
+      }
+    }
+    if (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) {
+      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)) {
+        path = path + ',"idEmpleado":{"idPersona":' + this.empleadoId + '}';
+      } else {
+        path = '{"idEmpleado":{"idPersona":' + this.empleadoId + '}';
+      }
+    }
+    if (typeof this.clienteId !== 'undefined' && this.clienteId !== null) {
+      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
+        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)) {
+        path = path + ',"idFichaClinica":{"idCliente":{"idPersona":' + this.clienteId + '}}';
+      } else {
+        path = '{"idFichaClinica":{"idCliente":{"idPersona":' + this.clienteId + '}}';
+      }
+    }
+    if (typeof this.idProducto !== 'undefined' && this.idProducto !== null) {
+      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
+        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)
+        || (typeof this.clienteId !== 'undefined' && this.clienteId !== null)) {
+        path = path + ',"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
+      } else {
+        path = '{"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
+      }
+    }
+    path = path + '}';
+    path = encodeURIComponent(path);
+    path = '?ejemplo=' + path;
+    return path;
+  }
+  /*-------------------------------------------------------------------------*/
+  generarPdf() {
+    console.log('lista para reporte: ', this.listaServiciosReporte);
+    let doc  = new jsPdf ();         // doc.text( this.listaServiciosReporte , 10 , 10 );
+      doc.autoTable({html: '#my-table'});
+      doc.save('table.pdf');
+  }
+  /*-------------------------------------------------------------------------*/
+  generarExcel() {
+    let fechaHora= new Date();
+    let mes = '';
+    if ((fechaHora.getMonth() + 1) < 10) {
+      mes = '0' + (fechaHora.getMonth() + 1).toString();
+    } else {
+      mes = (fechaHora.getMonth() + 1).toString();
+    }
+    let fechaHoraString = fechaHora.getFullYear().toString() +
+      mes + fechaHora.getDate().toString() + fechaHora.getHours().toString() + fechaHora.getMinutes().toString() +
+      fechaHora.getSeconds().toString();
+    console.log('nombre: ', fechaHoraString);
+    let lista = [];
+    this.listaServiciosReporte.forEach( fila => {
+      lista.push( {
+        'Fecha': fila[0],
+        'Especialista': fila[1],
+        'Cliente': fila[2],
+        'Sub-Categoría': fila[3],
+        'Presupuesto': fila[4],
+      });
+    });
+    this.excelService.exportAsExcelFile(lista, 'reporte' + fechaHoraString);
+  }
+  /*-------------------------------------------------------------------------*/
+  /*cerrarModalReporte() {
+
+  }*/
+  /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
     const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
     $.notify({
@@ -519,6 +649,7 @@ export class ServicioComponent implements OnInit {
     this.listaNombreEmpleadoSeleccionados = new Array<any>();
     this.listaClienteSeleccionados = new Array<any>();
     this.listaNombreClienteSeleccionados = new Array<any>();
+    this.listaServiciosReporte = new Array<any>();
     this.mostrarBoton = false;
     this.listarCategorias();
     // this.listarSubCategorias();

@@ -223,7 +223,10 @@
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
               <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarServicio()">Agregar
                 Servicio</button>
+                <button mat-raised-button class="btn btn-success"
+                  [disabled]="!(fechaDesde && fechaHasta)" (click)="obtenerServiciosReporte()">Generar Reporte</button>
             </div>
+            
             <div class="table-responsive">
               <table class="table">
                 <thead>
@@ -370,5 +373,79 @@
       </div>
     </div>
     <!-------------------------END MODIFICAR CATEGORIA--------------------------->
+ 
+  </div>
+</div>
+    <!------------------------- MODAL REPORTE--------------------------->
+    <div class="modal fade" id="modalReporte" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg "  role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Reporte de servicio</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!--*******************-->
+          <div class="row">
+            <div class="col-md-6">
+              <button type="button" class="btn btn-info"
+                (click)="generarExcel()">EXCEL</button>
+                <button type="button" class="btn btn-info"
+                (click)="generarPdf()">PDF</button>
+            </div>
+          </div>
+          <!--*******GRILLA************-->
+          <div class="table-responsive">
+              <table class="table table-striped" id="my-table">
+                <thead>
+                  <tr>
+                    <th>{{ tableDataReporte.headerRow[0] }}</th>
+                    <th>{{ tableDataReporte.headerRow[1] }}</th>
+                    <th>{{ tableDataReporte.headerRow[2] }}</th>
+                    <th>{{ tableDataReporte.headerRow[3] }}</th>
+                    <th>{{ tableDataReporte.headerRow[4] }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of tableDataReporte.dataRows">
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          <!--*******************-->
+          <div *ngIf="listaServiciosReporte.length === 0">No hay datos</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal"
+            (click)="limpiar()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+   </div>
+   <!---------------------------------------------END MODAL REPORTE--------------------------------------->
+
+<!-- Modal KUDE -->
+<div class="modal fade" id="pdf" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-kude" role="document">
+    <div class="modal-content modal-kude">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">KUDE</h5>
+        <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </a>
+      </div>
+      <div class="modal-body modal-body-kude">
+        <iframe class="kude" id="inlineFrameExample">
+        </iframe>
+      </div>
+    </div>
   </div>
 </div>
