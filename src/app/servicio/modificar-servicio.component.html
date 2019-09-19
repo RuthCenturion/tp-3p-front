@@ -1,0 +1,229 @@
+<div class="main-content">
+    <div class="container-fluid">
+      <!--<div class="container-fluid">-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-icon card-header-rose">
+              <div class="card-icon">
+                <i class="material-icons">assignment</i>
+              </div>
+              <h4 class="card-title ">Modificar Servicio {{idServicio}}</h4>
+            </div>
+            <div class="card-body">
+              <!--*********************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <input matInput type="text"  [(ngModel)]="fechaHoraServicio"
+                      placeholder="Fecha" disabled>
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <input matInput type="text" [(ngModel)]="observacion" placeholder="Observación">
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control" [(ngModel)]="nombreEmpleado"
+                    placeholder="Empleado" disabled>
+                  </mat-form-field>                  
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control" [(ngModel)]="nombreCliente"
+                      placeholder="Client" disabled>
+                  </mat-form-field>
+                </div>
+              </div>
+              <!--*******************--->
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>{{ tableDataFichasAsociadas.headerRow[0] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[1] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[2] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[3] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[4] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[5] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[6] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[7] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[8] }}</th>
+                      <th>{{ tableDataFichasAsociadas.headerRow[9] }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of tableDataFichasAsociadas.dataRows">
+                      <td>{{row[0]}}</td>
+                      <td>{{row[1]}}</td>
+                      <td>{{row[2]}}</td>
+                      <td>{{row[3]}}</td>
+                      <td>{{row[4]}}</td>
+                      <td>{{row[5]}}</td>
+                      <td>{{row[6]}}</td>
+                      <td>{{row[7]}}</td>
+                      <td>{{row[8]}}</td>
+                      <td>{{row[9]}}</td>
+                    </tr>
+                  </tbody>
+                </table>               
+              </div>
+              <!--*******************--->
+              <div class="row">
+                <div class="col-md-6">
+                    <button mat-raised-button class="btn btn-primary mat-raised-button" (click)="modificarServicio()">Guardar</button>
+                    <button mat-raised-button class="btn btn-warning mat-raised-button" (click)="cancelar()">Cancelar</button>
+                  </div>                  
+              </div>
+              <!--*******************--->
+            </div>
+            <!--end-card-body-->
+          </div>
+          <!--end-card-->
+        </div><!-- end col-md-12 -->
+      </div><!-- end row -->
+      <!--*********DETALLES**********--->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-icon card-header-rose">
+              <div class="card-icon">
+                <i class="material-icons">assignment</i>
+              </div>
+              <h4 class="card-title ">Detalles del servicio {{idServicio}}</h4>
+            </div>
+            <div class="card-body">
+              <!--*********************-->
+              <!--div class="row">
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                      <mat-select placeholder="Seleccionar Categoría" name="idCategoria" [(ngModel)]="idCategoria"
+                        (ngModelChange)="listarSubCategorias(idCategoria)">
+                        <mat-option *ngFor="let l of listaCategoria" [value]="l[0]">
+                          {{l[1]}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                      <mat-select placeholder="Seleccionar Sub-Categoría" name="idProducto" [(ngModel)]="idProducto"
+                        [disabled]="!idCategoria">
+                        <mat-option *ngFor="let l of listaSubCategoria" [value]="l[0]">
+                          {{l[1]}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div-->
+              <!--*******************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                      <mat-select placeholder="Seleccionar tipo servicio" name="idTipoServicio" [(ngModel)]="idTipoServicio"
+                        (ngModelChange)="obtenerPrecio(idTipoServicio)" required>
+                        <mat-option *ngFor="let l of listaTipoServicio" [value]="l[0]">
+                          {{l[1]}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                        <input matInput type="text" [(ngModel)]="precio" placeholder="Precio" disabled>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group no-border">
+                      <mat-form-field>
+                          <input matInput type="text" [(ngModel)]="cantidad" placeholder="Cantidad" required >
+                      </mat-form-field>
+                    </div>
+                  </div>                  
+              </div>
+              <!--*******************--->
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>{{ tableDataDetalle.headerRow[0] }}</th>
+                      <!--th>{{ tableDataDetalle.headerRow[1] }}</th-->
+                      <th>{{ tableDataDetalle.headerRow[2] }}</th>
+                      <th>{{ tableDataDetalle.headerRow[3] }}</th>
+                      <th>{{ tableDataDetalle.headerRow[4] }}</th>
+                      <th>{{ tableDataDetalle.headerRow[5] }}</th>
+                      <th>{{ tableDataDetalle.headerRow[6] }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of tableDataDetalle.dataRows">
+                      <td>{{row[0]}}</td>
+                      <!--td>{{row[1]}}</td-->
+                      <td>{{row[2]}}</td>
+                      <td>{{row[3]}}</td>
+                      <td>{{row[4]}}</td>
+                      <td>{{row[5]}}</td>
+                      <td class="text-right">
+                        <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                        (click)="confirmarEliminar(row[0])" matTooltip="Eliminar detalle"><i class="material-icons">delete</i></a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!--*******************--->
+              </div>
+              <div *ngIf="listaDetalles.length === 0">{{mensajeVacio}}</div>
+              <!--*******************--->
+              <div class="row">
+                  <button mat-raised-button class="btn btn-primary btn-sm" 
+                  (click)="agregarDetalle()" [disabled]="!(idTipoServicio && cantidad)">Agregar detalle</button>
+                <!--button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
+                <button mat-raised-button class="btn btn-fill btn-rose" (click)="cancelar()">Cancelar</button-->
+              </div>
+              <!--*******************--->
+            </div><!--end-card-body-->
+          </div><!--end-card-->
+        </div><!-- end col-md-12 -->
+      </div><!-- end row -->
+     <!------------------------- ELIMINAR DETALLE--------------------------->
+     <div class="modal fade modal-warning" id="modalEliminar" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar este detalle?
+           </h5>
+           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+           </button>
+         </div>
+         <div class="modal-body">
+           <!--*******************-->
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+           <button type="button" class="btn btn-primary" (click)="eliminarDetalle()" data-dismiss="modal">
+             Aceptar</button>
+         </div>
+       </div>
+     </div>
+   </div>
+   <!-------------------------END ELIMINAR DETALLE--------------------------->
+    </div>
+  </div>

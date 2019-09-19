@@ -38,6 +38,13 @@ export class CategoriaService {
   agregarCategoria(categoria: any): Observable<any> {
     return this.http.post(this.categoriaUrl, categoria/*, httpOptions*/);
   }
+  eliminarCategoria(id): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(id).forEach( function(key) {
+      httpParams = httpParams.append(key, id[key]);
+    });
+    return this.http.delete(this.categoriaUrl + '/' + id);
+  }
   // --------------------- SUB-CATEGORIAS ---------------------
   getSubCategoria(): Observable<any> {
     return this.http.get(this.subCategoriaUrl);

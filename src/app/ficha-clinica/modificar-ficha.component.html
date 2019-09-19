@@ -1,0 +1,256 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+    </div>
+    <!--<div class="container-fluid">-->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon card-header-rose">
+            <div class="card-icon">
+              <i class="material-icons">assignment</i>
+            </div>
+            <h4 class="card-title ">Modificar Ficha Clínica</h4>
+          </div>
+          <div class="card-body">
+            <!--*********************-->
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="fechaFicha"
+                    placeholder="Fecha" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="nombreEmpleado"
+                      placeholder="Empleado" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="nombreCliente"
+                      placeholder="Cliente" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="descripcionCategoria"
+                      placeholder="Categoría" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="descripcionSubCategoria"
+                      placeholder="Sub-Categoría" disabled>
+                  </mat-form-field>
+
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <textarea matInput placeholder="Motivo" [(ngModel)]="motivo" disabled></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <textarea matInput placeholder="Diagnóstico" [(ngModel)]="diagnostico" disabled></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-12">
+                <div class="input-group no-border">
+                  <mat-form-field>
+                    <textarea matInput placeholder="Observación" [(ngModel)]="observacion"></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <!--*******************--->
+            <div class="row">
+              <button mat-raised-button class="btn btn-primary btn-sm" (click)="modificarFicha()"
+                [disabled]="!(observacion)">GUARDAR</button>
+              <button mat-raised-button class="btn btn-fill btn-rose" (click)="limpiar()">Limpiar</button>
+              <button mat-raised-button class="btn btn-info btn-sm" (click)="cancelarModificar()">CANCELAR</button>
+              <!--button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar Ficha</button-->
+            </div>
+            <!--*******************--->
+            <!--grilla de servicios asociados-->
+            <div class="col-md-12">
+              <div class="card">
+                <div class="card-header card-header-icon card-header-rose">
+
+                  <h4 class="card-title "> Lista de servicios asociados</h4>
+                </div>
+                <div class="card-body table-full-width">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th *ngFor="let cell of tableData3.headerRow">{{ cell }}</th>
+                        </tr>
+                      </thead>
+                      <tbody >
+                        <!--tr >
+                          <td *ngFor="let cell of tableData3.dataRows[0]">{{cell}}</td>
+                        </tr>
+                        <tr>
+                          <td *ngFor="let cell of tableData3.dataRows[1]">{{cell}}</td>
+                        </tr>
+                        <tr >
+                          <td *ngFor="let cell of tableData3.dataRows[2]">{{cell}}</td>
+                        </tr>
+                        <tr>
+                          <td *ngFor="let cell of tableData3.dataRows[3]">{{cell}}</td>
+                        </tr>
+                        <tr >
+                          <td *ngFor="let cell of tableData3.dataRows[4]">{{cell}}</td>
+                        </tr-->
+                        <tr *ngFor="let row of tableData3.dataRows" (click)="pruebaUnaSolaSeleccion(row)">
+                          <td>{{row[0]}}</td>
+                          <td>{{row[1]}}</td>
+                          <td >{{row[2]}}</td>
+                          <td >{{row[3]}}</td>
+                          <td class="text-right">
+                            <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                              (click)="verServicio(row[0],row[1],row[2],row[3])"><i class="material-icons"
+                                matTooltip="Ver servicio">search</i></a>
+                            <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                              (click)="editarServicio(row)" matTooltip="Editar servicio"><i
+                                class="material-icons">edit</i></a>
+                          </td>
+                        </tr>
+
+                      </tbody>
+                    </table>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!--end grilla de servicios asociados-->
+          </div>
+          <!--end del card-body-->
+        </div>
+        <!--end del card-->
+      </div><!-- end col-md-12 -->
+    </div><!-- end row -->
+
+    <!------------------------- MODIFICAR RESERVA--------------------------->
+    <div class="modal fade" id="exampleModal5" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+      aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modificar reserva</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Fecha reserva</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFechaReserva"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Inicio</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarInicio"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Fin</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarFin" disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Empleado</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreEmpleado"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Cliente</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarNombreCliente"
+                    disabled>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Asistió</label>
+              <div class="col-sm-9">
+                NO
+                <mat-slide-toggle class="example-margin" [color]="primary" [disabled]="false"
+                  [(ngModel)]="modificarAsistio">
+                </mat-slide-toggle> SI
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <label class="col-sm-3 col-form-label">Observacion</label>
+              <div class="col-sm-9">
+                <mat-form-field>
+                  <input matInput type="text" class="form-control form-control-sm" [(ngModel)]="modificarObservacion">
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal">
+              Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-------------------------END MODIFICAR CATEGORIA--------------------------->
+  </div>
+</div>

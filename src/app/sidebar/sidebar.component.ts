@@ -49,7 +49,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'grid', title: 'Horario Excepción', ab: 'HE'}
         ]
     },*/ {
-        path: '/widgets',
+        path: '/ficha-clinica',
         title: 'Ficha Clínica',
         type: 'link',
         icontype: 'description'
@@ -60,8 +60,8 @@ export const ROUTES: RouteInfo[] = [{
         type: 'link',
         icontype: 'date_range' 
     }, {
-        path: '/widgets',
-        title: 'Facturación',
+        path: '/servicio',
+        title: 'Facturación de servicios',
         type: 'link',
         icontype: 'monetization_on'
 
@@ -82,7 +82,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}*/
         ]
-    },/*{
+    }, {
         path: '/components',
         title: 'Components',
         type: 'sub',
@@ -99,7 +99,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}
         ]
-    }, */
+    }, 
     {
         path: '/forms',
         title: 'Forms',

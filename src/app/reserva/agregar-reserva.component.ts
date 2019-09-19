@@ -353,7 +353,7 @@ export class AgregarReservaComponent implements OnInit {
       this.service.agregarReserva(dato).subscribe(
         response => {
           console.log('reserva exitosa: ', response);
-          this.showNotification('Reserva agendada conrrectamente.', NOTIFY.SUCCESS);
+          this.showNotification('Reserva creada con éxito!', NOTIFY.SUCCESS);
           this.clienteNombre = null;
           this.clienteId = null;
           this.observacion = null;

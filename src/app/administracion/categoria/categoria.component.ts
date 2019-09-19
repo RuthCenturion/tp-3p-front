@@ -283,6 +283,15 @@ export class CategoriaComponent implements OnInit {
     this.eliminarDescripcion = desc;
   }
   eliminar() {
-    this.showNotification('Los datos se han eliminado con éxito. ', NOTIFY.SUCCESS);
+    this.categoriaService.eliminarCategoria(this.eliminarId).subscribe(
+      response => {
+        this.showNotification('Los datos se han eliminado con éxito. ', NOTIFY.SUCCESS);
+        this.listarCategorias();
+      },
+      error => {
+        this.showNotification('Error al eliminar categoría. ', NOTIFY.DANGER);
+      }
+    );
+    
   }
 }

@@ -10,15 +10,17 @@ import 'rxjs/add/observable/throw';
 @Injectable({
     providedIn: 'root'
 })
-export class ReservaService {
+export class FichaClinicaService {
     private empleadoUrl = SERVICE_REST + 'persona';
     private clienteUrl = SERVICE_REST + 'persona';
     private reservaUrl = SERVICE_REST + 'reserva';
+    private fichaClinicaUrl = SERVICE_REST + 'fichaClinica';
+    private servicioUrl = SERVICE_REST + 'servicio';
 
     constructor(private http: HttpClient) { }
 
-    getReservas(): Observable<any> {
-        return this.http.get(this.reservaUrl);
+    getFichas(): Observable<any> {
+        return this.http.get(this.fichaClinicaUrl);
     }
     //buscador de empleado
     // -por nombre
@@ -33,35 +35,29 @@ export class ReservaService {
             return this.http.get(this.clienteUrl);
         }
     }
-    buscarReservas(descripcion): Observable<any> {
-        return this.http.get(this.reservaUrl + descripcion);
+    buscarFichas(descripcion): Observable<any> {
+        return this.http.get(this.fichaClinicaUrl + descripcion);
     }
-    buscarAgenda(descripcion): Observable<any> {
-        return this.http.get(this.empleadoUrl + descripcion);
-    }
-    agregarReserva(reserva: any): Observable<any> {
+    agregarFicha(ficha: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
                 'usuario': 'gustavo'
             })
         };
-        return this.http.post(this.reservaUrl, reserva, httpOptions);
+        return this.http.post(this.fichaClinicaUrl, ficha, httpOptions);
     }
-    modificarReserva(reserva: any): Observable<any> {
+      modificarFicha(ficha: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({
-                'Content-Type': 'application/json'/*,
-                'usuario': 'gustavo'*/
+                'Content-Type': 'application/json',
+                'usuario': 'gustavo'
             })
         };
-        return this.http.put(this.reservaUrl, reserva, httpOptions);
+        return this.http.put(this.fichaClinicaUrl, ficha, httpOptions);
     }
-    eliminarReserva(id): Observable<any> {
-        let httpParams = new HttpParams();
-        Object.keys(id).forEach( function(key) {
-          httpParams = httpParams.append(key, id[key]);
-        });
-        return this.http.delete(this.reservaUrl + '/' + id);
-      }
+    
+    getServiciosAsociados(descripcion): Observable<any> {
+        return this.http.get(this.servicioUrl  + descripcion);
+    }
 }

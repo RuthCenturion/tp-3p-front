@@ -2,9 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableData } from '../md/md-table/md-table.component';
 import { Router } from '@angular/router';
 import { NOTIFY } from '../commons/app-utils';
-import { ReservaService } from '../services/reserva.service';
-import { CategoriaService } from '../services/categoria.service';
 import { FichaClinicaService } from '../services/ficha-clinica.service';
+import { CategoriaService } from '../services/categoria.service';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
@@ -30,25 +29,29 @@ export interface PeriodicElement {
 }
 
 @Component({
-  selector: 'app-reserva',
-  templateUrl: './reserva.component.html',
-  styleUrls: ['./reserva.component.css']
+  selector: 'app-agregar-ficha',
+  templateUrl: './agregar-ficha.component.html',
+  styleUrls: ['./agregar-ficha.component.css']
 })
-export class ReservaComponent implements OnInit {
+export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicElement[] = [];
 
- ELEMENT_DATA: PeriodicElement[] = [];
-
-  public tableData1: TableData;
+  
   public tableBuscarEmpleado: TableData;
   public tableBuscarCliente: TableData;
+  public tableDataFicha: TableData;
 
-  // filtro de la grilla
+  // datos a guardar
   fechaDesde: any;
-  fechaHasta: any;
   empleadoId: any;
   empleadoNombre: any;
   clienteId: any;
   clienteNombre: any;
+  idCategoria: any;
+  idProducto: any;
+  tipoProductoNombre: any;
+  motivo: any;
+  diagnostico: any;
+  observacion: any;
   // buscador empleado
   fila: any;
   buscarEmpleadoNombre: any;
@@ -63,7 +66,7 @@ export class ReservaComponent implements OnInit {
   clienteSeleccionadoNombre: any;
   mostrarAceptar: any;
   
-  // datos modal modificar  
+  // datos modal modificar
   modificarIdReserva: any;
   modificarFechaReserva: any;
   modificarInicio: any;
@@ -79,21 +82,7 @@ export class ReservaComponent implements OnInit {
     {value: 'S', viewValue: 'SI'},
     {value: 'N', viewValue: 'NO'}
   ];
-  // cancelarReserva
-  cancelarId: any;
-  // datos del modal de nuevaFicha
-  fichaFecha: any;
-  fichaIdEmpleado: any;
-  fichaNombreEmpleado: any;
-  fichaIdCliente; any;
-  fichaNombreCliente: any;
-  fichaIdCategoria: any;
-  fichaDescripcionCategoria: any;
-  fichaidProducto: any;
-  fichaDescripcionSubCategoria: any;
-  fichaMotivo: any;
-  fichaDiagnostico: any;
-  fichaObservacion: any;
+  
   // panelOpenState = false;
   listaAtributos: Array<any>;
   listaBuscarEmpleados: Array<any>;
@@ -101,6 +90,7 @@ export class ReservaComponent implements OnInit {
   listaCategoria: Array<any>;
   listaSubCategoria: Array<any>;
   listaReservas: Array<any>;
+  listaFichaClinica: Array<any>;
   listaHorarios: Array<any>;
 
 
@@ -109,15 +99,9 @@ export class ReservaComponent implements OnInit {
   selection = new SelectionModel<PeriodicElement>(true, []);
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-  constructor(private service: ReservaService,
+  constructor(private service: FichaClinicaService,
     private categoriaService: CategoriaService,
-    private fichaService: FichaClinicaService,
     private router: Router ) {
-    this.tableData1 = {
-      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 
-        'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
-      dataRows: this.listaReservas
-    };
     this.tableBuscarEmpleado = {
       headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
@@ -128,41 +112,17 @@ export class ReservaComponent implements OnInit {
     };
   }
   /*-------------------------------------------------------------------------*/
-  listarReservas() {
-    this.service.getReservas().subscribe(
-      response => {
-        this.listaReservas = new Array<any>();
-        console.log('getReservas():', response);
-        if (response.totalDatos > 0 ) {
-          response.lista.forEach(reserva => {
-            this.listaAtributos = new Array<any>();
-            // fechas
-            this.listaAtributos.push(reserva.idReserva); // 0
-            this.listaAtributos.push(reserva.fecha); // 1
-            this.listaAtributos.push(reserva.horaInicio); // 2
-            this.listaAtributos.push(reserva.horaFin); // 3
-            // profesional
-            this.listaAtributos.push(reserva.idEmpleado.idPersona); // 4
-            this.listaAtributos.push(reserva.idEmpleado.nombreCompleto); // 5
-            // cliente
-            this.listaAtributos.push(reserva.idCliente.idPersona); // 6
-            this.listaAtributos.push(reserva.idCliente.nombreCompleto); // 7
-
-            this.listaReservas.push(this.listaAtributos);
-
-            this.tableData1 = {
-              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado', 'Id Cliente', 'Cliente', 'Acciones'],
-              dataRows: this.listaReservas
-            };
-          });
-        }
-      }
-    );
-  }
+ 
   /*-------------------------------------------------------------------------*/
   listarEmpleadosBuscador(buscadorNombre) {
     // let buscadorNombre = 'Gustavo'
-    let url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+    // let url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+    let url = '';
+    if (buscadorNombre) {
+      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+    } else {
+      url = '';
+    }
     this.listaBuscarEmpleados = new Array<any>();
     this.service.getEmpleadosBuscador(url).subscribe(
       response => {
@@ -170,21 +130,22 @@ export class ReservaComponent implements OnInit {
         if (response.totalDatos > 0 ) {
           response.lista.forEach(
             empleado => {
-              let lista = new Array<any>();lista.push(false);
-              lista.push(empleado.idPersona); // 0
-              lista.push(empleado.nombreCompleto); // 1
-              lista.push(empleado.email); // 2
-              // local por defecto
-              lista.push(empleado.idLocalDefecto.nombre); // 3
-              this.listaBuscarEmpleados.push(lista);
-
-              this.tableBuscarEmpleado = {
-                headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
-                dataRows: this.listaBuscarEmpleados
-              };
-
+              let lista = new Array<any>();
+              if (empleado.idLocalDefecto) {
+                lista.push(false);
+                lista.push(empleado.idPersona); // 0
+                lista.push(empleado.nombreCompleto); // 1
+                lista.push(empleado.email); // 2
+                // local por defecto
+                lista.push(empleado.idLocalDefecto.nombre); // 3
+                this.listaBuscarEmpleados.push(lista);
+  
+                this.tableBuscarEmpleado = {
+                  headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+                  dataRows: this.listaBuscarEmpleados
+                };
+              }             
             });
-
         }
       }
     );
@@ -204,6 +165,13 @@ export class ReservaComponent implements OnInit {
     this.empleadoId = this.empleadoSeleccionadoId;
     this.empleadoNombre = this.empleadoSeleccionadoNombre;
     console.log('aceptar');
+    // limpiar la grilla del buscadorEmpleado
+    this.buscarEmpleadoNombre = null;
+    this.listaBuscarEmpleados = [];
+    this.tableBuscarEmpleado = {
+      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      dataRows: this.listaBuscarEmpleados
+    };
   }
   /*-------------------------------------------------------------------------*/
   cancelarBuscarEmpleado() {
@@ -267,6 +235,7 @@ export class ReservaComponent implements OnInit {
     console.log('cliente seleccionado: ', this.selection.selected[0]);
     this.clienteId = this.selection.selected[0].idCliente;
     this.clienteNombre = this.selection.selected[0].name;
+
   }
   /*-------------------------------------------------------------------------*/
   cancelarBuscarCliente() {
@@ -282,86 +251,39 @@ export class ReservaComponent implements OnInit {
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   }
   /*-------------------------------------------------------------------------*/
-  buscar() {
-    let path = '';
-    let fechaHastaCadena = '';
-    if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-      let fechaDesdeString = this.fechaCadena(this.fechaDesde);
-      path = '{"fechaDesdeCadena":"' + fechaDesdeString + '"';
-      console.log('path: ', path);
-    }
-    if (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null) {
-      fechaHastaCadena = this.fechaCadena(this.fechaHasta);
-      if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-        path = path + ', "fechaHastaCadena":"' + fechaHastaCadena + '"';
-        console.log('path: ', path);
-      } else {
-        path = '{"fechaHastaCadena":"' + fechaHastaCadena + '"';
+  guardarFicha() {
+    let dato = {
+      motivoConsulta: this.motivo,
+      diagnostico: this.diagnostico,
+      observacion: this.observacion,
+      idEmpleado: {
+        idPersona: this.empleadoId
+      },
+      idCliente: {
+        idPersona: this.clienteId
+      },
+      idTipoProducto: {
+        idTipoProducto: this.idProducto
       }
-    }
-    if (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) {
-      if ( (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)) {
-        path = path + ',"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      } else {
-        path = '{"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      }
-    }
-    if (typeof this.clienteId !== 'undefined' && this.clienteId !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-          || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
-            || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) ) {
-        path = path + ',"idCliente": {"idPersona":' + this.clienteId + '}';
-      } else {
-        path = '{"idCliente": {"idPersona":' + this.clienteId + '}';
-      }
-    }
-    path = path + '}';
-    console.log('path', path);
-    path = encodeURIComponent(path);
-    path = '?ejemplo=' + path;
-    this.service.buscarReservas(path).subscribe(
+    };
+    this.service.agregarFicha(dato).subscribe(
       response => {
-        this.listaReservas = new Array<any>();
-        console.log('getReservas():', response);
-        if (response.totalDatos > 0 ) {
-          response.lista.forEach(reserva => {
-            this.listaAtributos = new Array<any>();
-            // fechas
-            this.listaAtributos.push(reserva.idReserva); // 0
-            this.listaAtributos.push(reserva.fecha); // 1
-            this.listaAtributos.push(reserva.horaInicio); // 2
-            this.listaAtributos.push(reserva.horaFin); // 3
-            // profesional
-            this.listaAtributos.push(reserva.idEmpleado.idPersona); // 4
-            this.listaAtributos.push(reserva.idEmpleado.nombreCompleto); // 5
-            // cliente
-            this.listaAtributos.push(reserva.idCliente.idPersona); // 6
-            this.listaAtributos.push(reserva.idCliente.nombreCompleto); // 7
-            // flagAsistio
-            this.listaAtributos.push(reserva.flagAsistio === 'S' ? 'SI' : 'NO'); // 8
-            this.listaAtributos.push(reserva.flagEstado === 'R' ? 'Reservado' : 'Cancelado'); // 9
-            this.listaAtributos.push(reserva.observacion); // 10
-
-            this.listaReservas.push(this.listaAtributos);
-
-            this.tableData1 = {
-              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
-                 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
-              dataRows: this.listaReservas
-            };
-          });
-        } else {
-          this.listaReservas = [];
-          this.tableData1 = {
-            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
-               'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
-            dataRows: this.listaReservas
-          };
-        }
+        console.log('postFicha(): ', response);
+        this.showNotification('Ficha creada con éxito!', NOTIFY.SUCCESS);
+        this.limpiar();
+      },
+      error => {
+        this.showNotification('Ocurrió un error al agregar ficha. Consulte con soporte', NOTIFY.DANGER);
       }
     );
   }
+  /*-------------------------------------------------------------------------*/
+  cancelarAgregar() {
+    // this.router
+    this.router.navigate(['ficha-clinica']);
+  }
+  /*-------------------------------------------------------------------------*/
+  
   /*-------------------------------------------------------------------------*/
   fechaCadena(fecha): any {
     let d = new Date(fecha);
@@ -385,26 +307,22 @@ export class ReservaComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   limpiar() {
+    this.fechaDesde = new Date();
     this.empleadoId = null;
     this.empleadoNombre = null;
-    
     this.clienteId = null;
     this.clienteNombre = null;
+    this.idCategoria = null;
+    this.idProducto = null;
+    this.motivo = null;
+    this.diagnostico = null;
+    this.observacion = null;
     // los list de los buscadores
     this.listaBuscarEmpleados = [];
     this.ELEMENT_DATA = [];
-    
     this.paginator.pageIndex = 0;
     this.dataSource.paginator = this.paginator;
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
-    // se cargan las reservas de la fecha actual
-    this.fechaHasta = new Date();
-    this.fechaDesde = new Date();
-    this.buscar();
-  }
-  /*-------------------------------------------------------------------------*/
-  agregarReserva() {
-    this.router.navigate(['reserva/agregar-reserva']);
   }
   /*-------------------------------------------------------------------------*/
   abrirModalModificar(idReserva, fechaReserva, inicio, fin, idEmpleado,
@@ -423,7 +341,7 @@ export class ReservaComponent implements OnInit {
     $('#exampleModal5').modal('show');
   }
   /*-------------------------------------------------------------------------*/
-  modificar(origen) {
+/*  modificar() {
     let dato = {
       idReserva: this.modificarIdReserva,
       observacion: (this.modificarObservacion ? this.modificarObservacion : ''),
@@ -433,126 +351,14 @@ export class ReservaComponent implements OnInit {
     this.service.modificarReserva(dato).subscribe(
       response => {
         console.log('modificarReserva(): ', response);
-        if (!origen) {
-          this.showNotification('Modificación de la reserva con éxito!', NOTIFY.SUCCESS);
-        }
+        this.showNotification('Modificación de la reserva con éxito!', NOTIFY.SUCCESS);
         this.buscar();
       },
       error => {
         this.showNotification('Error al modificar la reserva. Consulte con soporte', NOTIFY.WARNING);
       }
     );
-  }
-  /*-------------------------------------------------------------------------*/
-  confirmarCancelar(idReserva) {
-    $('#exampleModal4').modal('show');
-    this.cancelarId = idReserva;
-  }
-  /*-------------------------------------------------------------------------*/
-  cancelarReserva() {
-   this.service.eliminarReserva(this.cancelarId).subscribe(
-     response => {
-       this.showNotification('Reserva cancelada con éxito!', NOTIFY.SUCCESS);
-     },
-     error => {
-      this.showNotification('Error al cancelar la reserva. Consulte con soporte', NOTIFY.DANGER);
-     }
-   );
-  }
-  /*-------------------------------------------------------------------------*/
-  // modalFicha
-  abrirModalNuevaFicha(row) {
-    console.log('fila seleccionada para agregar nuevaFicha a la reserva: ');
-    console.log(row);
-    this.modificarIdReserva = row[0]; // se debe marcar como asistido
-    this.fichaFecha = new Date();
-    this.fichaIdEmpleado = row[4];
-    this.fichaNombreEmpleado = row[5];
-    this.fichaIdCliente = row[6];
-    this.fichaNombreCliente = row[7];
-    /*this.fichaIdCategoria = row[4];
-    this.fichaDescripcionCategoria = row[4];
-    this.fichaidProducto = row[4];
-    this.fichaDescripcionSubCategoria = row[4];
-    this.fichaMotivo = null;
-    this.fichaDiagnostico = null;
-    this.fichaObservacion = null;*/
-
-    $('#modalFicha').modal('show');
-  }
-  /*-------------------------------------------------------------------------*/
-  agregarNuevaFicha() {
-    console.log('agregar nuevaFicha: ');
-    this.showNotification('MARCAR COMO ASISTIDA LA RESERVA', NOTIFY.WARNING);
-    let dato = {
-      motivoConsulta: this.fichaMotivo,
-      diagnostico: this.fichaDiagnostico,
-      observacion: this.fichaObservacion,
-      idEmpleado: {
-        idPersona: this.fichaIdEmpleado
-      },
-      idCliente: {
-        idPersona: this.fichaIdCliente
-      },
-      idTipoProducto: {
-        idTipoProducto: this.fichaidProducto
-      }
-    };
-    this.fichaService.agregarFicha(dato).subscribe(
-      response => {
-        console.log('postFicha(): ', response);
-        this.showNotification('Ficha creada con éxito!', NOTIFY.SUCCESS);
-        this.limpiar();
-        this.asistencia = 'S';
-        // this.modificarIdReserva
-        this.modificarAsistio = 'S';
-        this.modificar('NF');
-      },
-      error => {
-        this.modificarIdReserva = null;
-        this.showNotification('Ocurrió un error al agregar ficha. Consulte con soporte', NOTIFY.DANGER);
-      }
-    );
-  }
-  /*-------------------------------------------------------------------------*/
-  listarCategorias() {
-    this.categoriaService.getCategoria().subscribe(
-      response => {
-        this.listaCategoria = new Array<any>();
-        response.lista.forEach(cat => {
-          this.listaAtributos = new Array<any>();
-          this.listaAtributos.push(cat.idCategoria);
-          this.listaAtributos.push(cat.descripcion);
-          this.listaCategoria.push(this.listaAtributos);
-        });
-      },
-      error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
-      }
-    );
-  }
-  /*-------------------------------------------------------------------------*/
-  listarSubCategorias(idCategoria) {
-    console.log('categoriaSeleccionada: ', this.fichaIdCategoria);
-    let url = '{"idCategoria":{"idCategoria":' + idCategoria + '}}';
-    url = '?ejemplo=' + encodeURIComponent(url);
-    this.categoriaService.obtenerSubCategoria(url).subscribe(
-      response => {
-        this.listaAtributos = new Array<any>();
-        this.listaSubCategoria = new Array<any>();
-        response.lista.forEach(subCat => {
-          this.listaAtributos = new Array<any>();
-          this.listaAtributos.push(subCat.idTipoProducto);
-          this.listaAtributos.push(subCat.descripcion);
-          this.listaSubCategoria.push(this.listaAtributos);
-        });
-      },
-      error => {
-        this.showNotification('Error al obtener sub-categorias', NOTIFY.DANGER);
-      }
-    );
-
-  }
+  }*/
   /*-------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------*/
@@ -584,23 +390,7 @@ export class ReservaComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   /*-------------------------------------------------------------------------*/
-  /*clienteSeleccionado(id, nombre, evento ) {
-    // se debe habilitar el botón aceptar solo si está seleccionado un elemento
-    if (!this.filaCliente) {
-      console.log('cliente seleccionado del buscador: ', id, ' ', nombre, ' ', evento);
-      this.clienteSeleccionadoId = id;
-      this.clienteSeleccionadoNombre = nombre;
-      this.listaClienteSeleccionado.push(
-        {
-          clienteId: id,
-          clienteNombre: nombre
-        }
-      );
-    } else {
-      console.log('no se seleccionó fila');
-    }
-  }*/
-  /*-------------------------------------------------------------------------*/ 
+  /*-------------------------------------------------------------------------*/
   isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
@@ -628,20 +418,53 @@ export class ReservaComponent implements OnInit {
   }
 
   /*-------------------------------------------------------------------------*/
+  listarCategorias() {
+    this.categoriaService.getCategoria().subscribe(
+      response => {
+        this.listaCategoria = new Array<any>();
+        response.lista.forEach(cat => {
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(cat.idCategoria);
+          this.listaAtributos.push(cat.descripcion);
+          this.listaCategoria.push(this.listaAtributos);
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  listarSubCategorias(idCategoria) {
+    console.log('holaMundo: ', idCategoria);
+    let url = '{"idCategoria":{"idCategoria":' + idCategoria + '}}';
+    url = '?ejemplo=' + encodeURIComponent(url);
+    this.categoriaService.obtenerSubCategoria(url).subscribe(
+      response => {
+        this.listaAtributos = new Array<any>();
+        this.listaSubCategoria = new Array<any>();
+        response.lista.forEach(subCat => {
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(subCat.idTipoProducto);
+          this.listaAtributos.push(subCat.descripcion);
+          this.listaSubCategoria.push(this.listaAtributos);
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener sub-categorias', NOTIFY.DANGER);
+      }
+    );
+
+  }
+  /*-------------------------------------------------------------------------*/
 
   ngOnInit() {
     this.listarCategorias();
-    this.listaSubCategoria = new Array<any>();
-    // this.listarReservas();
     // al iniciar busca las reservas del dia actual
-    console.log(new Date());
     this.fechaDesde = new Date();
-    this.fechaHasta = new Date();
-    this.buscar();
     this.listaClienteSeleccionado = new Array<any> ();
     this.dataSource.paginator = this.paginator;
     this.mostrarAceptar = false;
-    // this.listarEmpleadosBuscador();
   }
 
 }

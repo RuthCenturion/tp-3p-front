@@ -1,0 +1,373 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <!------------------------- BUSCAR EMPLEADO--------------------------->
+      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+              <div class="row">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="buscarEmpleadoNombre"
+                    placeholder="Nombre Empleado">
+                  <button type="button" class="btn btn-info"
+                    (click)="listarEmpleadosBuscador(buscarEmpleadoNombre)">Buscar</button>
+                </div>
+              </div>
+              <!--*******GRILLA************-->
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>{{ tableBuscarEmpleado.headerRow[0] }}</th>
+                      <th>{{ tableBuscarEmpleado.headerRow[1] }}</th>
+                      <th>{{ tableBuscarEmpleado.headerRow[2] }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of tableBuscarEmpleado.dataRows">
+                      <td>{{row[0]}}</td>
+                      <td>{{row[1]}}</td>
+                      <td>{{row[2]}}</td>
+                      <td class="text-right">
+                        <div class="form-check">
+                          <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value=""
+                              (click)="seleccionarVariosEmpleado(row[0],row[1] )">
+                            <span class="form-check-sign">
+                              <span class="check"></span>
+                            </span>
+                          </label>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <!--*******************-->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                (click)="cancelarBuscarEmpleado()">Cancelar</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarEmpleado()"
+                [disabled]="!(listaEmpleadoSeleccionados.length===1)">
+                Aceptar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!---------------------------------------------END BUSCAR EMPLEADO--------------------------------------->
+      <!---------------------------------------------- BUSCAR CLIENTE ------------------------------------->
+      <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <!--*******************-->
+              <div class="row">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
+                    placeholder="Nombre Empleado">
+                  <button type="button" class="btn btn-info"
+                    (click)="listarClientesBuscador(buscarClienteNombre)">Buscar</button>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="col-md-12">
+                <!--*******GRILLA************-->
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>{{ tableBuscarCliente.headerRow[0] }}</th>
+                        <th>{{ tableBuscarCliente.headerRow[1] }}</th>
+                        <th>{{ tableBuscarCliente.headerRow[2] }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of tableBuscarCliente.dataRows">
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td class="text-right">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" value=""
+                                (click)="seleccionarVariosCliente(row[0],row[1] )">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!--*******************-->
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                (click)="cancelarBuscarCliente()">Cancelar</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarCliente()"
+                [disabled]="!(listaClienteSeleccionados.length === 1)">
+                Aceptar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-------------------------END BUSCAR CLIENTE--------------------------->
+    </div>
+    <!--<div class="container-fluid">-->
+    <div class="row">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header card-header-icon card-header-rose">
+            <div class="card-icon">
+              <i class="material-icons">assignment</i>
+            </div>
+            <h4 class="card-title ">Agregar Servicio</h4>
+          </div>
+          <div class="card-body">
+            <!--*********************-->
+            <div class="row">
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput [matDatepicker]="pickerTr" (click)="picker.open()" [(ngModel)]="fechaDesde"
+                    placeholder="Fecha"
+                    [disabled]="guardado">
+                  <mat-datepicker-toggle matSuffix [for]="pickerTr"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTr></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field>
+                  <input matInput type="text" [(ngModel)]="observacion" placeholder="Observación"
+                  [disabled]="guardado" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <!--*******************-->
+            <div class="row">
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="empleadoNombre"
+                    [disabled]="(guardado)" placeholder="Empleado">
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon"
+                  [disabled]="(guardado)">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="clienteNombre" 
+                  placeholder="Cliente" [disabled]="guardado">>
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon"
+                  [disabled]="guardado">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <!--*******************--->
+            <div class="table-responsive">
+              <table class="table"> 
+                <thead>
+                  <tr>
+                    <th>{{ tableDataFichasAsociadas.headerRow[0] }}</th>
+                    <th>{{ tableDataFichasAsociadas.headerRow[1] }}</th>
+                    <!--th>{{ tableDataFichasAsociadas.headerRow[2] }}</th-->
+                    <th>{{ tableDataFichasAsociadas.headerRow[3] }}</th>
+                    <!--th>{{ tableDataFichasAsociadas.headerRow[4] }}</th-->
+                    <th>{{ tableDataFichasAsociadas.headerRow[5] }}</th>
+                    <!--th>{{ tableDataFichasAsociadas.headerRow[6] }}</th-->
+                    <th>{{ tableDataFichasAsociadas.headerRow[7] }}</th>
+                    <!--th>{{ tableDataFichasAsociadas.headerRow[8] }}</th-->
+                    <th>{{ tableDataFichasAsociadas.headerRow[9] }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of tableDataFichasAsociadas.dataRows">
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <!--td>{{row[2]}}</td-->
+                    <td>{{row[3]}}</td>
+                    <!--td>{{row[4]}}</td-->
+                    <td>{{row[5]}}</td>
+                    <!--td>{{row[6]}}</td-->
+                    <td>{{row[7]}}</td>
+                    <!--td>{{row[8]}}</td-->
+                    <td>{{row[9]}}</td>
+                    <td class="text-right">
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input class="form-check-input" type="checkbox" value=""
+                            (click)="seleccionarUnaFicha(row[0])">
+                          <span class="form-check-sign">
+                            <span class="check"></span>
+                          </span>
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <!--*******************--->
+            </div>
+            <div *ngIf="listaFichasAsociadas.length === 0">{{mensajeVacio}}</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button mat-raised-button class="btn btn-fill btn-rose"  (click)="agregarServicio()"
+                    [disabled]="!((listaFichaSeleccionada.length === 1) && observacion) || guardado">Agregar Servicio</button>
+                </div>              
+            </div>
+            <mat-divider></mat-divider>
+            <!--*********DETALLES**********--->
+    <!-- div *ngIf="modelAgregarDetalle"-->
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-icon card-header-rose">
+              <!--div class="card-icon">
+                <i class="material-icons">assignment</i>
+              </div-->
+              <h4 class="card-title ">Detalle del servicio {{idServicio}}</h4>
+            </div>
+            <div class="card-body">
+              <!--*********************-->
+              <!--div class="row">
+                  <div class="col-md-6">
+                    <div class="input-group no-border">
+                      <mat-form-field>
+                        <mat-select placeholder="Seleccionar Categoría" name="idCategoria" [(ngModel)]="idCategoria"
+                          (ngModelChange)="listarSubCategorias(idCategoria)">
+                          <mat-option *ngFor="let l of listaCategoria" [value]="l[0]">
+                            {{l[1]}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="input-group no-border">
+                      <mat-form-field>
+                        <mat-select placeholder="Seleccionar Sub-Categoría" name="idProducto" [(ngModel)]="idProducto"
+                          [disabled]="!idCategoria">
+                          <mat-option *ngFor="let l of listaSubCategoria" [value]="l[0]">
+                            {{l[1]}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div-->
+              <!--*******************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                      <mat-select placeholder="Seleccionar tipo servicio" name="idTipoServicio" [(ngModel)]="idTipoServicio"
+                        (ngModelChange)="obtenerPrecio(idTipoServicio)">
+                        <mat-option *ngFor="let l of listaTipoServicio" [value]="l[0]">
+                          {{l[1]}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <mat-form-field>
+                        <input matInput type="text" [(ngModel)]="precio" placeholder="Precio" disabled>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <!--*******************-->
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="input-group no-border">
+                        <mat-form-field>
+                            <input matInput type="text" [(ngModel)]="cantidad" placeholder="Cantidad" >
+                        </mat-form-field>
+                      </div>
+                    </div>                  
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>{{ tableDataDetalle.headerRow[0] }}</th>
+                        <!--th>{{ tableDataDetalle.headerRow[1] }}</th-->
+                        <th>{{ tableDataDetalle.headerRow[2] }}</th>
+                        <th>{{ tableDataDetalle.headerRow[3] }}</th>
+                        <th>{{ tableDataDetalle.headerRow[4] }}</th>
+                        <th>{{ tableDataDetalle.headerRow[5] }}</th>
+                        <th>{{ tableDataDetalle.headerRow[6] }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of tableDataDetalle.dataRows">
+                        <td>{{row[0]}}</td>
+                        <!--td>{{row[1]}}</td-->
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td>{{row[5]}}</td>
+                        <td class="text-right">
+                          <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                          (click)="confirmarEliminar(row[0])" matTooltip="Eliminar detalle"><i class="material-icons">delete</i></a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <!--*******************--->
+                </div>
+              <div *ngIf="listaFichasAsociadas.length === 0">{{mensajeVacio}}</div>
+              <!--*******************--->
+              <div class="row">
+                  <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarDetalle()"
+                  [disabled]="!(idTipoServicio && cantidad && mostarAgregarDetalle)"
+                  >Agregar detalle</button>
+                <button mat-raised-button class="btn btn-fill btn-rose" (click)="Aceptar()">Aceptar</button>
+                <!--button mat-raised-button class="btn btn-fill btn-rose" (click)="cancelar()">Cancelar</button-->
+              </div>
+              <div class="row">
+                <button mat-raised-button class="btn btn-primary btn-sm" (click)="guardar()"
+                  [disabled]="!(mostarAgregarDetalle)">Guardar</button>
+                <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
+                <button mat-raised-button class="btn btn-warning" (click)="cancelar()">Cancelar</button>
+              </div>
+              <!--*******************--->
+            </div><!--end-card-body-->
+          </div><!--end-card-->
+        </div><!-- end col-md-12 -->
+      </div><!-- end row -->
+    <!-- /div>< end if -->
+            
+            <!--*******************--->
+          </div><!--end-card-body-->
+        </div><!--end-card-->
+      </div><!-- end col-md-12 -->
+    </div><!-- end row -->
+   
+  </div>
+</div>
