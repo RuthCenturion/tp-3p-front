@@ -559,38 +559,42 @@ export class AgregarServicioComponent implements OnInit {
     this.service.agregarServicio(dato).subscribe(
       response => {
         this.idServicio = response;
-      }
-    );
-    if (this.listaDetalles.length > 0) {
-      // se agregan los detalles con el idServicio obtenido
-      try {
-        this.listaDetalles.forEach( detalle => {
-          console.log('agregar detalle');
-          console.log(detalle);
-          let datoDetalle = {
-            cantidad: detalle[4],
-            idPresentacionProducto: {
-              idPresentacionProducto: detalle[1]
-            },
-            idServicio: {
-              idServicio: this.idServicio
-            }
-          };
-          let url = '/' + this.idServicio + '/detalle';
-          this.service.agregarDetalle(url, datoDetalle).subscribe(response => {
-            this.idTipoServicio = null;
-            this.cantidad = null;
-          },
-          error => {
+        if (this.listaDetalles.length > 0) {
+          // se agregan los detalles con el idServicio obtenido
+          try {
+            this.listaDetalles.forEach( detalle => {
+              console.log('agregar detalle');
+              console.log(detalle);
+              let datoDetalle = {
+                cantidad: detalle[4],
+                idPresentacionProducto: {
+                  idPresentacionProducto: detalle[1]
+                },
+                idServicio: {
+                  idServicio: this.idServicio
+                }
+              };
+              let url = '/' + this.idServicio + '/detalle';
+              this.service.agregarDetalle(url, datoDetalle).subscribe(response => {
+                this.idTipoServicio = null;
+                this.cantidad = null;
+              },
+              error => {
+                this.showNotification('Error al guardar. Consulte con soporte', NOTIFY.DANGER);
+               });
+            });
+            this.limpiar();
+          } catch (e) {
+            this.limpiar();
             this.showNotification('Error al guardar. Consulte con soporte', NOTIFY.DANGER);
-           });
-        });
-     //   this.limpiar();
-      } catch (e) {
-      //  this.limpiar();
+          }
+        }
+        this.showNotification('Los datos se guardaron con éxito.', NOTIFY.SUCCESS);
+      },
+      error => {
         this.showNotification('Error al guardar. Consulte con soporte', NOTIFY.DANGER);
       }
-    }
+    );
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
@@ -628,9 +632,20 @@ export class AgregarServicioComponent implements OnInit {
     this.empleadoNombre = null;
     this.clienteId = null;
     this.clienteNombre = null;
+    this.observacion = null;
     this.idCategoria = null;
     this.idProducto = null;
+    this.listaFichasAsociadas = [];
+    this.tableDataFichasAsociadas = {
+      headerRow: ['Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+        'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+      dataRows: this.listaFichasAsociadas
+    };
     this.listaDetalles = [];
+    this.tableDataDetalle = {
+      headerRow: ['Id. Detalle', 'Id Pres.', 'Presentación', 'Precio Unit.', 'Cantidad', 'Total', 'Acciones'],
+      dataRows: this.listaDetalles
+    };
     // los list de los buscadores
   }
   /*-------------------------------------------------------------------------*/
