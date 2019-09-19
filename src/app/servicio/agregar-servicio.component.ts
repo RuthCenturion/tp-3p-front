@@ -16,6 +16,7 @@ export class AgregarServicioComponent implements OnInit {
   public tableDataFichasAsociadas: TableData;
   public tableBuscarEmpleado: TableData;
   public tableBuscarCliente: TableData;
+  public tableDataDetalle: TableData;
 
   // 
   fechaDesde: any;
@@ -32,6 +33,9 @@ export class AgregarServicioComponent implements OnInit {
   modelAgregarDetalle: any;
   // del detalle
   precio: any;
+  idTipoServicio: any;
+  descripcionTipoServicio: any;
+  cantidad: any;
   // buscador de empleados
   buscarEmpleadoNombre: any;
   // buscador de clientes
@@ -55,6 +59,7 @@ export class AgregarServicioComponent implements OnInit {
   listaNombreClienteSeleccionados: Array<any>;
   listaFichaSeleccionada: Array<any>;
   listaFichasAsociadas = new Array<any>();
+  listaDetalles = new Array<any>();
   mostrarDetalles: any;
   mostarAgregarDetalle: any;
   mensajeVacio: any;
@@ -80,6 +85,11 @@ export class AgregarServicioComponent implements OnInit {
     this.tableBuscarCliente = {
       headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
+    };
+    this.listaDetalles = new Array<any>();
+    this.tableDataDetalle = {
+      headerRow: ['Id. Detalle', 'Id Pres.', 'Presentación', 'Precio Unit.', 'Cantidad', 'Total', 'Acciones'],
+      dataRows: this.listaDetalles
     };
   }
   /*-------------------------------------------------------------------------*/
@@ -464,6 +474,7 @@ export class AgregarServicioComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
   obtenerPrecio(idPresentacionProducto) {
     let index = this.listaIdTipoServicios.indexOf(idPresentacionProducto);
+    this.descripcionTipoServicio = this.listaTipoServicio [index][1];
     this.precio = this.listaTipoServicio[index].existenciaProducto ? this.listaTipoServicio[index].existenciaProducto : 0;
 
     console.log('---',  this.precio ); // { nombre: 'cerezas', cantidad: 5 }
@@ -491,13 +502,9 @@ export class AgregarServicioComponent implements OnInit {
     console.log('lista de id seleccionados al final: ', this.listaFichaSeleccionada);
   }
   /*-------------------------------------------------------------------------*/
-  guardarServicio() {
-    let dato = {
-      observacion: this.observacion,
-      idFichaClinica: {
-        idFichaClinica: this.listaFichaSeleccionada[0]
-      }
-    };
+  agregarServicio() {
+    // this.showNotification('Datos guardados', NOTIFY.SUCCESS);
+    /*
     this.service.agregarServicio(dato).subscribe(
       servicio => {
         console.log('servicio creado: ', servicio);
@@ -513,17 +520,77 @@ export class AgregarServicioComponent implements OnInit {
         this.idServicio =  null;
         this.showNotification('Error al crear el servicio. Consulte con soporte', NOTIFY.DANGER);
       }
+    );*/
+    // DISABLE todos los campos de servicio
+    // HABILITAR 'agregar detalle'
+    this.guardado = true;
+    this.mostarAgregarDetalle = true;
+  }
+  /*-------------------------------------------------------------------------*/
+  agregarDetalle() {
+    let lista = new Array<any>();
+    lista.push(0); // id del detalle --->
+    lista.push(this.idTipoServicio);
+    lista.push(this.descripcionTipoServicio);
+    lista.push(this.precio);
+    lista.push(this.cantidad);
+    lista.push('TOTAL');
+    this.listaDetalles.push(lista);
+    this.tableDataDetalle = {
+      headerRow: ['Id. Detalle', 'Id Pres.', 'Presentación', 'Precio Unit.', 'Cantidad', 'Total', 'Acciones'],
+      dataRows: this.listaDetalles
+    };
+    this.idTipoServicio = null;
+    this.descripcionTipoServicio = null;
+    this.precio = null;
+    this.cantidad = 0;
+  }
+  /*-------------------------------------------------------------------------*/
+  // guarda el servicio con el detalle
+  guardar() {
+    console.log('agregar servicio y detalle');
+          console.log(this.listaDetalles);
+    let dato = {
+      observacion: this.observacion,
+      idFichaClinica: {
+        idFichaClinica: this.listaFichaSeleccionada[0]
+      }
+    };
+    this.service.agregarServicio(dato).subscribe(
+      response => {
+        this.idServicio = response;
+      }
     );
-    /*
-        { 
-        "cantidad": 1,
-        "idPresentacionProducto":{
-        "idPresentacionProducto":31
-        },
-        "idServicio":{
-        "idServicio":3
-        }
-        }*/
+    if (this.listaDetalles.length > 0) {
+      // se agregan los detalles con el idServicio obtenido
+      try {
+        this.listaDetalles.forEach( detalle => {
+          console.log('agregar detalle');
+          console.log(detalle);
+          let datoDetalle = {
+            cantidad: detalle[4],
+            idPresentacionProducto: {
+              idPresentacionProducto: detalle[1]
+            },
+            idServicio: {
+              idServicio: this.idServicio
+            }
+          };
+          let url = '/' + this.idServicio + '/detalle';
+          this.service.agregarDetalle(url, datoDetalle).subscribe(response => {
+            this.idTipoServicio = null;
+            this.cantidad = null;
+          },
+          error => {
+            this.showNotification('Error al guardar. Consulte con soporte', NOTIFY.DANGER);
+           });
+        });
+     //   this.limpiar();
+      } catch (e) {
+      //  this.limpiar();
+        this.showNotification('Error al guardar. Consulte con soporte', NOTIFY.DANGER);
+      }
+    }
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
@@ -563,6 +630,7 @@ export class AgregarServicioComponent implements OnInit {
     this.clienteNombre = null;
     this.idCategoria = null;
     this.idProducto = null;
+    this.listaDetalles = [];
     // los list de los buscadores
   }
   /*-------------------------------------------------------------------------*/
@@ -572,6 +640,7 @@ export class AgregarServicioComponent implements OnInit {
     this.listaClienteSeleccionados = new Array<any>();
     this.listaNombreClienteSeleccionados = new Array<any>();
     this.listaFichaSeleccionada = new Array<any>();
+    this.listaDetalles = new Array<any>();
     this.mostrarDetalles = false;
     this.mostarAgregarDetalle = false;
     this.listarCategorias();
