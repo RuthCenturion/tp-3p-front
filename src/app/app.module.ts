@@ -53,6 +53,7 @@ import { AuthLayoutComponent } from './layouts/auth/auth-layout.component';
 
 import { AppRoutes } from './app.routing';
 import { ServicioComponent } from './servicio/servicio.component';
+
 // import { FichaClinicaComponent } from './ficha-clinica/ficha-clinica.component';
 // import { HorarioComponent } from './horario/horario.component';
 // import { AdministracionComponent } from './administracion/administracion.component';

@@ -1,0 +1,95 @@
+<div class="login-register">
+    <div class="row login-card">
+      <div class="col-sm-6 login-card-img">
+        <div class="login-form-img">
+          <img class="login-img" src="assets/img/img1.png">
+        </div>
+        <p class="version-no">v 0.0.7</p>
+      </div>
+      <div class="col-sm-6 text-center login-card-form">
+        <div class="login-form">
+          <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+            <div class="avatar">
+              <i id="login-icon" class="fa fa-user fa-4x"></i>
+            </div>
+            <h2 class="text-center">Iniciar sesión</h2>
+  
+            <!-- usuario -->
+            <div class="form-group">
+              <input class="form-control" placeholder="Usuario" type="text" name="" (ngModelChange)="valid()"
+                [ngClass]="{'has-val': validUsername}" formControlName="username">
+            </div>
+  
+            <!-- pass -->
+            <div class="form-group">
+              <input class="form-control" type="{{ showPass ? 'text' : 'password' }}" name="pass"
+                formControlName="password" (ngModelChange)="valid()" [ngClass]="{'has-val': validPassword}"
+                placeholder="Contraseña">
+            </div>
+            <div class="form-group">
+              <button type="submit" [disabled]="disabledButton" class="btn btn-primary btn-lg btn-block">INGRESAR</button>
+            </div>
+            <div class="clearfix">
+              <a class="pull-left login-link" (click)=reestablecerPass()>Restablecer contraseña</a>
+            </div>
+          </form>
+          <!-- <div class="alert alert-primary" role="alert">
+            Usuario: admin, Contraseña: admin
+          </div> -->
+          <div class="alert alert-danger alert-dismissible" role="alert" *ngIf="showMessage">
+            {{ loginMessage }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!------------------------- Modal--------------------------->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">Reestablecer contraseña</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="usuarioRestablecerForm">
+        <!-------------------------------------------------->
+        <br>
+        <div class="row ">
+            <div class="col-md-4 ">
+                <label for="username" >Usuario</label>
+              </div>            
+          <div class="col-md-8">
+            <input type="text" class="form-control form-control-sm " id="username" [(ngModel)]="username"
+              formControlName="username" required>
+          </div>
+        </div>
+        <!-------------------------------------------------->
+        <br>
+        <div class="row ">
+          <div class="col-md-4 ">
+            <label for="email">Correo</label>
+          </div>
+          <div class="col-md-8">
+            <input type="text" class="form-control form-control-sm" id="email" [(ngModel)]="email"
+              formControlName="email" required>
+          </div>
+        </div>
+        <!-------------------------------------------------->
+        <br><br>          
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="cancelar()">Cancelar</button>
+            <button type="button" class="btn btn-primary" [disabled]="!usuarioRestablecerForm.valid" (click)="enviar()" data-dismiss="modal">Enviar</button>
+          </div>
+      </form><br><br><br>
+    </div>
+  </div>
+</div>
+</div>
+<!------------------------- Modal--------------------------->
