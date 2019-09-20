@@ -1,8 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FichaClinicaService } from '../services/ficha-clinica.service';
 import { NOTIFY } from '../commons/app-utils';
 import { TableData } from '../md/md-table/md-table.component';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 declare const $: any;
 
@@ -31,6 +32,8 @@ declare interface DatoModificar {
 
 export class ModificarFichaComponent implements OnInit {
   public tableData3: TableData;
+  public tableDataArchivo: TableData;
+
 
   idFicha: string;
   fechaFicha: string;
@@ -46,43 +49,59 @@ export class ModificarFichaComponent implements OnInit {
   diagnostico: any;
   observacion: any;
   listaServicios: Array<any>;
+  listaArchivos: Array<any>;
+  listaArchivosGrilla: Array<any>;
+
+  // archivo
+  multiple: any;
+  files: File[] = [];
+  @Input()
+  deleteButtonIcon = 'close';
+  @ViewChild('fileUpload', { static: true }) fileUpload: ElementRef;
+  listaArchivosEliminar: Array<any>;
 
 
   constructor(private route: ActivatedRoute,
     private router: Router,
-    private service: FichaClinicaService ) {
-      this.listaServicios = [];
-      this.tableData3 = {
-        headerRow: [ 'ID', 'Fecha',  'Presupuesto', 'Observacion', 'Acciones' ],
-        dataRows: this.listaServicios
-      };
-     }
-   /*-------------------------------------------------------------------------*/
-   modificarFicha() {
-      let dato: any = {
-        idFichaClinica: this.idFicha,
-        observacion: this.observacion
-      };
-      this.service.modificarFicha(dato).subscribe(
-        response => {
-          console.log('modificarFicha(): ', response);
-          this.showNotification('Modificación de la ficha con éxito!', NOTIFY.SUCCESS);
-          this.cancelarModificar();
-        },
-        error => {
-          this.showNotification('Error al modificar la ficha. Consulte con soporte', NOTIFY.WARNING);
-        }
-      );
-   }
+    private service: FichaClinicaService,
+    private sanitizer: DomSanitizer) {
+    this.listaServicios = [];
+    this.tableData3 = {
+      headerRow: ['ID', 'Fecha', 'Presupuesto', 'Observacion', 'Acciones'],
+      dataRows: this.listaServicios
+    };
+    this.listaArchivos = [];
+    this.tableDataArchivo = {
+      headerRow: ['Id', 'Id', 'Nombre archivo', 'Acciones'],
+      dataRows: this.listaServicios
+    };
+  }
+  /*-------------------------------------------------------------------------*/
+  modificarFicha() {
+    let dato: any = {
+      idFichaClinica: this.idFicha,
+      observacion: this.observacion
+    };
+    this.service.modificarFicha(dato).subscribe(
+      response => {
+        console.log('modificarFicha(): ', response);
+        this.showNotification('Modificación de la ficha con éxito!', NOTIFY.SUCCESS);
+        this.cancelarModificar();
+      },
+      error => {
+        this.showNotification('Error al modificar la ficha. Consulte con soporte', NOTIFY.WARNING);
+      }
+    );
+  }
   /*-------------------------------------------------------------------------*/
   cancelarModificar() {
     this.router.navigate(['ficha-clinica']);
   }
-   /*-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*/
   verServicio(a, b, c, d) {
     console.log('lo seleccionado para verServicio: ', a, b, c, d);
   }
-   /*-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*/
   editarServicio(servicioSeleccionado) {
     console.log('lo seleccionado para editarServicio: ', servicioSeleccionado);
     let modificar = new Array<any>();
@@ -106,37 +125,139 @@ export class ModificarFichaComponent implements OnInit {
     this.router.navigate(['servicio/modificar-servicio', modificar]);
 
   }
-   /*-------------------------------------------------------------------------*/
-   pruebaUnaSolaSeleccion(row) { // se envia toda la fila como array
+  /*-------------------------------------------------------------------------*/
+  pruebaUnaSolaSeleccion(row) { // se envia toda la fila como array
     console.log('fila seleccionada: ', row);
-   }
+  }
   /*-------------------------------------------------------------------------*/
   listarServiciosAsociados() {
     let url = '{"idFichaClinica":{"idFichaClinica":' + this.idFicha + '}}';
     let path = encodeURIComponent(url);
     path = '?ejemplo=' + path;
-      this.service.getServiciosAsociados(path).subscribe(
-        response => {
+    this.service.getServiciosAsociados(path).subscribe(
+      response => {
+        console.log('listaTotal de servicios', response.lista);
+        if (response.totalDatos > 0) {
+          this.listaServicios = new Array<any>();
           console.log('listaTotal de servicios', response.lista);
-          if(response.totalDatos > 0) {
-            this.listaServicios = new Array<any>();
-            console.log('listaTotal de servicios', response.lista);
-            response.lista.forEach(servicio => {
-              let lista = new Array<any>();
-              lista.push(servicio.idServicio);
-              lista.push(servicio.fechaHora);
-              lista.push(servicio.presupuesto);
-              lista.push(servicio.observacion);
-              this.listaServicios.push(lista);
+          response.lista.forEach(servicio => {
+            let lista = new Array<any>();
+            lista.push(servicio.idServicio);
+            lista.push(servicio.fechaHora);
+            lista.push(servicio.presupuesto);
+            lista.push(servicio.observacion);
+            this.listaServicios.push(lista);
 
-              this.tableData3 = {
-                headerRow: [ 'ID', 'Fecha',  'Presupuesto', 'Observacion', 'Acciones' ],
-                dataRows: this.listaServicios
-              };
-            });
-          }
+            this.tableData3 = {
+              headerRow: ['ID', 'Fecha', 'Presupuesto', 'Observacion', 'Acciones'],
+              dataRows: this.listaServicios
+            };
+          });
         }
-      );
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  listarArchivosAsociados() {
+    let url = '?idFichaClinica=' + this.idFicha;
+    this.listaArchivos = new Array<any>();
+    this.listaArchivosGrilla = new Array<any>();
+    let index = 1;
+    this.service.getArchivosAsociados(url).subscribe(
+      response => {
+        console.log('archivos asociados: ', response);
+        if (response.totalDatos > 0) {
+          console.log('listaTotal de servicios', response.lista);
+          response.lista.forEach(archivo => {
+            let lista = new Array<any>();
+            lista.push(index);
+            lista.push(archivo.idFichaArchivo);
+            lista.push(archivo.nombre);
+            this.listaArchivos.push(lista);
+            this.listaArchivosGrilla.push(lista);
+            index = index + 1;
+            this.tableDataArchivo = {
+              headerRow: ['Id', 'Id', 'Nombre archivo', 'Acciones'],
+              dataRows: this.listaArchivosGrilla
+            };
+          });
+        } else {
+          this.listaArchivos = [];
+          this.listaArchivosGrilla = [];
+          this.tableDataArchivo = {
+            headerRow: ['Id', 'Id', 'Nombre archivo', 'Acciones'],
+            dataRows: this.listaArchivosGrilla
+          };
+        }
+      }
+    );
+
+  }
+  /*-------------------------------------------------------------------------*/
+  onClick(event) {
+    console.log(event.target.files);
+    this.multiple = true;
+    if (this.fileUpload) {
+      this.fileUpload.nativeElement.click();
+    }
+  }
+  /*-------------------------------------------------------------------------*/
+  onFileSelected(event) {
+    let files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
+    console.log('event::::::', event);
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+      file.objectURL = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(files[i])));
+      
+      this.files.push(files[i]);
+      let lista = new Array<any>();
+      lista.push(this.listaArchivosGrilla.length + 1); // id en la grilla
+      lista.push(i); // id del detalle, no se tiene todavia
+      lista.push(files[i].name);
+      this.listaArchivosGrilla.push(lista);
+      this.tableDataArchivo = {
+        headerRow: ['Id', 'Id', 'Nombre archivo', 'Acciones'],
+        dataRows: this.listaArchivosGrilla
+      };
+    }
+    console.log('files: ', this.files);
+    console.log('filesGrilla: ', this.listaArchivosGrilla);
+  }
+  /*-------------------------------------------------------------------------*/
+  isMultiple(): boolean {
+    return this.multiple
+  }
+  /*-------------------------------------------------------------------------*/
+  removeFile(event, file) {
+    let ix;
+    if (this.files && -1 !== (ix = this.files.indexOf(file))) {
+      this.files.splice(ix, 1);
+      // this.limpiar();
+      this.clearInputElement();
+    }
+  }
+  /*-------------------------------------------------------------------------*/
+  clearInputElement() {
+    this.fileUpload.nativeElement.value = '';
+  }
+  /*-------------------------------------------------------------------------*/
+  eliminarArchivo(row) {
+    console.log('fila del archivo seleccionada: ', row);
+    // row == un array con la posion en la grilla, el idFichaArchivo, nombre del archivo
+    // si la pos[1] != 0, significa que se quiere eliminar un archivo de la ficha
+    // si la pos[1] == 0, significa que se quiere eliminar un archivo recién subido
+    // primero se elimina del array de la grilla, cuando se selecciona guardar se elimina realmente
+    if (row[1] !== 0) {
+      this.listaArchivosEliminar.push(row[1]);
+      this.listaArchivosGrilla.splice(row[0] - 1, 1);
+    } else {
+      this.listaArchivosGrilla.splice(row[0] - 1, 1);
+    }
+    let index = 1;
+    for (let i = 0; i < this.listaArchivosGrilla.length; i++) {
+      this.listaArchivosGrilla[i][0] = index;
+      index++;
+    }
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
@@ -182,11 +303,12 @@ export class ModificarFichaComponent implements OnInit {
       this.motivo = params.motivo;
       this.diagnostico = params.diagnostico;
       this.observacion = params.observacion;
-      
-    });
-    
-    this.listarServiciosAsociados();
 
-    }
+    });
+    this.listaArchivosEliminar = new Array<any>();
+    this.listarServiciosAsociados();
+    this.listarArchivosAsociados();
+
+  }
 
 }

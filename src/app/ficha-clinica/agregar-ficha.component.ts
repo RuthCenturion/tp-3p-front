@@ -1,12 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild,  ElementRef } from '@angular/core';
 import { TableData } from '../md/md-table/md-table.component';
 import { Router } from '@angular/router';
-import { NOTIFY } from '../commons/app-utils';
-import { FichaClinicaService } from '../services/ficha-clinica.service';
-import { CategoriaService } from '../services/categoria.service';
+import { NOTIFY } from '../commons/app-utils'
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+
+import { FichaClinicaService } from '../services/ficha-clinica.service';
+import { CategoriaService } from '../services/categoria.service';
 
 declare const $: any;
 
@@ -82,7 +84,7 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
     {value: 'S', viewValue: 'SI'},
     {value: 'N', viewValue: 'NO'}
   ];
-  
+
   // panelOpenState = false;
   listaAtributos: Array<any>;
   listaBuscarEmpleados: Array<any>;
@@ -93,6 +95,14 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
   listaFichaClinica: Array<any>;
   listaHorarios: Array<any>;
 
+  // archivo
+  multiple: any;
+  files: File[] = [];
+  @Input()
+  deleteButtonIcon = 'close';
+
+  @ViewChild('fileUpload', {static: true}) fileUpload: ElementRef;
+
 
   displayedColumns: string[] = ['select', 'position', 'idCliente', 'name', 'email'];
   dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
@@ -101,7 +111,8 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
 
   constructor(private service: FichaClinicaService,
     private categoriaService: CategoriaService,
-    private router: Router ) {
+    private router: Router,
+    private sanitizer: DomSanitizer ) {
     this.tableBuscarEmpleado = {
       headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
@@ -111,7 +122,6 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
       dataRows: this.listaBuscarClientes
     };
   }
-  /*-------------------------------------------------------------------------*/
  
   /*-------------------------------------------------------------------------*/
   listarEmpleadosBuscador(buscadorNombre) {
@@ -266,16 +276,59 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
         idTipoProducto: this.idProducto
       }
     };
-    this.service.agregarFicha(dato).subscribe(
-      response => {
-        console.log('postFicha(): ', response);
-        this.showNotification('Ficha creada con éxito!', NOTIFY.SUCCESS);
-        this.limpiar();
-      },
-      error => {
-        this.showNotification('Ocurrió un error al agregar ficha. Consulte con soporte', NOTIFY.DANGER);
-      }
-    );
+    console.log('archivos a subir: ', this.files);
+    try {
+      this.service.agregarFicha(dato).subscribe(
+        response => {
+          console.log('postFicha(): ', response);
+          if (this.files.length > 0 ) {
+            // subir los archivos seleccionados con el id generado
+           /* this.files.forEach(
+              file => {
+                this.service.subirArchivo(file, response.idFichaClinica).subscribe(
+                  res => {
+                    let ix;
+                    if (this.files && -1 !== (ix = this.files.indexOf(file))) {
+                      this.files.splice(ix, 1);
+                      this.clearInputElement();
+                    }
+                  }
+                );
+            });*/
+            for (let i = 0; i < this.files.length; i++) {
+              this.service.subirArchivo(this.files[i], response.idFichaClinica).subscribe(
+                res => {
+                  let ix;
+                  if (this.files && -1 !== (ix = this.files.indexOf(this.files[i]))) {
+                    this.files.splice(ix, 1);
+                    this.clearInputElement();
+                  }
+                }
+              );
+            }
+            this.files = [];
+          }
+          this.showNotification('Ficha creada con éxito!', NOTIFY.SUCCESS);
+          this.limpiar();
+        },
+      );
+    } catch (e) {
+      this.showNotification('Ocurrió un error al agregar ficha. Consulte con soporte', NOTIFY.DANGER);
+    }
+  }
+  
+   /*-------------------------------------------------------------------------*/
+  removeFile(event, file) {
+    let ix;
+    if (this.files && -1 !== (ix = this.files.indexOf(file))) {
+      this.files.splice(ix, 1);
+      // this.limpiar();
+      this.clearInputElement();
+    }
+  }
+  /*-------------------------------------------------------------------------*/
+  clearInputElement() {
+    this.fileUpload.nativeElement.value = '';
   }
   /*-------------------------------------------------------------------------*/
   cancelarAgregar() {
@@ -283,7 +336,7 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
     this.router.navigate(['ficha-clinica']);
   }
   /*-------------------------------------------------------------------------*/
-  
+
   /*-------------------------------------------------------------------------*/
   fechaCadena(fecha): any {
     let d = new Date(fecha);
@@ -457,10 +510,47 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
 
   }
   /*-------------------------------------------------------------------------*/
-  onFileSelected(event) {
-    console.log(event);
+  onClick(event) {
+    console.log(event.target.files);
+    /*this.service.subirArchivo(event.target.files[0], 35).subscribe(
+      response => {
+        console.log('++++', response);
+      }, error => {
+        console.log('----', error);
+      }
+    );*/
+    this.multiple = true;
+    if (this.fileUpload) {
+      this.fileUpload.nativeElement.click();
+    }
   }
   /*-------------------------------------------------------------------------*/
+  onFileSelected(event) {
+    let files = event.dataTransfer ? event.dataTransfer.files : event.target.files;
+    console.log('event::::::', event);
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+
+      //if(!this.isFileSelected(file)){
+  //    if (this.validate(file)) {
+        //      if(this.isImage(file)) {
+        file.objectURL = this.sanitizer.bypassSecurityTrustUrl((window.URL.createObjectURL(files[i])));
+        //      }
+      /*  if (!this.isMultiple()) {
+          this.files = [];
+          console.log('multiple ', this.multiple);
+        }*/
+        this.files.push(files[i]);
+        //  }
+    //  }
+      //}
+    }
+    console.log('ruthi: ', this.files);
+  }
+  /*-------------------------------------------------------------------------*/
+  isMultiple(): boolean {
+    return this.multiple
+  }
   /*-------------------------------------------------------------------------*/
 
   ngOnInit() {

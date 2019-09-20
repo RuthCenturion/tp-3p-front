@@ -240,19 +240,41 @@
                   </div>
                 </div>
               </div>
-              <!--*******************--->
+              <!--*******************--
               https://medium.com/angular-chile/subir-archivos-a-firebase-cloud-storage-con-angular-7-d735d5dbfa53
               https://forobeta.com/temas/cargar-archivos-e-imagenes-con-angular-4-5-y-6-facil.658106/
               https://stackblitz.com/edit/angular-material-fileupload?file=src%2Fapp%2Fwidgets%2Ffileupload.component.ts
+              --> 
+              <div class="row">
+                <input type="file"
+                      class="input_fileupload--hidden"
+                      (input)="onInput($event)"
+                      (change)="onFileSelected($event)"
+                      [(ngModel)]="inputFileName"
+                      [accept]="accept"
+                      style="display: none"
+                      #fileUpload>
+                <button mat-raised-button color="primary"(click)="fileUpload.click()"
+                  [disabled]="(files.length === 3) || !(empleadoId && clienteId && (idCategoria && idProducto) && motivo && diagnostico && observacion)">
+                  <mat-icon>add</mat-icon>Subir Archivo
+                </button>                
+                <div *ngFor="let f of files">
+                  <span>{{f.name}}</span>
+                  <button mat-icon-button
+                          color="primary"
+                          [attr.title]="deleteButtonLabel?deleteButtonLabel:null"
+                          (click)="removeFile(event,f)">
+                    <mat-icon>{{deleteButtonIcon}}</mat-icon>
+                  </button>
+                </div>
+              </div>
               <div class="row">
                 <button mat-raised-button class="btn btn-primary btn-sm" (click)="guardarFicha()"
                 [disabled]="!(empleadoId && clienteId && (idCategoria && idProducto) && motivo && diagnostico && observacion)">GUARDAR</button>
                 <button mat-raised-button class="btn btn-fill btn-rose" (click)="limpiar()">Limpiar</button>
                 <button mat-raised-button class="btn btn-info btn-sm" (click)="cancelarAgregar()">CANCELAR</button>
-                <input style="display: none"
-                  type="file" (change)="onFileSelected($event)"  multiple #fileInput>
-                  <button mat-raised-button class="btn btn-info btn-sm" (click)="fileInput.click()">Seleccionar archivo</button>
-                <button mat-raised-button class="btn btn-info btn-sm" (click)="subirArchivo()">Subir</button>
+                
+                
                 <!--button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar Ficha</button-->
               </div>
               <!--*******************--->

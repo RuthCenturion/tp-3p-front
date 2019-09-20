@@ -16,6 +16,7 @@ export class FichaClinicaService {
     private reservaUrl = SERVICE_REST + 'reserva';
     private fichaClinicaUrl = SERVICE_REST + 'fichaClinica';
     private servicioUrl = SERVICE_REST + 'servicio';
+    private archivoUrl = SERVICE_REST + 'fichaArchivo';
 
     constructor(private http: HttpClient) { }
 
@@ -59,5 +60,24 @@ export class FichaClinicaService {
     
     getServiciosAsociados(descripcion): Observable<any> {
         return this.http.get(this.servicioUrl  + descripcion);
+    }
+
+    subirArchivo(file, idFicha): Observable<any> {
+        console.log('file: ', file);
+        const httpOptions = {
+            headers: new HttpHeaders({
+                // 'Content-Type': 'application/json',
+                'usuario': 'ana'
+            })
+        };
+        const formData = new FormData();
+        formData.append('file', file, file.name);
+        formData.append('nombre', file.name);
+        formData.append('idFichaClinica', idFicha);
+        return this.http.post(this.archivoUrl + '/archivo', formData);
+// return this.http.put(this.fichaClinicaUrl, file, httpOptions);
+    }
+    getArchivosAsociados(descripcion): Observable<any> {
+        return this.http.get(this.archivoUrl  + descripcion);
     }
 }

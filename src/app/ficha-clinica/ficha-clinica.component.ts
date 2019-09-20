@@ -391,7 +391,10 @@ export class FichaClinicaComponent implements OnInit {
             // sub-categoria === tipoProducto
             this.listaAtributos.push(ficha.idTipoProducto.idTipoProducto); // 8
             this.listaAtributos.push(ficha.idTipoProducto.descripcion); // 9
-
+            this.listaAtributos.push(ficha.motivoConsulta); // 10
+            this.listaAtributos.push(ficha.diagnostico); // 11
+            this.listaAtributos.push(ficha.observacion); // 12
+            
             this.listaFichaClinica.push(this.listaAtributos);
 
             this.tableDataFicha = {

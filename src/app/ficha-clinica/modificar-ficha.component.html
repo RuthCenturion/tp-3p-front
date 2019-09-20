@@ -91,13 +91,70 @@
                 </div>
               </div>
             </div>
+            
+            <!--******** TABLA FICHAS***********--->
+            <div class="row">
+              <div class="col-lg-4 col-md-12">
+                <!--div class="card"-->
+                  <!--div class="card-header card-header-text card-header-warning">
+                    <h4 class="card-title "> Archivos de la ficha {{idFicha}}</h4>
+                  </div-->
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>{{ tableDataArchivo.headerRow[0] }}</th>
+                          <th>{{ tableDataArchivo.headerRow[1] }}</th>
+                          <th>{{ tableDataArchivo.headerRow[2]}}</th>
+                          <th>{{ tableDataArchivo.headerRow[3]}}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of tableDataArchivo.dataRows">
+                          <td>{{row[0]}}</td>
+                          <td>{{row[1]}}</td>
+                          <td>{{row[2]}}</td>
+                          <td>
+                            <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                            (click)="eliminarArchivo(row)">
+                            <i class="material-icons" matTooltip="Eliminar archivo">delete</i></a>     
+                        </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!--div *ngIf="listaReservas.length === 0">Sin datos</div-->
+                <!--/div-->
+               </div>                
+            </div>
+              <!--********SUBIR ARCHIVO***********-->
+            <div class="row">
+                <input type="file" class="input_fileupload--hidden" (input)="onInput($event)"
+                  (change)="onFileSelected($event)" [(ngModel)]="inputFileName"
+                  [accept]="accept" style="display: none" #fileUpload>
+                <button mat-raised-button color="primary"(click)="fileUpload.click()"
+                  [disabled]="(listaArchivosGrilla.length === 3) || !( observacion)">
+                  <mat-icon>add</mat-icon>Subir Archivo
+                </button>                
+                <div *ngFor="let f of files">
+                  <span>{{f.name}}</span>
+                  <button mat-icon-button
+                          color="primary"
+                          [attr.title]="deleteButtonLabel?deleteButtonLabel:null"
+                          (click)="removeFile(event,f)">
+                    <mat-icon>{{deleteButtonIcon}}</mat-icon>
+                  </button>
+                </div>              
+            </div>
             <!--*******************--->
             <div class="row">
-              <button mat-raised-button class="btn btn-primary btn-sm" (click)="modificarFicha()"
+              
+                <button mat-raised-button class="btn btn-primary btn-sm" (click)="modificarFicha()"
                 [disabled]="!(observacion)">GUARDAR</button>
-              <button mat-raised-button class="btn btn-fill btn-rose" (click)="limpiar()">Limpiar</button>
-              <button mat-raised-button class="btn btn-info btn-sm" (click)="cancelarModificar()">CANCELAR</button>
-              <!--button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar Ficha</button-->
+                <button mat-raised-button class="btn btn-fill btn-rose" (click)="limpiar()">Limpiar</button>
+                <button mat-raised-button class="btn btn-info btn-sm" (click)="cancelarModificar()">CANCELAR</button>
+                <!--button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarReserva()">Agregar Ficha</button-->
+              
             </div>
             <!--*******************--->
             <!--grilla de servicios asociados-->
@@ -106,6 +163,7 @@
                 <div class="card-header card-header-icon card-header-rose">
 
                   <h4 class="card-title "> Lista de servicios asociados</h4>
+
                 </div>
                 <div class="card-body table-full-width">
                   <div class="table-responsive">
