@@ -457,6 +457,11 @@ export class AgregarFichaComponent implements OnInit {  ELEMENT_DATA: PeriodicEl
 
   }
   /*-------------------------------------------------------------------------*/
+  onFileSelected(event) {
+    console.log(event);
+  }
+  /*-------------------------------------------------------------------------*/
+  /*-------------------------------------------------------------------------*/
 
   ngOnInit() {
     this.listarCategorias();
