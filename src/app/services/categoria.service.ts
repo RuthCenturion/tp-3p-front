@@ -35,6 +35,15 @@ export class CategoriaService {
       return this.http.get(this.categoriaUrl);
     }
   }
+
+  obtenerCategoriaPaginado(descripcion: any, inicio: number, cantidad:number): Observable<any>{
+    if (descripcion) {
+      return this.http.get(this.categoriaUrl  + descripcion);
+    } else {
+      return this.http.get(this.categoriaUrl + '?orderBy=idCategoria&orderDir=asc&inicio='+inicio+'&cantidad='+cantidad);
+    }
+  }
+
   agregarCategoria(categoria: any): Observable<any> {
     return this.http.post(this.categoriaUrl, categoria/*, httpOptions*/);
   }
