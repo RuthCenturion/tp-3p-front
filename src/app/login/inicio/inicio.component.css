@@ -138,3 +138,117 @@
   
   
   /*******************/
+  .login-card { 
+    margin: 0 15%;
+  }
+  .login-img {
+    width: 85%;
+  }
+  .login-form {
+    width: 60%;
+    margin: 0 auto;
+    padding-bottom: 0px;
+    padding-top: 20%;	
+  }
+  .login-form form {
+    color: #7a7a7a;
+    border-radius: 2px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    background: #ececec;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    position: relative;	
+  }
+  .login-form h2 {
+    font-size: 18px;
+      margin: 26px 0 15px;
+  }
+  .login-form .avatar {
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    top: -50px;
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    z-index: 9;
+    background: #003F6F;
+    padding: 18px;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+  }
+  /* .form-control {
+    min-height: 35px;
+    background: #fff;
+    box-shadow: none !important;
+    border-color: #e3e3e3;
+  } */
+  .form-control:focus {
+    border-color: #70c5c0;
+  }
+  .form-control, .btn {        
+    border-radius: 2px;
+  }
+  .login-form .form-group {  
+    margin-bottom: 1rem;
+    font-size: 13px;
+  }
+  .login-form .btn {        
+    font-size: 13px;
+    /*font-weight: bold;*/
+    background: #003F6F;;
+    border: none;
+    margin-bottom: 8px;
+  }
+  .login-form-img {
+    width: 70%;
+    margin: 0 auto;
+    /* padding: 43% 0;	 */
+    padding: 36% 0;
+  }
+  .card .card-icon i {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 1.6rem;
+  }
+  .tarjeta-title{
+    font-size: .9rem;
+  }
+  small {
+    font-size: 80%;
+  }
+  .tarjetas-chart {
+    min-height: 150px;
+    padding-top: 0px;
+  }
+  /* google-chart {
+    width: 150; 
+    height: 150;
+  } */
+  .card-body {
+    flex: 1 1 auto;
+    padding: .6rem;
+  }
+  .card-title h4{
+    font-size: 1.1rem;
+  }
+  .tarjetas-chart h4{
+    font-size: 1.1rem;
+  }
+  .gauge-padding{
+    padding: .6rem;
+  }
+  .margin-pie{
+    margin:5%;
+  }
+  .version-no {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    padding-left: 15px;
+    padding-bottom: 15px;
+  }

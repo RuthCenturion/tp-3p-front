@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild,  ElementRef } from '@angular/core';
 import { TableData } from '../md/md-table/md-table.component';
 import { Router } from '@angular/router';
-import { NOTIFY } from '../commons/app-utils'
+import { NOTIFY } from '../commons/app-utils';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
