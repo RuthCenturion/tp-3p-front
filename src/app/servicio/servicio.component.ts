@@ -5,6 +5,7 @@ import { NOTIFY } from '../commons/app-utils';
 import { CategoriaService } from '../services/categoria.service';
 import { ServicioService } from '../services/servicio.service';
 import { ExcelServiceService } from '../services/excel-service.service';
+import { PageEvent } from '@angular/material';
 import * as jsPdf from 'jspdf';
 import 'jspdf-autotable';
 import { saveAs } from 'file-saver';
@@ -55,6 +56,13 @@ export class ServicioComponent implements OnInit {
   listaNombreClienteSeleccionados: Array<any>;
   mostrarBoton: any;
   mensajeVacio: any;
+
+ // MatPaginator Inputs
+ length;
+ pageSize = 5;
+
+ // MatPaginator Output
+ pageEvent: PageEvent;
 
   constructor(
     private service: ServicioService,
@@ -557,10 +565,13 @@ export class ServicioComponent implements OnInit {
         || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
         || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)
         || (typeof this.clienteId !== 'undefined' && this.clienteId !== null)) {
-        path = path + ',"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
+        path = path + ',"idFichaClinica":{"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}}';
       } else {
-        path = '{"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
+        path = '{"idFichaClinica":{"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}}';
       }
+    }
+    if (path.length === 0) { // cuando inicia trae todos los servicios y sin filtros
+      return null;
     }
     path = path + '}';
     path = encodeURIComponent(path);
@@ -631,6 +642,73 @@ export class ServicioComponent implements OnInit {
     });
   }
   /*-------------------------------------------------------------------------*/
+  listarServicioPaginado(evento: any) {
+    let inicio;
+    if(evento == undefined) {
+      inicio = 0
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    let url = this.crearStringUrl();
+    console.log('url en: ', url);
+    this.service.buscarServiciosPaginado(url, inicio, this.pageSize).subscribe(
+      response => {
+        console.log('buscarServicios(conParametros): ', response);
+        this.length = response.totalDatos;
+        if (response.totalDatos > 0) {
+          this.listaServicios = new Array<any>();
+          response.lista.forEach(
+            servicio => {
+              let lista = new Array<any>();
+              // servicio
+              lista.push(servicio.idServicio); // 0
+              lista.push(servicio.fechaHora); // 1
+              // ficha
+              lista.push(servicio.idFichaClinica.idFichaClinica); // 2
+              lista.push(servicio.idFichaClinica.fechaHora); // 3
+              // profesional
+              lista.push(servicio.idEmpleado.idPersona); // 4
+              lista.push(servicio.idEmpleado.nombreCompleto); // 5
+              // cliente
+              lista.push(servicio.idFichaClinica.idCliente.idPersona); // 6
+              lista.push(servicio.idFichaClinica.idCliente.nombreCompleto); // 7
+              // categoria
+              lista.push(servicio.idFichaClinica.idTipoProducto.idCategoria.idCategoria); // 8
+              lista.push(servicio.idFichaClinica.idTipoProducto.idCategoria.descripcion); // 9
+              // sub-categoria
+              lista.push(servicio.idFichaClinica.idTipoProducto.idTipoProducto); // 10
+              lista.push(servicio.idFichaClinica.idTipoProducto.descripcion); // 11
+              lista.push(servicio.observacion); // 12 no se muestra
+              this.listaServicios.push(lista);
+              this.tableDataServicio = {
+                headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Observacion', 'Acciones'],
+                dataRows: this.listaServicios
+              };
+            },
+            error => {
+              this.listaServicios = [];
+              this.tableDataServicio = {
+                headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+                  'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+                dataRows: this.listaServicios
+              };
+            });
+        } else {
+          this.mensajeVacio = 'Búsqueda sin resultados';
+          this.listaServicios = [];
+          this.tableDataServicio = {
+            headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+              'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Acciones'],
+            dataRows: this.listaServicios
+          };
+        }
+      }
+    );
+
+
+
+  }
   /*-------------------------------------------------------------------------*/
   limpiar() {
     this.fechaHasta = null;
@@ -642,6 +720,14 @@ export class ServicioComponent implements OnInit {
     this.idCategoria = null;
     this.idProducto = null;
     // los list de los buscadores
+
+    this.listaServicios = [];
+    this.length = 0;
+    // this.pageSize = 0;
+    this.tableDataServicio = {
+      headerRow: ['Id', 'Fecha', 'Ficha', 'Fecha Ficha', 'Id Pr.', 'Profesional', 'Id Clie.',
+        'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 'Sub-Categoria', 'Observacion', 'Acciones'],
+      dataRows: this.listaServicios};
   }
   /*-------------------------------------------------------------------------*/
   ngOnInit() {
@@ -653,7 +739,8 @@ export class ServicioComponent implements OnInit {
     this.mostrarBoton = false;
     this.listarCategorias();
     // this.listarSubCategorias();
-    this.listarServicios();
+ //   this.listarServicios();
+    this.listarServicioPaginado(undefined);
     // al iniciar busca las reservas del dia actual
     /* console.log(new Date());
      this.fechaDesde = new Date();

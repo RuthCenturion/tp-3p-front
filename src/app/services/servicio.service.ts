@@ -38,6 +38,13 @@ export class ServicioService {
     buscarServicios(descripcion): Observable<any> {
         return this.http.get(this.servicioUrl + descripcion);
     }
+    buscarServiciosPaginado(descripcion: any, inicio: number, cantidad: number): Observable<any> {
+        if (descripcion) {
+          return this.http.get(this.servicioUrl  + descripcion + '&orderBy=idServicio&orderDir=asc&inicio=' + inicio + '&cantidad=' + cantidad);
+        } else {
+          return this.http.get(this.servicioUrl + '?orderBy=idServicio&orderDir=asc&inicio=' + inicio + '&cantidad=' + cantidad);
+        }
+      }
     agregarServicio(servicio: any): Observable<any> {
         const httpOptions = {
             headers: new HttpHeaders({

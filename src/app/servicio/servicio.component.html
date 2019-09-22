@@ -218,7 +218,7 @@
             </div>
             <!--*******************--->
             <div class="row">
-              <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()"
+              <button mat-raised-button class="btn btn-primary btn-sm" (click)="listarServicioPaginado(undefined)"
                 [disabled]="!(fechaDesde || fechaHasta || empleadoId || clienteId || (idCategoria && idProducto))">Buscar</button>
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
               <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarServicio()">Agregar
@@ -271,6 +271,9 @@
                           class="material-icons">edit</i></a>
                     </td>
                   </tr>
+                  <mat-paginator [length]="length" [pageSize]="pageSize" 
+                    (page)="pageEvent = listarServicioPaginado($event)">
+                  </mat-paginator>
                 </tbody>
               </table>
             </div>
