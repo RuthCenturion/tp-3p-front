@@ -10,7 +10,7 @@ import 'rxjs/add/observable/throw';
 @Injectable({
     providedIn: 'root'
 })
-export class ServicioService {
+export class BuscadorService {
     private empleadoUrl = SERVICE_REST + 'persona';
     private clienteUrl = SERVICE_REST + 'persona';
     private reservaUrl = SERVICE_REST + 'reserva';
@@ -19,9 +19,9 @@ export class ServicioService {
 
     constructor(private http: HttpClient) { }
 
-    getServicios(): Observable<any> {
+    /*getServicios(): Observable<any> {
         return this.http.get(this.servicioUrl);
-    }
+    }*/
     //buscador de empleado
     // -por nombre
     // -si tiene idLocalDefecto
@@ -34,10 +34,7 @@ export class ServicioService {
         } else {
             return this.http.get(this.clienteUrl);
         }
-    }
-    getClienteBuscadorPaginado(url): Observable<any> {
-            return this.http.get(this.clienteUrl + url);
-    }
+    }/*
     buscarServicios(descripcion): Observable<any> {
         return this.http.get(this.servicioUrl + descripcion);
     }
@@ -86,6 +83,6 @@ export class ServicioService {
         /*Object.keys(id).forEach( function(key) {
             httpParams = httpParams.append(key, id[key]);
         });*/
-        return this.http.delete(this.servicioUrl + descripcion);
-    }
+  /*      return this.http.delete(this.servicioUrl + descripcion);
+    }*/
 }

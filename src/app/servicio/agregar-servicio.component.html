@@ -4,7 +4,7 @@
       <!------------------------- BUSCAR EMPLEADO--------------------------->
       <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
@@ -68,7 +68,7 @@
       <!---------------------------------------------- BUSCAR CLIENTE ------------------------------------->
       <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
@@ -178,7 +178,7 @@
               <div class="col-md-6">
                 <div class="input-group no-border">
                   <input type="text" value="" class="form-control" [(ngModel)]="clienteNombre" 
-                  placeholder="Cliente" [disabled]="guardado">>
+                  placeholder="Cliente" [disabled]="guardado">
                   <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon"
                   [disabled]="guardado">
                     <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>

@@ -1,0 +1,66 @@
+ <!------------------------- BUSCAR EMPLEADO--------------------------->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!--*******************-->
+        <div class="row">
+          <div class="input-group no-border">
+            <input type="text" value="" class="form-control" [(ngModel)]="buscarEmpleadoNombre"
+              placeholder="Nombre Empleado">
+            <button type="button" class="btn btn-info"
+              (click)="listarEmpleadosBuscador(buscarEmpleadoNombre)">Buscar</button>
+          </div>
+        </div>
+        <!--*******GRILLA************-->
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>{{ tableBuscarEmpleado.headerRow[1] }}</th>
+                <th>{{ tableBuscarEmpleado.headerRow[2] }}</th>
+                <th>{{ tableBuscarEmpleado.headerRow[3] }}</th>
+                <th>{{ tableBuscarEmpleado.headerRow[4] }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of tableBuscarEmpleado.dataRows">
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td class="text-right">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input class="form-check-input" type="checkbox" value=""
+                        (click)="seleccionarVariosEmpleado(row[1],row[2] )">
+                      <span class="form-check-sign">
+                        <span class="check"></span>
+                      </span>
+                    </label>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!--*******************-->
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          (click)="cancelarBuscarEmpleado()">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarEmpleado()"
+          >
+          Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!---------------------------------------------END BUSCAR EMPLEADO--------------------------------------->

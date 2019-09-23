@@ -4,7 +4,7 @@
       <!------------------------- BUSCAR EMPLEADO--------------------------->
       <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
@@ -70,7 +70,7 @@
       <!---------------------------------------------- BUSCAR CLIENTE ------------------------------------->
       <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
@@ -83,9 +83,9 @@
               <div class="row">
                 <div class="input-group no-border">
                   <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
-                    placeholder="Nombre Empleado">
+                    placeholder="Nombre cliente">
                   <button type="button" class="btn btn-info"
-                    (click)="listarClientesBuscador(buscarClienteNombre)">Buscar</button>
+                    (click)="listarClientePaginado(undefined, buscarClienteNombre)">Buscar</button>
                 </div>
               </div>
               <!--*******************-->
@@ -95,23 +95,21 @@
                   <table class="table table-striped">
                     <thead>
                       <tr>
+                        <th>{{ tableBuscarCliente.headerRow[0] }}</th>
                         <th>{{ tableBuscarCliente.headerRow[1] }}</th>
                         <th>{{ tableBuscarCliente.headerRow[2] }}</th>
-                        <th>{{ tableBuscarCliente.headerRow[3] }}</th>
-                        <th>{{ tableBuscarCliente.headerRow[4] }}</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr *ngFor="let row of tableBuscarCliente.dataRows">
+                        <td>{{row[0]}}</td>
                         <td>{{row[1]}}</td>
                         <td>{{row[2]}}</td>
-                        <td>{{row[3]}}</td>
-                        <td>{{row[4]}}</td>
                         <td class="text-right">
                           <div class="form-check">
                             <label class="form-check-label">
                               <input class="form-check-input" type="checkbox" value=""
-                                (click)="seleccionarVariosCliente(row[1],row[2] )">
+                                (click)="seleccionarVariosCliente(row[0],row[1] )">
                               <span class="form-check-sign">
                                 <span class="check"></span>
                               </span>
@@ -120,6 +118,9 @@
                         </td>
                       </tr>
                     </tbody>
+                    <mat-paginator [length]="lengthBuscadorCliente" [pageSize]="pageSize" 
+                    (page)="pageEvent = listarClientePaginado($event, buscarClienteNombre)">
+                  </mat-paginator>
                   </table>
                 </div>
                 <!--*******************-->
@@ -225,7 +226,9 @@
                 Servicio</button>
                 <button mat-raised-button class="btn btn-success"
                   [disabled]="!(fechaDesde && fechaHasta)" (click)="obtenerServiciosReporte()">Generar Reporte</button>
-            </div>
+                  
+                  <router-outlet><app-empleado></app-empleado></router-outlet>
+                </div>
             
             <div class="table-responsive">
               <table class="table">

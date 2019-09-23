@@ -33,6 +33,9 @@ export const AppRoutes: Routes = [
     }, {
         path: 'servicio',
         loadChildren: './servicio/servicio.module#ServicioModule'
+    },{
+        path: 'buscadores',
+        loadChildren: './buscadores/buscadores.module#BuscadoresModule'
     },
      {
         path: 'forms',
