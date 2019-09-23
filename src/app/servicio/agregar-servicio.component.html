@@ -30,6 +30,7 @@
                       <th>{{ tableBuscarEmpleado.headerRow[0] }}</th>
                       <th>{{ tableBuscarEmpleado.headerRow[1] }}</th>
                       <th>{{ tableBuscarEmpleado.headerRow[2] }}</th>
+                      <th>Seleccionar</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -81,9 +82,9 @@
               <div class="row">
                 <div class="input-group no-border">
                   <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
-                    placeholder="Nombre Empleado">
+                    placeholder="Nombre cliente">
                   <button type="button" class="btn btn-info"
-                    (click)="listarClientesBuscador(buscarClienteNombre)">Buscar</button>
+                    (click)="listarClientePaginado(undefined, buscarClienteNombre)">Buscar</button>
                 </div>
               </div>
               <!--*******************-->
@@ -96,6 +97,7 @@
                         <th>{{ tableBuscarCliente.headerRow[0] }}</th>
                         <th>{{ tableBuscarCliente.headerRow[1] }}</th>
                         <th>{{ tableBuscarCliente.headerRow[2] }}</th>
+                        <th>Seleccionar</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -116,6 +118,9 @@
                         </td>
                       </tr>
                     </tbody>
+                    <mat-paginator [length]="lengthBuscadorCliente" [pageSize]="pageSize" 
+                      (page)="pageEvent = listarClientePaginado($event, buscarClienteNombre)">
+                    </mat-paginator>
                   </table>
                 </div>
                 <!--*******************-->

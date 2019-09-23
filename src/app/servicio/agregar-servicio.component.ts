@@ -40,6 +40,8 @@ export class AgregarServicioComponent implements OnInit {
   buscarEmpleadoNombre: any;
   // buscador de clientes
   buscarClienteNombre: any;
+  lengthBuscadorCliente;
+  pageSize = 5;
 
   listaAtributos: Array<any>;
   listaBuscarEmpleados: Array<any>;
@@ -167,9 +169,9 @@ export class AgregarServicioComponent implements OnInit {
   listarEmpleadosBuscador(buscadorNombre) {
     let url = '';
     if (buscadorNombre) {
-      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D&orderBy=idPersona&orderDir=asc';
     } else {
-      url = '';
+      url = '?orderBy=idPersona&orderDir=asc';
     }
     this.listaBuscarEmpleados = new Array<any>();
     this.service.getEmpleadosBuscador(url).subscribe(
@@ -179,7 +181,7 @@ export class AgregarServicioComponent implements OnInit {
           this.listaBuscarEmpleados = new Array<any>();
           response.lista.forEach(
             empleado => {
-        //      if (empleado.idLocalDefecto) {
+              if (empleado.idLocalDefecto) {
                 let lista = new Array<any>();
                 lista.push(empleado.idPersona); // 0
                 lista.push(empleado.nombreCompleto); // 1
@@ -189,7 +191,7 @@ export class AgregarServicioComponent implements OnInit {
                   headerRow: ['Id', 'Nombre', 'Email'],
                   dataRows: this.listaBuscarEmpleados
                 };
-        //      }
+              }
             });
 
         }
@@ -228,6 +230,48 @@ export class AgregarServicioComponent implements OnInit {
         }
       }
     );
+  }
+    /*-------------------------------------------------------------------------*/
+  listarClientePaginado(evento, buscarClienteNombre) {
+    let inicio;
+    if (evento === undefined) {
+      inicio = 0;
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    let url = '';
+    if (buscarClienteNombre !== undefined && buscarClienteNombre !== null) {
+      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscarClienteNombre + '%22%2C%22soloUsuariosDelSistema%22%3Anull%7D'
+      + '&orderBy=idPersona&orderDir=asc&inicio=' + inicio + '&cantidad=' + this.pageSize;
+    } else {
+      url = '?ejemplo=%7B%22soloUsuariosDelSistema%22%3Anull%7D&orderBy=idPersona&orderDir=asc&inicio=' + inicio + '&cantidad=' + this.pageSize;
+    }
+    this.listaBuscarClientes = new Array<any>();
+    this.service.getClienteBuscadorPaginado(url).subscribe(
+      response => {
+        console.log('buscadorClientes: ', response);
+        this.lengthBuscadorCliente = response.totalDatos;
+        if (response.totalDatos > 0) {
+          response.lista.forEach(
+            cliente => {
+              if (cliente.soloUsuariosDelSistema !== true) {
+                let lista = new Array<any>();
+                lista.push(cliente.idPersona); // 0
+                lista.push(cliente.nombreCompleto); // 1
+                lista.push(cliente.email); // 2
+                this.listaBuscarClientes.push(lista);
+
+                this.tableBuscarCliente = {
+                  headerRow: ['Id', 'Nombre', 'Email'],
+                  dataRows: this.listaBuscarClientes
+                };
+              }
+            });
+
+        }
+      }
+    );
+
   }
   /*-------------------------------------------------------------------------*/
   cancelar() {
@@ -324,7 +368,7 @@ export class AgregarServicioComponent implements OnInit {
     // obtener el empleado con el unico id que esta en la lista 'listaSeleccionados'
     this.clienteId = this.listaClienteSeleccionados[0];
     this.clienteNombre = this.listaNombreClienteSeleccionados[0];
-    // limpiar la grilla del buscadorEmpleado
+    // limpiar la grilla del buscadorCliente
     this.buscarClienteNombre = null;
     this.listaBuscarClientes = [];
     this.tableBuscarCliente = {
@@ -335,6 +379,7 @@ export class AgregarServicioComponent implements OnInit {
     // se elimina lo seleccionado
     this.listaClienteSeleccionados = [];
     this.listaNombreClienteSeleccionados = [];
+    this.lengthBuscadorCliente = 0;
     /* si ya se seleccionó también un cliente, cargar la grilla de fichas 
     correspondientes a el cliente y empleado seleccionados */
     if (this.empleadoId) {
@@ -347,6 +392,7 @@ export class AgregarServicioComponent implements OnInit {
    cancelarBuscarCliente() {
     this.buscarClienteNombre = null;
     // this.fila = null;
+    this.lengthBuscadorCliente = 0;
     this.listaClienteSeleccionados = [];
     this.listaNombreClienteSeleccionados = [];
     this.listaBuscarClientes = [];
