@@ -4,7 +4,7 @@
       <!------------------------- BUSCAR EMPLEADO--------------------------->
       <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Buscar empleado</h5>
@@ -30,7 +30,7 @@
                       <th>{{ tableBuscarEmpleado.headerRow[1] }}</th>
                       <th>{{ tableBuscarEmpleado.headerRow[2] }}</th>
                       <th>{{ tableBuscarEmpleado.headerRow[3] }}</th>
-                      <th>{{ tableBuscarEmpleado.headerRow[4] }}</th>
+                      <th>Seleccionar</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -38,16 +38,17 @@
                       <td>{{row[1]}}</td>
                       <td>{{row[2]}}</td>
                       <td>{{row[3]}}</td>
-                      <td>{{row[4]}}</td>
                       <td class="text-right">
-                        <div class="form-check" (click)="empleadoSeleccionado(row[1],row[2])">
+                        <div class="form-check">
                           <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" [(ngModel)]="fila" value="">
+                            <input class="form-check-input" type="checkbox" value=""
+                              (click)="seleccionarVariosEmpleado(row[0],row[1] )">
                             <span class="form-check-sign">
                               <span class="check"></span>
                             </span>
                           </label>
                         </div>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -57,8 +58,8 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal"
                 (click)="cancelarBuscarEmpleado()">Cancelar</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarEmpleado()"
-                [disabled]="!fila">
+              <button type="button" class="btn btn-primary" (click)="aceptarEmpleado()"
+              [disabled]="!(listaEmpleadoSeleccionados.length===1)">
                 Aceptar</button>
             </div>
           </div>
@@ -68,7 +69,7 @@
       <!---------------------------------------------- BUSCAR CLIENTE ------------------------------------->
       <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-lg" role="document">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
@@ -83,60 +84,52 @@
                   <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
                     placeholder="Nombre Empleado">
                   <button type="button" class="btn btn-info"
-                    (click)="listarClientesBuscador(buscarClienteNombre)">Buscar</button>
+                    (click)="listarClientePaginado(undefined, buscarClienteNombre)">Buscar</button>
                 </div>
               </div>
               <!--*******************-->
               <div class="col-md-12">
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                  <!-- Checkbox Column -->
-                  <ng-container matColumnDef="select">
-                    <th mat-header-cell *matHeaderCellDef>
-                      <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                      </mat-checkbox>
-                    </th>
-                    <td mat-cell *matCellDef="let row">
-                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
-                      </mat-checkbox>
-                    </td>
-                  </ng-container>
-                  <!-- Position Column -->
-                  <ng-container matColumnDef="position">
-                    <th mat-header-cell *matHeaderCellDef> Posición </th>
-                    <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                  </ng-container>
-                  <!-- Position Column -->
-                  <ng-container matColumnDef="idCliente">
-                    <th mat-header-cell *matHeaderCellDef> Id </th>
-                    <td mat-cell *matCellDef="let element"> {{element.idCliente}} </td>
-                  </ng-container>
-
-                  <!-- Name Column -->
-                  <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-                  </ng-container>
-
-                  <!-- Weight Column -->
-                  <ng-container matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef> Email </th>
-                    <td mat-cell *matCellDef="let element"> {{element.email}} </td>
-                  </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
-                  </tr>
-                </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                <!--*******GRILLA************-->
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <!--th>{{ tableBuscarCliente.headerRow[0] }}</th-->
+                        <th>{{ tableBuscarCliente.headerRow[1] }}</th>
+                        <th>{{ tableBuscarCliente.headerRow[2] }}</th>
+                        <th>Seleccionar</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let row of tableBuscarCliente.dataRows">
+                        <!--td>{{row[0]}}</td-->
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td class="text-right">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="form-check-input" type="checkbox" value=""
+                                (click)="seleccionarVariosCliente(row[0],row[1] )">
+                              <span class="form-check-sign">
+                                <span class="check"></span>
+                              </span>
+                            </label>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <mat-paginator [length]="lengthBuscadorCliente" [pageSize]="pageSize" 
+                    (page)="pageEvent = listarClientePaginado($event, buscarClienteNombre)">
+                  </mat-paginator>
+                  </table>
+                </div>
               </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal"
                 (click)="cancelarBuscarCliente()">Cancelar</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarCliente()"
-                [disabled]="!mostrarAceptar">
+              <button type="button" class="btn btn-primary" (click)="aceptarCliente()"
+              [disabled]="!(listaClienteSeleccionados.length === 1)">
                 Aceptar</button>
             </div>
           </div>
@@ -159,7 +152,7 @@
             <div class="row">
               <div class="col-md-6">
                 <mat-form-field>
-                  <input matInput [matDatepicker]="pickerTr" (click)="picker.open()" [(ngModel)]="fechaDesde"
+                  <input matInput [matDatepicker]="pickerTr" (click)="pickerTr.open()" [(ngModel)]="fechaDesde"
                     placeholder="Fecha desde">
                   <mat-datepicker-toggle matSuffix [for]="pickerTr"></mat-datepicker-toggle>
                   <mat-datepicker #pickerTr></mat-datepicker>
@@ -226,7 +219,7 @@
 
             <!--*******************--->
             <div class="row">
-              <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()"
+              <button mat-raised-button class="btn btn-primary btn-sm" (click)="listarFichaPaginado(undefined)"
               [disabled]="!(fechaDesde || fechaHasta || empleadoId || clienteId || (idCategoria && idProducto))">Buscar</button>
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
               <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarFicha()">Agregar Ficha</button>
@@ -235,7 +228,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>{{ tableDataFicha.headerRow[0] }}</th>
+                    <!--th>{{ tableDataFicha.headerRow[0] }}</th-->
                     <th>{{ tableDataFicha.headerRow[1] }}</th>
                     <!--th>{{ tableDataFicha.headerRow[2] }}</th-->
                     <th>{{ tableDataFicha.headerRow[3] }}</th>
@@ -253,7 +246,7 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let row of tableDataFicha.dataRows">
-                    <td>{{row[0]}}</td>
+                    <!--td>{{row[0]}}</td-->
                     <td>{{row[1]}}</td>
                     <!--td>{{row[2]}}</td-->
                     <td>{{row[3]}}</td>
@@ -281,6 +274,9 @@
                           class="material-icons">add</i></a>
                     </td>
                   </tr>
+                  <mat-paginator [length]="length" [pageSize]="pageSize" 
+                    (page)="pageEvent = listarFichaPaginado($event)">
+                  </mat-paginator>
                 </tbody>
               </table>
             </div>

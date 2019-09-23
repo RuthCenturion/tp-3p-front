@@ -341,6 +341,7 @@ export class ServicioComponent implements OnInit {
       }
     );
   }
+  /*-------------------------------------------------------------------------*/
   listarClientePaginado(evento, buscarClienteNombre) {
     let inicio;
     if(evento == undefined) {
@@ -381,7 +382,6 @@ export class ServicioComponent implements OnInit {
         }
       }
     );
-
   }
   /*-------------------------------------------------------------------------*/
   agregarServicio() {
@@ -473,7 +473,7 @@ export class ServicioComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   aceptarCliente() {
-    // obtener el empleado con el unico id que esta en la lista 'listaSeleccionados'
+    // obtener el cliente con el unico id que esta en la lista 'listaSeleccionados'
     this.clienteId = this.listaClienteSeleccionados[0];
     this.clienteNombre = this.listaNombreClienteSeleccionados[0];
     // limpiar la grilla del buscadorEmpleado

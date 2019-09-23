@@ -7,6 +7,7 @@ import { CategoriaService } from '../services/categoria.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { PageEvent } from '@angular/material';
 
 declare const $: any;
 
@@ -44,13 +45,11 @@ declare interface DatoModificar {
 }
 
 @Component({
-  selector: 'app-ficha-clinica',
+  selector: 'app-ficha-clinica', 
   templateUrl: './ficha-clinica.component.html',
   styleUrls: ['./ficha-clinica.component.css']
 })
 export class FichaClinicaComponent implements OnInit {
-
-  ELEMENT_DATA: PeriodicElement[] = [];
 
   public tableData1: TableData;
   public tableBuscarEmpleado: TableData;
@@ -67,19 +66,32 @@ export class FichaClinicaComponent implements OnInit {
   idCategoria: any;
   idProducto: any;
   tipoProductoNombre: any;
-  // buscador empleado
+  /***BUSCADORES***/
+  // empleado
   fila: any;
   buscarEmpleadoNombre: any;
   empleadoSeleccionadoId: any;
   empleadoSeleccionadoNombre: any;
   panelOpenState = false;
-  // buscador cliente
+  // cliente
   filaCliente: any;
   buscarClienteNombre: any;
   listaClienteSeleccionado: Array<any>;
   clienteSeleccionadoId: any;
   clienteSeleccionadoNombre: any;
   mostrarAceptar: any;
+
+  listaEmpleadoSeleccionados: Array<any>;
+  listaNombreEmpleadoSeleccionados: Array<any>;
+  listaClienteSeleccionados: Array<any>;
+  listaNombreClienteSeleccionados: Array<any>;
+
+  // MatPaginator Inputs
+ length;
+ pageSize = 5;
+ lengthBuscadorCliente;
+ // MatPaginator Output
+ pageEvent: PageEvent;
 
   // datos modal modificar
   modificarIdReserva: any;
@@ -108,10 +120,6 @@ export class FichaClinicaComponent implements OnInit {
   listaFichaClinica: Array<any>;
   listaHorarios: Array<any>;
 
-
-  displayedColumns: string[] = ['select', 'position', 'idCliente', 'name', 'email'];
-  dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
-  selection = new SelectionModel<PeriodicElement>(true, []);
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(private service: FichaClinicaService,
@@ -123,11 +131,11 @@ export class FichaClinicaComponent implements OnInit {
       dataRows: this.listaReservas
     };
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
     };
     this.tableBuscarCliente = {
-      headerRow: ['', 'Id', 'Nombre', 'Email'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
     };
     this.tableDataFicha = {
@@ -183,9 +191,9 @@ export class FichaClinicaComponent implements OnInit {
     // let url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
     let url = '';
     if (buscadorNombre) {
-      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D&orderBy=idPersona&orderDir=asc';
     } else {
-      url = '';
+      url = '?orderBy=idPersona&orderDir=asc';
     }
     this.listaBuscarEmpleados = new Array<any>();
     this.service.getEmpleadosBuscador(url).subscribe(
@@ -197,7 +205,7 @@ export class FichaClinicaComponent implements OnInit {
               if (empleado.idLocalDefecto) {
                 let lista = new Array<any>();
 
-                lista.push(false);
+                // lista.push(false);
                 lista.push(empleado.idPersona); // 0
                 lista.push(empleado.nombreCompleto); // 1
                 lista.push(empleado.email); // 2
@@ -206,14 +214,11 @@ export class FichaClinicaComponent implements OnInit {
                 this.listaBuscarEmpleados.push(lista);
 
                 this.tableBuscarEmpleado = {
-                  headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+                  headerRow: ['Id', 'Nombre', 'Email', 'Local'],
                   dataRows: this.listaBuscarEmpleados
                 };
               }
-
-
             });
-
         }
       }
     );
@@ -229,94 +234,157 @@ export class FichaClinicaComponent implements OnInit {
     }
   }
   /*-------------------------------------------------------------------------*/
+  seleccionarVariosEmpleado(idSeleccionado, nombreEmpleado) {
+    console.log('idSeleccionado: ', idSeleccionado);
+    console.log('lista de id seleccionados: ', this.listaEmpleadoSeleccionados);
+
+    // si no hay elementos en la lista --> agregar
+    if (this.listaEmpleadoSeleccionados.length === 0) {
+      this.listaEmpleadoSeleccionados.push(idSeleccionado);
+      this.listaNombreEmpleadoSeleccionados.push(nombreEmpleado);
+    } else {
+      // si el id ya está en la lista, no agregar y sacar de la lista, porque des-seleccionó en el check
+      if (this.listaEmpleadoSeleccionados.includes(idSeleccionado)) {
+        let posicion = this.listaEmpleadoSeleccionados.indexOf(idSeleccionado);
+        console.log('se encuentra en la posicion: ', this.listaEmpleadoSeleccionados.indexOf(idSeleccionado));
+        // se elimina de la lista
+        this.listaEmpleadoSeleccionados.splice(posicion, 1);
+        this.listaNombreEmpleadoSeleccionados.splice(posicion, 1);
+      } else {
+        this.listaEmpleadoSeleccionados.push(idSeleccionado);
+        this.listaNombreEmpleadoSeleccionados.push(nombreEmpleado);
+      }
+    }
+    // solo si hay un elemento seleccionado se puede habilitar el boton de aceptar
+    console.log('lista de id seleccionados al final: ', this.listaEmpleadoSeleccionados);
+  }
+  /*-------------------------------------------------------------------------*/
   aceptarEmpleado() {
-    this.empleadoId = this.empleadoSeleccionadoId;
-    this.empleadoNombre = this.empleadoSeleccionadoNombre;
-    console.log('aceptar');
+    // obtener el empleado con el unico id que esta en la lista 'listaSeleccionados'
+    this.empleadoId = this.listaEmpleadoSeleccionados[0];
+    this.empleadoNombre = this.listaNombreEmpleadoSeleccionados[0];
     // limpiar la grilla del buscadorEmpleado
     this.buscarEmpleadoNombre = null;
     this.listaBuscarEmpleados = [];
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
     };
+    $('#exampleModal2').modal('hide');
+    // se elimina lo seleccionado
+    this.listaEmpleadoSeleccionados = [];
+    this.listaNombreEmpleadoSeleccionados = [];
   }
   /*-------------------------------------------------------------------------*/
   cancelarBuscarEmpleado() {
     this.buscarEmpleadoNombre = null;
-    this.fila = null;
+    // this.fila = null;
+    this.listaEmpleadoSeleccionados = [];
+    this.listaNombreEmpleadoSeleccionados = [];
     this.listaBuscarEmpleados = [];
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
     };
   }
-  /*-------------------------------------------------------------------------*/
-  listarClientesBuscador(buscadorNombre) {
-    let url = '';
-    if (buscadorNombre) {
-      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+   /*-------------------------------------------------------------------------*/
+  listarClientePaginado(evento, buscarClienteNombre) {
+    let inicio;
+    if (evento === undefined) {
+      inicio = 0;
     } else {
-      url = '';
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    let url = '';
+    if (buscarClienteNombre !== undefined && buscarClienteNombre !== null) {
+      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscarClienteNombre + '%22%2C%22soloUsuariosDelSistema%22%3Anull%7D'
+      //              %7B%22nombre%22%3A%22ana%22%2C%22soloUsuariosDelSistema%22%3Anull%7D
+      + '&orderBy=idPersona&orderDir=asc&inicio=' + inicio + '&cantidad=' + this.pageSize;
+    } else {
+      url = '?ejemplo=%7B%22soloUsuariosDelSistema%22%3Anull%7D&orderBy=idPersona&orderDir=asc&inicio='
+        + inicio + '&cantidad=' + this.pageSize;
     }
     this.listaBuscarClientes = new Array<any>();
-    this.service.getEmpleadosBuscador(url).subscribe(
+    this.service.getClienteBuscadorPaginado(url).subscribe(
       response => {
         console.log('buscadorClientes: ', response);
-        let i: number = 0;
+        this.lengthBuscadorCliente = response.totalDatos;
         if (response.totalDatos > 0) {
           response.lista.forEach(
             cliente => {
-              let lista = new Array<any>();
-              if (cliente.idLocalDefecto === null) {
-                i = i + 1;
-                lista.push(false);
+              if (cliente.soloUsuariosDelSistema !== true) {
+                let lista = new Array<any>();
                 lista.push(cliente.idPersona); // 0
                 lista.push(cliente.nombreCompleto); // 1
                 lista.push(cliente.email); // 2
                 this.listaBuscarClientes.push(lista);
-                /* let nuevo : PeriodicElement;
-                 nuevo.position = i;
-                 nuevo.idCliente = cliente.idPersona;
-                 nuevo.name = cliente.nombreCompleto;
-                 nuevo.email = cliente.email;*/
-                this.ELEMENT_DATA.push({
-                  position: i,
-                  idCliente: cliente.idPersona,
-                  name: cliente.nombreCompleto,
-                  email: cliente.email
-                });
-                this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
-                this.dataSource.paginator = this.paginator;
+
                 this.tableBuscarCliente = {
-                  headerRow: ['', 'Id', 'Nombre', 'Email'],
+                  headerRow: ['Id', 'Nombre', 'Email'],
                   dataRows: this.listaBuscarClientes
                 };
               }
             });
+
         }
       }
     );
   }
   /*-------------------------------------------------------------------------*/
+  seleccionarVariosCliente(idSeleccionado, nombreCliente) {
+    console.log('idSeleccionado: ', idSeleccionado);
+    console.log('lista de id seleccionados: ', this.listaClienteSeleccionados);
+
+    // si no hay elementos en la lista --> agregar
+    if (this.listaClienteSeleccionados.length === 0) {
+      this.listaClienteSeleccionados.push(idSeleccionado);
+      this.listaNombreClienteSeleccionados.push(nombreCliente);
+    } else {
+      // si el id ya está en la lista, no agregar y sacar de la lista, porque des-seleccionó en el check
+      if (this.listaClienteSeleccionados.includes(idSeleccionado)) {
+        let posicion = this.listaClienteSeleccionados.indexOf(idSeleccionado);
+        console.log('se encuentra en la posicion: ', this.listaClienteSeleccionados.indexOf(idSeleccionado));
+        // se elimina de la lista
+        this.listaClienteSeleccionados.splice(posicion, 1);
+        this.listaNombreClienteSeleccionados.splice(posicion, 1);
+      } else {
+        this.listaClienteSeleccionados.push(idSeleccionado);
+        this.listaNombreClienteSeleccionados.push(nombreCliente);
+      }
+    }
+    // solo si hay un elemento seleccionado se puede habilitar el boton de aceptar
+    console.log('lista de id seleccionados al final: ', this.listaClienteSeleccionados);
+  }
+  /*-------------------------------------------------------------------------*/
   aceptarCliente() {
-    console.log('cliente seleccionado: ', this.selection.selected[0]);
-    this.clienteId = this.selection.selected[0].idCliente;
-    this.clienteNombre = this.selection.selected[0].name;
+    // obtener el cliente con el unico id que esta en la lista 'listaSeleccionados'
+    this.clienteId = this.listaClienteSeleccionados[0];
+    this.clienteNombre = this.listaNombreClienteSeleccionados[0];
+    // limpiar la grilla del buscadorEmpleado
+    this.buscarClienteNombre = null;
+    this.listaBuscarClientes = [];
+    this.tableBuscarCliente = {
+      headerRow: [ 'Id', 'Nombre', 'Email'],
+      dataRows: this.listaBuscarClientes
+    };
+    $('#exampleModal3').modal('hide');
+    // se elimina lo seleccionado
+    this.listaClienteSeleccionados = [];
+    this.listaNombreClienteSeleccionados = [];
+    this.lengthBuscadorCliente = 0;
 
   }
   /*-------------------------------------------------------------------------*/
   cancelarBuscarCliente() {
+    this.listaClienteSeleccionados = [];
+    this.listaNombreClienteSeleccionados = [];
+    this.lengthBuscadorCliente = 0;
     this.buscarClienteNombre = null;
     this.listaBuscarClientes = [];
     this.tableBuscarCliente = {
-      headerRow: ['', 'Id', 'Nombre', 'Email'],
+      headerRow: ['Id', 'Nombre', 'Email'],
       dataRows: this.listaBuscarClientes
     };
-    this.paginator.pageIndex = 0;
-    this, this.dataSource.paginator = this.paginator;
-    this.ELEMENT_DATA = [];
-    this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
   }
   /*-------------------------------------------------------------------------*/
   buscar() {
@@ -447,10 +515,14 @@ export class FichaClinicaComponent implements OnInit {
     this.idProducto = null;
     // los list de los buscadores
     this.listaBuscarEmpleados = [];
-    this.ELEMENT_DATA = [];
-    this.paginator.pageIndex = 0;
-    this.dataSource.paginator = this.paginator;
-    this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
+    this.length = 0;
+    this.listaFichaClinica = [];
+
+    this.tableDataFicha = {
+      headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 
+      'Sub-Categoria', 'Motivo', 'Diagnóstico', 'Observación', 'Acciones'],
+      dataRows: this.listaFichaClinica
+    };
   }
   /*-------------------------------------------------------------------------*/
   agregarFicha() {
@@ -520,8 +592,6 @@ export class FichaClinicaComponent implements OnInit {
     );
   }*/
   /*-------------------------------------------------------------------------*/
-  /*-------------------------------------------------------------------------*/
-  /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
     const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
     $.notify({
@@ -549,9 +619,7 @@ export class FichaClinicaComponent implements OnInit {
     });
   }
   /*-------------------------------------------------------------------------*/
-  /*-------------------------------------------------------------------------*/
-  /*-------------------------------------------------------------------------*/
-  isAllSelected() {
+ /* isAllSelected() {
     const numSelected = this.selection.selected.length;
     const numRows = this.dataSource.data.length;
     if (numSelected === 1) {
@@ -562,21 +630,21 @@ export class FichaClinicaComponent implements OnInit {
     return numSelected === numRows;
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  /** Selects all rows if they are not all selected; otherwise clear selection. *
   masterToggle() {
     this.isAllSelected() ?
       this.selection.clear() :
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
-  /** The label for the checkbox on the passed row */
+  /** The label for the checkbox on the passed row *
   checkboxLabel(row?: PeriodicElement): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-
+*/
   /*-------------------------------------------------------------------------*/
   listarCategorias() {
     this.categoriaService.getCategoria().subscribe(
@@ -614,23 +682,131 @@ export class FichaClinicaComponent implements OnInit {
         this.showNotification('Error al obtener sub-categorias', NOTIFY.DANGER);
       }
     );
-
+  }
+  crearStringUrl() {
+    let path = '';
+    let fechaHastaCadena = '';
+    if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
+      let fechaDesdeString = this.fechaCadena(this.fechaDesde);
+      path = '{"fechaDesdeCadena":"' + fechaDesdeString + '"';
+      console.log('path: ', path);
+    }
+    if (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null) {
+      fechaHastaCadena = this.fechaCadena(this.fechaHasta);
+      if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
+        path = path + ',"fechaHastaCadena":"' + fechaHastaCadena + '"';
+        console.log('path: ', path);
+      } else {
+        path = '{"fechaHastaCadena":"' + fechaHastaCadena + '"';
+      }
+    }
+    if (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) {
+      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)) {
+        path = path + ',"idEmpleado":{"idPersona":' + this.empleadoId + '}';
+      } else {
+        path = '{"idEmpleado":{"idPersona":' + this.empleadoId + '}';
+      }
+    }
+    if (typeof this.clienteId !== 'undefined' && this.clienteId !== null) {
+      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
+        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)) {
+        path = path + ',"idCliente":{"idPersona":' + this.clienteId + '}';
+      } else {
+        path = '{"idCliente":{"idPersona":' + this.clienteId + '}';
+      }
+    }
+    if (typeof this.idProducto !== 'undefined' && this.idProducto !== null) {
+      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
+        || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null)
+        || (typeof this.clienteId !== 'undefined' && this.clienteId !== null)) {
+        console.log('this.categoriaId: ', this.idCategoria);
+        console.log('this.tipoProductoId: ', this.idProducto);
+        path = path + ',"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
+      } else {
+        path = '{"idTipoProducto":{"idTipoProducto":' + this.idProducto + '}';
+      }
+    }
+    if (path.length === 0) { // cuando inicia trae todos las fichas y sin filtros
+      return '';
+    }
+    path = path + '}';
+    console.log('path', path);
+    path = encodeURIComponent(path);
+    path = '?ejemplo=' + path;
+    return path;
   }
   /*-------------------------------------------------------------------------*/
+  listarFichaPaginado(evento) {
+    let inicio;
+    if (evento === undefined) {
+      inicio = 0;
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    let url = this.crearStringUrl();
+    if (url === '') {
+      url = '?orderBy=idFichaClinica&orderDir=asc&inicio=' + inicio + '&cantidad=' + this.pageSize;
+    } else {
+      url = url + '&orderBy=idFichaClinica&orderDir=asc&inicio=' + inicio + '&cantidad=' + this.pageSize;
+    }
+    console.log('url en: ', url);
+    this.service.getFichasPaginado(url).subscribe(
+      response => {
+        this.listaFichaClinica = new Array<any>();
+        console.log('getFichas():', response);
+        this.length = response.totalDatos;
+        if (response.totalDatos > 0) {
+          response.lista.forEach(ficha => {
+            this.listaAtributos = new Array<any>();
+            // fechas
+            this.listaAtributos.push(ficha.idFichaClinica); // 0
+            this.listaAtributos.push(ficha.fechaHora); // 1
+            // profesional
+            this.listaAtributos.push(ficha.idEmpleado.idPersona); // 2
+            this.listaAtributos.push(ficha.idEmpleado.nombreCompleto); // 3
+            // cliente
+            this.listaAtributos.push(ficha.idCliente.idPersona); // 4
+            this.listaAtributos.push(ficha.idCliente.nombreCompleto); // 5
+            // categoria
+            this.listaAtributos.push(ficha.idTipoProducto.idCategoria.idCategoria); // 6
+            this.listaAtributos.push(ficha.idTipoProducto.idCategoria.descripcion); // 7
+            // sub-categoria === tipoProducto
+            this.listaAtributos.push(ficha.idTipoProducto.idTipoProducto); // 8
+            this.listaAtributos.push(ficha.idTipoProducto.descripcion); // 9
+            // de la ficha
+            this.listaAtributos.push(ficha.motivoConsulta); // 10
+            this.listaAtributos.push(ficha.diagnostico); // 11
+            this.listaAtributos.push(ficha.observacion); // 12
 
+            this.listaFichaClinica.push(this.listaAtributos);
+
+            this.tableDataFicha = {
+              headerRow: ['Id', 'Fecha', 'Id Pr.', 'Profesional', 'Id Clie.', 'Cliente', 'Id Cat', 'Categoria', 'Id Sub-Cat.', 
+              'Sub-Categoria', 'Motivo', 'Diagnóstico', 'Observación', 'Acciones'],
+              dataRows: this.listaFichaClinica
+            };
+          });
+        }
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
   ngOnInit() {
     this.listarCategorias();
-    // this.listarSubCategorias();
-    this.listarFichas();
-    // al iniciar busca las reservas del dia actual
     console.log(new Date());
     this.fechaDesde = new Date();
     this.fechaHasta = new Date();
-    //  this.buscar();
     this.listaClienteSeleccionado = new Array<any>();
-    this.dataSource.paginator = this.paginator;
     this.mostrarAceptar = false;
-    // this.listarEmpleadosBuscador();
+    this.listaEmpleadoSeleccionados = new Array<any>();
+    this.listaNombreEmpleadoSeleccionados = new Array<any>();
+    this.listaClienteSeleccionados = new Array<any>();
+    this.listaNombreClienteSeleccionados = new Array<any>();
+    // al iniciar busca las fichas del dia actual
+    this.listarFichaPaginado(undefined);
   }
 
 }

@@ -23,6 +23,9 @@ export class FichaClinicaService {
     getFichas(): Observable<any> {
         return this.http.get(this.fichaClinicaUrl);
     }
+    getFichasPaginado(url): Observable<any> {
+        return this.http.get(this.fichaClinicaUrl + url);
+    }
     //buscador de empleado
     // -por nombre
     // -si tiene idLocalDefecto
@@ -35,6 +38,9 @@ export class FichaClinicaService {
         } else {
             return this.http.get(this.clienteUrl);
         }
+    }
+    getClienteBuscadorPaginado(url): Observable<any> {
+        return this.http.get(this.clienteUrl + url);
     }
     buscarFichas(descripcion): Observable<any> {
         return this.http.get(this.fichaClinicaUrl + descripcion);

@@ -224,12 +224,9 @@
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
               <button mat-raised-button class="btn btn-fill btn-rose" (click)="agregarServicio()">Agregar
                 Servicio</button>
-                <button mat-raised-button class="btn btn-success"
-                  [disabled]="!(fechaDesde && fechaHasta)" (click)="obtenerServiciosReporte()">Generar Reporte</button>
-                  
-                  <router-outlet><app-empleado></app-empleado></router-outlet>
-                </div>
-            
+              <button mat-raised-button class="btn btn-success"
+                [disabled]="!(fechaDesde && fechaHasta)" (click)="obtenerServiciosReporte()">Generar Reporte</button>
+            </div>            
             <div class="table-responsive">
               <table class="table">
                 <thead>
