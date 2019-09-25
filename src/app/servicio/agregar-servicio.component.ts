@@ -696,6 +696,11 @@ export class AgregarServicioComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   ngOnInit() {
+    
+   /* if( ) {
+
+    }*/
+
     this.listaEmpleadoSeleccionados = new Array<any>();
     this.listaNombreEmpleadoSeleccionados = new Array<any>();
     this.listaClienteSeleccionados = new Array<any>();

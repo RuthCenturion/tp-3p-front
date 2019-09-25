@@ -1,13 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableData } from '../md/md-table/md-table.component';
 import { Router } from '@angular/router';
+import {SelectionModel} from '@angular/cdk/collections';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import { PageEvent } from '@angular/material';
+
 import { NOTIFY } from '../commons/app-utils';
 import { ReservaService } from '../services/reserva.service';
 import { CategoriaService } from '../services/categoria.service';
 import { FichaClinicaService } from '../services/ficha-clinica.service';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
 
 declare const $: any;
 
@@ -41,6 +43,12 @@ export class ReservaComponent implements OnInit {
   public tableData1: TableData;
   public tableBuscarEmpleado: TableData;
   public tableBuscarCliente: TableData;
+  // MatPaginator Inputs
+ length;
+ pageSize = 5;
+ lengthBuscadorCliente;
+ // MatPaginator Output
+ pageEvent: PageEvent;
 
   // filtro de la grilla
   fechaDesde: any;
@@ -49,6 +57,7 @@ export class ReservaComponent implements OnInit {
   empleadoNombre: any;
   clienteId: any;
   clienteNombre: any;
+  mostrarFiltro: any;
   // buscador empleado
   fila: any;
   buscarEmpleadoNombre: any;
@@ -102,6 +111,8 @@ export class ReservaComponent implements OnInit {
   listaSubCategoria: Array<any>;
   listaReservas: Array<any>;
   listaHorarios: Array<any>;
+  listaEmpleadoSeleccionados: Array<any>;
+  listaNombreEmpleadoSeleccionados: Array<any>;
 
 
   displayedColumns: string[] = ['select', 'position', 'idCliente', 'name', 'email'];
@@ -119,7 +130,7 @@ export class ReservaComponent implements OnInit {
       dataRows: this.listaReservas
     };
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
     };
     this.tableBuscarCliente = {
@@ -162,7 +173,13 @@ export class ReservaComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
   listarEmpleadosBuscador(buscadorNombre) {
     // let buscadorNombre = 'Gustavo'
-    let url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+ //   let url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D';
+    let url = '';
+    if (buscadorNombre) {
+      url = '?ejemplo=%7B%22nombre%22%3A%22' + buscadorNombre + '%22%7D&orderBy=idPersona&orderDir=asc';
+    } else {
+      url = '?orderBy=idPersona&orderDir=asc';
+    }
     this.listaBuscarEmpleados = new Array<any>();
     this.service.getEmpleadosBuscador(url).subscribe(
       response => {
@@ -170,21 +187,22 @@ export class ReservaComponent implements OnInit {
         if (response.totalDatos > 0 ) {
           response.lista.forEach(
             empleado => {
-              let lista = new Array<any>();lista.push(false);
-              lista.push(empleado.idPersona); // 0
-              lista.push(empleado.nombreCompleto); // 1
-              lista.push(empleado.email); // 2
-              // local por defecto
-              lista.push(empleado.idLocalDefecto.nombre); // 3
-              this.listaBuscarEmpleados.push(lista);
+              if (empleado.idLocalDefecto != null) {
+                let lista = new Array<any>();
+                lista.push(empleado.idPersona); // 0
+                lista.push(empleado.nombreCompleto); // 1
+                lista.push(empleado.email); // 2
+                // local por defecto
+                lista.push(empleado.idLocalDefecto.nombre); // 3
+                this.listaBuscarEmpleados.push(lista);
 
-              this.tableBuscarEmpleado = {
-                headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
-                dataRows: this.listaBuscarEmpleados
-              };
-
-            });
-
+                this.tableBuscarEmpleado = {
+                  headerRow: ['Id', 'Nombre', 'Email', 'Local'],
+                  dataRows: this.listaBuscarEmpleados
+                };
+              }
+            }
+          );
         }
       }
     );
@@ -200,10 +218,46 @@ export class ReservaComponent implements OnInit {
     }
   }
   /*-------------------------------------------------------------------------*/
+  seleccionarVariosEmpleado(idSeleccionado, nombreEmpleado) {
+    console.log('idSeleccionado: ', idSeleccionado);
+    console.log('lista de id seleccionados: ', this.listaEmpleadoSeleccionados);
+
+    // si no hay elementos en la lista --> agregar
+    if (this.listaEmpleadoSeleccionados.length === 0) {
+      this.listaEmpleadoSeleccionados.push(idSeleccionado);
+      this.listaNombreEmpleadoSeleccionados.push(nombreEmpleado);
+    } else {
+      // si el id ya está en la lista, no agregar y sacar de la lista, porque des-seleccionó en el check
+      if (this.listaEmpleadoSeleccionados.includes(idSeleccionado)) {
+        let posicion = this.listaEmpleadoSeleccionados.indexOf(idSeleccionado);
+        console.log('se encuentra en la posicion: ', this.listaEmpleadoSeleccionados.indexOf(idSeleccionado));
+        // se elimina de la lista
+        this.listaEmpleadoSeleccionados.splice(posicion, 1);
+        this.listaNombreEmpleadoSeleccionados.splice(posicion, 1);
+      } else {
+        this.listaEmpleadoSeleccionados.push(idSeleccionado);
+        this.listaNombreEmpleadoSeleccionados.push(nombreEmpleado);
+      }
+    }
+    // solo si hay un elemento seleccionado se puede habilitar el boton de aceptar
+    console.log('lista de id seleccionados al final: ', this.listaEmpleadoSeleccionados);
+  }
+  /*-------------------------------------------------------------------------*/
   aceptarEmpleado() {
-    this.empleadoId = this.empleadoSeleccionadoId;
-    this.empleadoNombre = this.empleadoSeleccionadoNombre;
-    console.log('aceptar');
+    // obtener el empleado con el unico id que esta en la lista 'listaSeleccionados'
+    this.empleadoId = this.listaEmpleadoSeleccionados[0];
+    this.empleadoNombre = this.listaNombreEmpleadoSeleccionados[0];
+    // limpiar la grilla del buscadorEmpleado
+    this.buscarEmpleadoNombre = null;
+    this.listaBuscarEmpleados = [];
+    this.tableBuscarEmpleado = {
+      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      dataRows: this.listaBuscarEmpleados
+    };
+    $('#exampleModal2').modal('hide');
+    // se elimina lo seleccionado
+    this.listaEmpleadoSeleccionados = [];
+    this.listaNombreEmpleadoSeleccionados = [];
   }
   /*-------------------------------------------------------------------------*/
   cancelarBuscarEmpleado() {
@@ -211,7 +265,7 @@ export class ReservaComponent implements OnInit {
     this.fila = null;
     this.listaBuscarEmpleados = [];
     this.tableBuscarEmpleado = {
-      headerRow: ['', 'Id', 'Nombre', 'Email', 'Local'],
+      headerRow: ['Id', 'Nombre', 'Email', 'Local'],
       dataRows: this.listaBuscarEmpleados
     };
   }
@@ -283,43 +337,7 @@ export class ReservaComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   buscar() {
-    let path = '';
-    let fechaHastaCadena = '';
-    if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-      let fechaDesdeString = this.fechaCadena(this.fechaDesde);
-      path = '{"fechaDesdeCadena":"' + fechaDesdeString + '"';
-      console.log('path: ', path);
-    }
-    if (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null) {
-      fechaHastaCadena = this.fechaCadena(this.fechaHasta);
-      if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
-        path = path + ', "fechaHastaCadena":"' + fechaHastaCadena + '"';
-        console.log('path: ', path);
-      } else {
-        path = '{"fechaHastaCadena":"' + fechaHastaCadena + '"';
-      }
-    }
-    if (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) {
-      if ( (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)) {
-        path = path + ',"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      } else {
-        path = '{"idEmpleado":{"idPersona":' + this.empleadoId + '}';
-      }
-    }
-    if (typeof this.clienteId !== 'undefined' && this.clienteId !== null) {
-      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
-          || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
-            || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) ) {
-        path = path + ',"idCliente": {"idPersona":' + this.clienteId + '}';
-      } else {
-        path = '{"idCliente": {"idPersona":' + this.clienteId + '}';
-      }
-    }
-    path = path + '}';
-    console.log('path', path);
-    path = encodeURIComponent(path);
-    path = '?ejemplo=' + path;
+    /*
     this.service.buscarReservas(path).subscribe(
       response => {
         this.listaReservas = new Array<any>();
@@ -360,7 +378,110 @@ export class ReservaComponent implements OnInit {
           };
         }
       }
+    );*/
+  }
+  /*-------------------------------------------------------------------------*/
+  listarReservaPaginado(evento) {
+    let inicio;
+    if(evento === undefined) {
+      inicio = 0;
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
+    let url = this.crearStringUrl();
+    console.log('url 1: ', url);
+    if (url === '') {
+      url = '?orderBy=idReserva&orderDir=asc&inicio=' + inicio + '&cantidad=' + this.pageSize;
+    } else {
+      url = url + '&orderBy=idReserva&orderDir=asc&inicio=' + inicio + '&cantidad=' + this.pageSize;
+    }
+    console.log('url 2: ', url);
+    this.service.buscarReservas(url).subscribe(
+      response => {
+        this.listaReservas = new Array<any>();
+        console.log('getReservas():', response);
+        this.length = response.totalDatos;
+        if (response.totalDatos > 0 ) {
+          response.lista.forEach(reserva => {
+            this.listaAtributos = new Array<any>();
+            // fechas
+            this.listaAtributos.push(reserva.idReserva); // 0
+            this.listaAtributos.push(reserva.fecha); // 1
+            this.listaAtributos.push(reserva.horaInicio); // 2
+            this.listaAtributos.push(reserva.horaFin); // 3
+            // profesional
+            this.listaAtributos.push(reserva.idEmpleado.idPersona); // 4
+            this.listaAtributos.push(reserva.idEmpleado.nombreCompleto); // 5
+            // cliente
+            this.listaAtributos.push(reserva.idCliente.idPersona); // 6
+            this.listaAtributos.push(reserva.idCliente.nombreCompleto); // 7
+            // flagAsistio
+            this.listaAtributos.push(reserva.flagAsistio === 'S' ? 'SI' : 'NO'); // 8
+            this.listaAtributos.push(reserva.flagEstado === 'R' ? 'Reservado' : 'Cancelado'); // 9
+            this.listaAtributos.push(reserva.observacion); // 10
+
+            this.listaReservas.push(this.listaAtributos);
+
+            this.tableData1 = {
+              headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
+                 'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
+              dataRows: this.listaReservas
+            };
+          });
+        } else {
+          this.listaReservas = [];
+          this.tableData1 = {
+            headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
+               'Id Cliente', 'Cliente', 'Asistió','Estado', 'Observación', 'Acciones'],
+            dataRows: this.listaReservas
+          };
+        }
+      }
     );
+  }
+  /*-------------------------------------------------------------------------*/
+  crearStringUrl() {
+    let path = '';
+    let fechaHastaCadena = '';
+    if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
+      let fechaDesdeString = this.fechaCadena(this.fechaDesde);
+      path = '{"fechaDesdeCadena":"' + fechaDesdeString + '"';
+      console.log('path: ', path);
+    }
+    if (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null) {
+      fechaHastaCadena = this.fechaCadena(this.fechaHasta);
+      if (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null) {
+        path = path + ', "fechaHastaCadena":"' + fechaHastaCadena + '"';
+        console.log('path: ', path);
+      } else {
+        path = '{"fechaHastaCadena":"' + fechaHastaCadena + '"';
+      }
+    }
+    if (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) {
+      if ( (typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+        || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)) {
+        path = path + ',"idEmpleado":{"idPersona":' + this.empleadoId + '}';
+      } else {
+        path = '{"idEmpleado":{"idPersona":' + this.empleadoId + '}';
+      }
+    }
+    if (typeof this.clienteId !== 'undefined' && this.clienteId !== null) {
+      if ((typeof this.fechaDesde !== 'undefined' && this.fechaDesde !== null)
+          || (typeof this.fechaHasta !== 'undefined' && this.fechaHasta !== null)
+            || (typeof this.empleadoId !== 'undefined' && this.empleadoId !== null) ) {
+        path = path + ',"idCliente": {"idPersona":' + this.clienteId + '}';
+      } else {
+        path = '{"idCliente": {"idPersona":' + this.clienteId + '}';
+      }
+    }
+    if (path.length === 0) { // cuando inicia trae todos los servicios y sin filtros
+      return '';
+    }
+    path = path + '}';
+    console.log('path', path);
+    path = encodeURIComponent(path);
+    path = '?ejemplo=' + path;
+    return path;
   }
   /*-------------------------------------------------------------------------*/
   fechaCadena(fecha): any {
@@ -385,11 +506,22 @@ export class ReservaComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   limpiar() {
+    this.fechaHasta = null;
+    this.fechaDesde = null;
+
     this.empleadoId = null;
     this.empleadoNombre = null;
     
     this.clienteId = null;
     this.clienteNombre = null;
+
+    this.length = 0;
+    this.listaReservas = [];
+    this.tableData1 = {
+      headerRow: ['Id', 'Fecha', 'Inicio', 'Fin', 'Id Emp.', 'Empleado',
+         'Id Cliente', 'Cliente', 'Asistió', 'Estado', 'Observación', 'Acciones'],
+      dataRows: this.listaReservas
+    };
     // los list de los buscadores
     this.listaBuscarEmpleados = [];
     this.ELEMENT_DATA = [];
@@ -398,9 +530,9 @@ export class ReservaComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource = new MatTableDataSource<PeriodicElement>(this.ELEMENT_DATA);
     // se cargan las reservas de la fecha actual
-    this.fechaHasta = new Date();
-    this.fechaDesde = new Date();
-    this.buscar();
+  //  this.fechaHasta = new Date();
+  //  this.fechaDesde = new Date();
+   // this.buscar();
   }
   /*-------------------------------------------------------------------------*/
   agregarReserva() {
@@ -626,10 +758,18 @@ export class ReservaComponent implements OnInit {
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
-
+  /*-------------------------------------------------------------------------*/
+  toggleFiltro() {
+    if (this.mostrarFiltro) {
+      this.mostrarFiltro = false;
+    } else {
+      this.mostrarFiltro = true;
+    }
+  }
   /*-------------------------------------------------------------------------*/
 
   ngOnInit() {
+    this.mostrarFiltro = false;
     this.listarCategorias();
     this.listaSubCategoria = new Array<any>();
     // this.listarReservas();
@@ -637,8 +777,11 @@ export class ReservaComponent implements OnInit {
     console.log(new Date());
     this.fechaDesde = new Date();
     this.fechaHasta = new Date();
-    this.buscar();
+    // this.buscar();
+    this.listarReservaPaginado(undefined);
     this.listaClienteSeleccionado = new Array<any> ();
+    this.listaEmpleadoSeleccionados = new Array<any> ();
+    this.listaNombreEmpleadoSeleccionados = new Array<any> ();
     this.dataSource.paginator = this.paginator;
     this.mostrarAceptar = false;
     // this.listarEmpleadosBuscador();
