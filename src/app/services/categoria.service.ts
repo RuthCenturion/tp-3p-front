@@ -14,12 +14,14 @@ import 'rxjs/add/observable/throw';
 
 
 export class CategoriaService {
-  private urlBase = 'https://gy7228.myfoscam.org:8443/stock-pwfe/';
+  private urlBase = 'http://gy7228.myfoscam.org:8080/rest/';
   private categoriaUrl = SERVICE_REST + 'categoria';
   private subCategoriaUrl = SERVICE_REST + 'tipoProducto';
   private servicioUrl = SERVICE_REST + 'presentacionProducto';
   private productoUrl = SERVICE_REST + 'producto';
-  private pacienteUrl = SERVICE_REST + 'persona';
+  private pacienteUrl = SERVICE_REST + 'clientes';
+  private clienteUrl = this.urlBase + 'clientes';
+  
   
   
 
@@ -110,9 +112,9 @@ export class CategoriaService {
     });
     return this.http.delete(this.servicioUrl + '/' + id);
   }
-  // --------------------- PACIENTES ---------------------
-  listarPacientes(): Observable<any> {
-    return this.http.get(this.pacienteUrl);
+  // --------------------- CLIENTES ---------------------
+  listarClientes(): Observable<any> {
+    return this.http.get(this.clienteUrl+'/all');
   }
   agregarPaciente(paciente: any): Observable<any> {
     const httpOptions = {

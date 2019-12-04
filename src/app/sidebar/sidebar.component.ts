@@ -33,10 +33,10 @@ export const ROUTES: RouteInfo[] = [{
         icontype: 'apps',
         collapse: 'administracion',
         children: [
-            {path: 'categoria', title: 'Categoría', ab: 'C'},
+            {path: 'categoria', title: 'Categoría', ab: 'Cat'},
             {path: 'subcategoria', title: 'Sub-Categoria', ab: 'SC'},
             {path: 'servicio', title: 'Servicios', ab: 'S'},
-            {path: 'paciente', title: 'Pacientes', ab: 'P'}
+            {path: 'paciente', title: 'Cliente', ab: 'C'}
         ]
     },/* {
         path: '/horario',

@@ -7,7 +7,7 @@
             <div class="row">
               <div class="col-md-9">
                 <button mat-raised-button type="submit" class="btn btn-fill btn-rose" data-toggle="modal"
-                  data-target="#exampleModal">Agregar nuevo paciente</button>
+                  data-target="#exampleModal">Agregar nuevo cliente</button>
               </div>
             </div>
           </div>
@@ -19,7 +19,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Agregar Paciente</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Agregar Cliente</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -103,14 +103,14 @@
           </div>
         </div>
       </div>
-      <!-------------------------END AGREGAR PACIENTE--------------------------->
-      <!------------------------- MODIFICAR PACIENTE--------------------------->
+      <!-------------------------END AGREGAR CLIENTE--------------------------->
+      <!------------------------- MODIFICAR CLIENTE--------------------------->
       <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modificar Pacinte</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Modificar Cliente</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -254,7 +254,7 @@
                     <th>{{ tableData1.headerRow[3] }}</th>
                     <th>{{ tableData1.headerRow[4] }}</th>
                     <th>{{ tableData1.headerRow[5] }}</th>
-                    <th>{{ tableData1.headerRow[6] }}</th>
+                    <!--th>{{ tableData1.headerRow[6] }}</th-->
                     <th>{{ tableData1.headerRow[7] }}</th>
                     <th class="disabled-sorting text-right">{{ tableData1.headerRow[8] }}</th>
                   </tr>
@@ -265,10 +265,10 @@
                     <td>{{row[1]}}</td>
                     <td>{{row[2]}}</td>
                     <td>{{row[3]}}</td>
-                    <td>{{row[4]}}</td>
+                    <!--td>{{row[4]}}</td-->
                     <td>{{row[5]}}</td>
                     <td>{{row[6]}}</td>
-                    <td>{{row[7]}}</td>
+                    <!--td>{{row[7]}}</td-->
                     <td class="text-right">
                       <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
                         (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])"><i class="material-icons">dvr</i></a>

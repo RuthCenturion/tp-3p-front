@@ -1,5 +1,5 @@
 {
-    "/stock-pwfe/*": {
+    "/rest/*": {
       "target": "http://gy7228.myfoscam.org:8080",
       "secure": false
     }

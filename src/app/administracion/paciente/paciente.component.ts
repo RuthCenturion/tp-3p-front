@@ -40,30 +40,30 @@ export class PacienteComponent implements OnInit {
 
   constructor(private service: CategoriaService) {
     this.tableData1 = {
-      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'RUC', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
       dataRows: this.listaPacientes
     };
   }
 
-  listarPacientes() {
-    this.service.listarPacientes().subscribe(
+  listarClientes() {
+    this.service.listarClientes().subscribe(
       response => {
         console.log('lista de pacientes: ', response);
         this.listaPacientes = new Array<any>();
-        if (response.totalDatos > 0) {
-          response.lista.forEach(paciente => {
+        if (response.data.clientes.length > 0) {
+          response.data.clientes.forEach(paciente => {
             this.listaAtributos = new Array<any>();
-            this.listaAtributos.push(paciente.idPersona); // 0
+            this.listaAtributos.push(paciente.id); // 0
             this.listaAtributos.push(paciente.nombre); // 1
             this.listaAtributos.push(paciente.apellido); // 2
-            this.listaAtributos.push(paciente.cedula); // 3
+            this.listaAtributos.push(paciente.nroDocumento); // 3
             this.listaAtributos.push(paciente.ruc); // 4
             this.listaAtributos.push(paciente.telefono); // 5
             this.listaAtributos.push(paciente.email); // 6
             this.listaAtributos.push(paciente.fechaNacimiento); // 7
             this.listaPacientes.push(this.listaAtributos);
             this.tableData1 = {
-              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'RUC', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento',  'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
               dataRows: this.listaPacientes
             };
           });
@@ -93,7 +93,7 @@ export class PacienteComponent implements OnInit {
       response => {
         console.log('lo creado: ', response);
         this.showNotification('Paciente creado con éxito!', NOTIFY.SUCCESS);
-        this.listarPacientes();
+        this.listarClientes();
         this.limpiarAgregar();
       },
       error => {
@@ -145,7 +145,7 @@ export class PacienteComponent implements OnInit {
       response => {
         console.log('lo creado: ', response);
         this.showNotification('Paciente creada con éxito!', NOTIFY.SUCCESS);
-        this.listarPacientes();
+        this.listarClientes();
         this.limpiarModificar();
       },
       error => {
@@ -166,7 +166,7 @@ export class PacienteComponent implements OnInit {
     this.service.eliminarPaciente(this.eliminarId).subscribe(
       response => {
         this.showNotification('Paciente eliminado con éxito!', NOTIFY.SUCCESS);
-        this.listarPacientes();
+        this.listarClientes();
       },
       error => {
         this.showNotification('Error al eliminar paceinte', NOTIFY.DANGER);
@@ -223,7 +223,8 @@ export class PacienteComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   ngOnInit() {
-    this.listarPacientes();
+    //this.listarPacientes();
+    this.listarClientes();
   }
 
 }
