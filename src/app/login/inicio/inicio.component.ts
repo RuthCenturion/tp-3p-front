@@ -45,7 +45,8 @@ export class InicioComponent implements OnInit, OnDestroy {
     let url = '{"soloUsuariosDelSistema":true}';
     url = '?ejemplo=' + encodeURIComponent(url);
     this.listaUsuarioSistema = new Array<any>();
-    this.service.getUsuario(url).subscribe(
+
+  /*  this.service.getUsuario(url).subscribe(
       response => {
         console.log('usuarios: ', response);
         if (response.totalDatos > 0) {
@@ -57,7 +58,7 @@ export class InicioComponent implements OnInit, OnDestroy {
           });
         }
       }
-    );
+    );*/
   }
   /*-------------------------------------------------------------------------*/
   sidebarToggle() {
@@ -86,6 +87,8 @@ export class InicioComponent implements OnInit, OnDestroy {
   ingresar() {
     console.log('ingresado: ', this.usuario);
     console.log('ingresado: ', this.pass);
+    this.router.navigate(['dashboard']);
+    /*
     let usuarioCorrecto = false;
     this.listaUsuarioSistema.forEach(
       user => {
@@ -102,6 +105,7 @@ export class InicioComponent implements OnInit, OnDestroy {
       this.usuario = '';
       this.showNotification('Usuario no válido.', NOTIFY.DANGER);
     }
+    */
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
