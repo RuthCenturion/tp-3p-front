@@ -1,7 +1,8 @@
 import * as cloneDeep from 'lodash/cloneDeep';
-export const API_HOST = 'https://gy7228.myfoscam.org:8443/stock-pwfe/';
+export const API_HOST = 'https://gy7228.myfoscam.org:8080/stock-pwfe/';
+//gy7228.myfoscam.org:8080
 // PARA desplegar la version en desarrollo con el proxy
-export const REST_HOST = '/stock-pwfe/';
+export const REST_HOST = '/rest/';
 export const SERVICE_REST = REST_HOST;
 
 export const VARGLOBALRESPONSE = -1;
