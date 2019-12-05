@@ -36,7 +36,7 @@ export const AdministracionRoutes: Routes = [
     {
         path: '',
         children: [ {
-            path: 'paciente',
+            path: 'cliente',
             component: PacienteComponent
         }]
     }, /*{

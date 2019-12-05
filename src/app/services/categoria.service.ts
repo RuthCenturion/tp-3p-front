@@ -116,13 +116,16 @@ export class CategoriaService {
   listarClientes(): Observable<any> {
     return this.http.get(this.clienteUrl+'/all');
   }
-  agregarPaciente(paciente: any): Observable<any> {
+  agregarCliente(cliente: any): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post(this.pacienteUrl, paciente, httpOptions);
+    return this.http.post(this.clienteUrl+'/add', cliente, httpOptions);
+  }
+  buscarClientes(param:any, filtro:any):Observable<any>{
+    return this.http.post(this.clienteUrl+'/getByPage'+filtro, param);
   }
   modificarPaciente(paciente: any): Observable<any> {
     const httpOptions = {

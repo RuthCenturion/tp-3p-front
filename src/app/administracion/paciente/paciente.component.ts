@@ -22,6 +22,9 @@ export class PacienteComponent implements OnInit {
   cedula: any;
   tipoPersona: any;
   fechaNacimiento: any;
+  // filtro de búsqueda
+  clienteNombre: any;
+  clienteApellido: any;
 
   modificarId: any;
   modificarNombre: any;
@@ -37,6 +40,7 @@ export class PacienteComponent implements OnInit {
   public tableData1: TableData;
   listaAtributos: Array<any>;
   listaPacientes: Array<any>;
+  mostrarFiltro: any;
 
   constructor(private service: CategoriaService) {
     this.tableData1 = {
@@ -48,7 +52,6 @@ export class PacienteComponent implements OnInit {
   listarClientes() {
     this.service.listarClientes().subscribe(
       response => {
-        console.log('lista de pacientes: ', response);
         this.listaPacientes = new Array<any>();
         if (response.data.clientes.length > 0) {
           response.data.clientes.forEach(paciente => {
@@ -63,10 +66,73 @@ export class PacienteComponent implements OnInit {
             this.listaAtributos.push(paciente.fechaNacimiento); // 7
             this.listaPacientes.push(this.listaAtributos);
             this.tableData1 = {
-              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento',  'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
               dataRows: this.listaPacientes
             };
           });
+        }
+      }
+    );
+  }
+  /*-------------------------------------------------------------------------*/
+  listarClientesPaginado() {
+    /*  POST /rest/clientes/getByPage?parametro=ban
+    {
+    "startIndexPage":3,
+    "pageSize":2
+    }*/
+    console.log('para filtrar: ', this.clienteNombre, '--', this.clienteApellido);
+    let param = {
+      "startIndexPage": 3,
+      "pageSize": 2
+    };
+    let filtro = '?';
+    if (typeof this.clienteApellido !== 'undefined' || typeof this.clienteNombre === 'undefined') {
+      filtro = filtro + 'parametro=' + this.clienteApellido;
+    }
+    if (typeof this.clienteNombre !== 'undefined' || typeof this.clienteApellido === 'undefined') {
+      filtro = filtro + 'parametro=' + this.clienteNombre;
+    }
+    if (typeof this.clienteNombre === 'undefined' && typeof this.clienteApellido === 'undefined') {
+      filtro = '?';
+    }
+    console.log('filtro: ', filtro);
+    this.service.buscarClientes(param, filtro).subscribe(
+      response => {
+        this.listaPacientes = new Array<any>();
+        if (response.data.clientes !== null) {
+          if (response.data.clientes.length > 0) {
+            response.data.clientes.forEach(paciente => {
+              this.listaAtributos = new Array<any>();
+              this.listaAtributos.push(paciente.id); // 0
+              this.listaAtributos.push(paciente.nombre); // 1
+              this.listaAtributos.push(paciente.apellido); // 2
+              this.listaAtributos.push(paciente.nroDocumento); // 3
+              this.listaAtributos.push(paciente.ruc); // 4
+              this.listaAtributos.push(paciente.telefono); // 5
+              this.listaAtributos.push(paciente.email); // 6
+              this.listaAtributos.push(paciente.fechaNacimiento); // 7
+              this.listaPacientes.push(this.listaAtributos);
+              this.tableData1 = {
+                headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+                dataRows: this.listaPacientes
+              };
+            });
+          } else {
+            this.listaPacientes=[];
+            this.tableData1 = {
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+              dataRows: this.listaPacientes
+            };
+            this.showNotification(response.message, NOTIFY.WARNING);
+          }
+        } else {
+          this.listaPacientes=[];
+          this.tableData1 = {
+            headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+            dataRows: this.listaPacientes
+          };
+          this.showNotification(response.message, NOTIFY.WARNING);
         }
       }
     );
@@ -78,26 +144,25 @@ export class PacienteComponent implements OnInit {
     let year = d.getFullYear();
     let mes = d.getMonth() + 1;
     let dia = d.getDate() + 1;
-    let fechaString = year + '-' + mes + '-' + dia + ' 00:00:00';
+    let fechaString = year + '-' + mes + '-' + dia;// + ' 00:00:00';
     let dato = {
       nombre: this.nombre,
       apellido: this.apellido,
       email: this.email,
       telefono: this.telefono,
-      ruc: this.ruc,
-      cedula: this.cedula,
-      tipoPersona: 'FISICA',
+      //  ruc: this.ruc,
+      nroDocumento: this.cedula,
+      //    tipoPersona: 'FISICA',
       fechaNacimiento: fechaString
     };
-    this.service.agregarPaciente(dato).subscribe(
+    this.service.agregarCliente(dato).subscribe(
       response => {
-        console.log('lo creado: ', response);
-        this.showNotification('Paciente creado con éxito!', NOTIFY.SUCCESS);
+        this.showNotification('Cliente creado con éxito!', NOTIFY.SUCCESS);
         this.listarClientes();
         this.limpiarAgregar();
       },
       error => {
-        this.showNotification('Error al agregar paciente', NOTIFY.DANGER);
+        this.showNotification('Error al agregar cliente', NOTIFY.DANGER);
         this.limpiarAgregar();
       }
     );
@@ -143,7 +208,6 @@ export class PacienteComponent implements OnInit {
 
     this.service.modificarPaciente(dato).subscribe(
       response => {
-        console.log('lo creado: ', response);
         this.showNotification('Paciente creada con éxito!', NOTIFY.SUCCESS);
         this.listarClientes();
         this.limpiarModificar();
@@ -165,11 +229,11 @@ export class PacienteComponent implements OnInit {
     //  this.showNotification('FALTA IMPLEMENTAR LLAMADO AL BACK ', NOTIFY.WARNING);
     this.service.eliminarPaciente(this.eliminarId).subscribe(
       response => {
-        this.showNotification('Paciente eliminado con éxito!', NOTIFY.SUCCESS);
+        this.showNotification('Cliente eliminado con éxito!', NOTIFY.SUCCESS);
         this.listarClientes();
       },
       error => {
-        this.showNotification('Error al eliminar paceinte', NOTIFY.DANGER);
+        this.showNotification('Error al eliminar cliente', NOTIFY.DANGER);
       }
     );
   }
@@ -201,6 +265,11 @@ export class PacienteComponent implements OnInit {
     });
   }
   /*-------------------------------------------------------------------------*/
+  limpiar (){
+    this.clienteApellido = null;
+    this.clienteNombre = null;
+  }
+  /*-------------------------------------------------------------------------*/
   limpiarAgregar() {
     this.nombre = null;
     this.apellido = null;
@@ -222,8 +291,18 @@ export class PacienteComponent implements OnInit {
     this.modificarFechaNacimiento = null;
   }
   /*-------------------------------------------------------------------------*/
+  toggleFiltro() {
+    if (this.mostrarFiltro) {
+      this.mostrarFiltro = false;
+    } else {
+      this.mostrarFiltro = true;
+    }
+  }
+
+  /*-------------------------------------------------------------------------*/
   ngOnInit() {
     //this.listarPacientes();
+    this.mostrarFiltro = false;
     this.listarClientes();
   }
 
