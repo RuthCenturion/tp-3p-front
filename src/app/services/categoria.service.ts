@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { SERVICE_REST,API_HOST } from '../commons/app-utils';
+import { SERVICE_REST, API_HOST } from '../commons/app-utils';
 
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw'; 
+import 'rxjs/add/observable/throw';
 @Injectable({
   providedIn: 'root'
 })
@@ -21,9 +21,7 @@ export class CategoriaService {
   private productoUrl = SERVICE_REST + 'producto';
   private pacienteUrl = SERVICE_REST + 'clientes';
   private clienteUrl = this.urlBase + 'clientes';
-  
-  
-  
+  private conceptoUrl = this.urlBase + 'vales';
 
   constructor(private http: HttpClient) { }
   // --------------------- CATEGORIAS ---------------------
@@ -32,17 +30,17 @@ export class CategoriaService {
   }
   obtenerCategoria(descripion): Observable<any> {
     if (descripion) {
-      return this.http.get(this.categoriaUrl  + descripion);
+      return this.http.get(this.categoriaUrl + descripion);
     } else {
       return this.http.get(this.categoriaUrl);
     }
   }
 
-  obtenerCategoriaPaginado(descripcion: any, inicio: number, cantidad:number): Observable<any>{
+  obtenerCategoriaPaginado(descripcion: any, inicio: number, cantidad: number): Observable<any> {
     if (descripcion) {
-      return this.http.get(this.categoriaUrl  + descripcion);
+      return this.http.get(this.categoriaUrl + descripcion);
     } else {
-      return this.http.get(this.categoriaUrl + '?orderBy=idCategoria&orderDir=asc&inicio='+inicio+'&cantidad='+cantidad);
+      return this.http.get(this.categoriaUrl + '?orderBy=idCategoria&orderDir=asc&inicio=' + inicio + '&cantidad=' + cantidad);
     }
   }
 
@@ -51,7 +49,7 @@ export class CategoriaService {
   }
   eliminarCategoria(id): Observable<any> {
     let httpParams = new HttpParams();
-    Object.keys(id).forEach( function(key) {
+    Object.keys(id).forEach(function (key) {
       httpParams = httpParams.append(key, id[key]);
     });
     return this.http.delete(this.categoriaUrl + '/' + id);
@@ -62,7 +60,7 @@ export class CategoriaService {
   }
   obtenerSubCategoria(descripion): Observable<any> {
     if (descripion) {
-      return this.http.get(this.subCategoriaUrl  + descripion);
+      return this.http.get(this.subCategoriaUrl + descripion);
     } else {
       return this.http.get(this.subCategoriaUrl);
     }
@@ -85,15 +83,22 @@ export class CategoriaService {
   }
   eliminarSubCategoria(id): Observable<any> {
     let httpParams = new HttpParams();
-    Object.keys(id).forEach( function(key) {
+    Object.keys(id).forEach(function (key) {
       httpParams = httpParams.append(key, id[key]);
     });
     return this.http.delete(this.subCategoriaUrl + '/' + id);
   }
-// --------------------- SERVICIOS ---------------------
-  getServicios(): Observable<any> {
-    return this.http.get(this.servicioUrl);
+  // --------------------- CONCEPTO DE USO DE PUNTOS ---------------------
+  listarConceptos(): Observable<any> {
+    return this.http.get(this.conceptoUrl+ '/all');
   }
+  getConceptos(): Observable<any> {
+    return this.http.get(this.conceptoUrl+ '/all');
+  }
+  getServicios(): Observable<any> {
+    return this.http.get(this.conceptoUrl);
+  }
+
   listarProductos(): Observable<any> {
     return this.http.get(this.productoUrl);
   }
@@ -107,14 +112,14 @@ export class CategoriaService {
   }
   eliminarServicio(id): Observable<any> {
     let httpParams = new HttpParams();
-    Object.keys(id).forEach( function(key) {
+    Object.keys(id).forEach(function (key) {
       httpParams = httpParams.append(key, id[key]);
     });
     return this.http.delete(this.servicioUrl + '/' + id);
   }
   // --------------------- CLIENTES ---------------------
   listarClientes(): Observable<any> {
-    return this.http.get(this.clienteUrl+'/all');
+    return this.http.get(this.clienteUrl + '/all');
   }
   agregarCliente(cliente: any): Observable<any> {
     const httpOptions = {
@@ -122,10 +127,10 @@ export class CategoriaService {
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post(this.clienteUrl+'/add', cliente, httpOptions);
+    return this.http.post(this.clienteUrl + '/add', cliente, httpOptions);
   }
-  buscarClientes(param:any, filtro:any):Observable<any>{
-    return this.http.post(this.clienteUrl+'/getByPage'+filtro, param);
+  buscarClientes(param: any, filtro: any): Observable<any> {
+    return this.http.post(this.clienteUrl + '/getByPage' + filtro, param);
   }
   modificarPaciente(paciente: any): Observable<any> {
     const httpOptions = {
@@ -137,7 +142,7 @@ export class CategoriaService {
   }
   eliminarPaciente(id): Observable<any> {
     let httpParams = new HttpParams();
-    Object.keys(id).forEach( function(key) {
+    Object.keys(id).forEach(function (key) {
       httpParams = httpParams.append(key, id[key]);
     });
     return this.http.delete(this.pacienteUrl + '/' + id);
