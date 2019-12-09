@@ -14,8 +14,8 @@ export class ServicioComponent implements OnInit {
   codigo: any; // solo para agregar, dato requerido del back
   idPresentacionProducto: any; // --> corresponde al id del servicio
   nombre: any;
-  descripcionGeneral: any;
-  existenciaProducto: any;
+  descripcion: any;
+  cantidadRequerida: any;
   idProducto: any;
   descripcionProducto: any;
   idTipoProducto: any; // --> corresponde al id de la subcategoria
@@ -84,15 +84,15 @@ export class ServicioComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
   agregar() {
     var dato = {
-      codigo: this.codigo,
-      flagServicio: 'S',
-      idProducto: {
+      descripcion: this.descripcion,
+      cantidadRequerida: this.cantidadRequerida,
+   /*   idProducto: {
         idProducto: this.idProducto
       },
-      nombre: this.nombre,
-      existenciaProducto: {
+      nombre: this.nombre,*/
+     /* existenciaProducto: {
         precioVenta: this.existenciaProducto
-      }
+      }*/
     };
     console.log('datos a agregar: ', dato);
     this.service.agregarServicio(dato).subscribe(
@@ -102,7 +102,7 @@ export class ServicioComponent implements OnInit {
         this.codigo = null;
         this.idProducto = null;
         this.nombre = null;
-        this.existenciaProducto = null;
+     //   this.existenciaProducto = null;
       },
       error => {
         this.showNotification('Error al agregar servicio', NOTIFY.DANGER);
@@ -114,7 +114,7 @@ export class ServicioComponent implements OnInit {
     this.codigo = null;
     this.idProducto = null;
     this.nombre = null;
-    this.existenciaProducto = null;
+ //   this.existenciaProducto = null;
   }
   /*-------------------------------------------------------------------------*/
   abrirModalModificar(id, nombre, desc, evento, idProducto, descProducto, idTipoProducto,
@@ -184,7 +184,7 @@ export class ServicioComponent implements OnInit {
     this.codigo = null;
     this.idProducto = null;
     this.nombre = null;
-    this.existenciaProducto = null;
+  //  this.existenciaProducto = null;
     //this.listarServicios();
     this.listarConceptos()
   }

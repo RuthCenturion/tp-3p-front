@@ -83,17 +83,17 @@ export class PacienteComponent implements OnInit {
     }*/
     console.log('para filtrar: ', this.clienteNombre, '--', this.clienteApellido);
     let param = {
-      "startIndexPage": 3,
-      "pageSize": 2
+      "startIndexPage": 0,
+      "pageSize": 10
     };
     let filtro = '?';
-    if (typeof this.clienteApellido !== 'undefined' || typeof this.clienteNombre === 'undefined') {
+   /* if (typeof this.clienteApellido !== 'undefined' || typeof this.clienteNombre === 'undefined') {
       filtro = filtro + 'parametro=' + this.clienteApellido;
-    }
-    if (typeof this.clienteNombre !== 'undefined' || typeof this.clienteApellido === 'undefined') {
+    }*/
+    if (typeof this.clienteNombre !== 'undefined' /*|| typeof this.clienteApellido === 'undefined'*/) {
       filtro = filtro + 'parametro=' + this.clienteNombre;
     }
-    if (typeof this.clienteNombre === 'undefined' && typeof this.clienteApellido === 'undefined') {
+    if (typeof this.clienteNombre === 'undefined'/* && typeof this.clienteApellido === 'undefined'*/) {
       filtro = '?';
     }
     console.log('filtro: ', filtro);
@@ -266,8 +266,12 @@ export class PacienteComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   limpiar (){
-    this.clienteApellido = null;
     this.clienteNombre = null;
+    this.listaPacientes = [];
+    this.tableData1 = {
+      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+      dataRows: this.listaPacientes
+    };
   }
   /*-------------------------------------------------------------------------*/
   limpiarAgregar() {
