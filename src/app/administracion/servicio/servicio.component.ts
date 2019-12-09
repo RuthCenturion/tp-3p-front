@@ -57,12 +57,10 @@ export class ServicioComponent implements OnInit {
   listarConceptos() {
     this.service.listarConceptos().subscribe(
       response => {
-        console.log('listar conceptos: ', response);
         this.listaServicios = new Array<any>();
         this.listaAtributos = new Array<any>();
         if(response.data.vales.length>0){
           response.data.vales.forEach(concepto => {
-            console.log('concepto: ',concepto);
             this.listaAtributos = new Array<any>();
             this.listaAtributos.push(concepto.id); // 0
             this.listaAtributos.push(concepto.descripcion); // 1
@@ -95,17 +93,17 @@ export class ServicioComponent implements OnInit {
       }*/
     };
     console.log('datos a agregar: ', dato);
-    this.service.agregarServicio(dato).subscribe(
+    this.service.agregarConcepto(dato).subscribe(
       response => {
-        this.showNotification('Servicio creado con éxito!', NOTIFY.SUCCESS);
+        this.showNotification('Concepto creado con éxito!', NOTIFY.SUCCESS);
         this.listarConceptos();
-        this.codigo = null;
-        this.idProducto = null;
-        this.nombre = null;
+        this.descripcion = null;
+        this.cantidadRequerida = null;
+        //this.nombre = null;
      //   this.existenciaProducto = null;
       },
       error => {
-        this.showNotification('Error al agregar servicio', NOTIFY.DANGER);
+        this.showNotification('Error al agregar concepto nuevo', NOTIFY.DANGER);
       }
     );
   }

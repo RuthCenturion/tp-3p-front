@@ -95,6 +95,14 @@ export class CategoriaService {
   getConceptos(): Observable<any> {
     return this.http.get(this.conceptoUrl+ '/all');
   }
+  agregarConcepto(concepto:any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post(this.conceptoUrl+'/add', concepto, httpOptions);
+  }
   getServicios(): Observable<any> {
     return this.http.get(this.conceptoUrl);
   }

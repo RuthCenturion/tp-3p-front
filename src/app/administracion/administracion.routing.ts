@@ -29,7 +29,7 @@ export const AdministracionRoutes: Routes = [
     {
       path: '',
       children: [ {
-        path: 'servicio',
+        path: 'concepto',
         component: ServicioComponent
         }]
     },

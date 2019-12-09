@@ -34,7 +34,7 @@ export const ROUTES: RouteInfo[] = [{
         collapse: 'administracion',
         children: [
             {path: 'cliente', title: 'Cliente', ab: 'C'},
-            {path: 'servicio', title: 'Concepto de Uso de Puntos', ab: 'CUP'},
+            {path: 'concepto', title: 'Concepto de Uso de Puntos', ab: 'CUP'},
             {path: 'categoria', title: 'Categoría', ab: 'Cat'},
             {path: 'subcategoria', title: 'Sub-Categoria', ab: 'SC'},
            
