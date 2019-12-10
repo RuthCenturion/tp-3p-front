@@ -31,8 +31,11 @@ export class CategoriaComponent implements OnInit {
 
   idCategoria: any;
   descripcion: any;
+  modificarInferior: any;
+  modificarSuperior: any;
+  modificarEquivalencia: any;
   modificarId: any;
-  modificarDescripcion: any;
+  /*modificarDescripcion: any;*/
 
   eliminarId: any;
   eliminarDescripcion: any;
@@ -260,6 +263,11 @@ export class CategoriaComponent implements OnInit {
     this.limiteSuperior = null;
     this.montoEquivalencia = null;
   }
+  limpiarModificar(){
+    this.modificarInferior = null;
+    this.modificarSuperior = null;
+    this.modificarEquivalencia = null;
+  }
 
   /*-------------------------------------------------------------------------*/
   agregar() {
@@ -307,7 +315,7 @@ export class CategoriaComponent implements OnInit {
       });
   }
   /*-------------------------------------------------------------------------*/
-  openDialog() {
+ /* openDialog() {
     console.log('name: ', this.modificarDescripcion);
     // this.dialog = new MatDialog();
     const dialogRef = this.dialog.open(ModalComponent, {
@@ -319,18 +327,34 @@ export class CategoriaComponent implements OnInit {
       console.log('The dialog was closed');
       this.animal = result;
     });
-  }
+  }*/
   /*-------------------------------------------------------------------------*/
-  abrirModalModificar(id, desc) {
-    console.log('fila seleccionada: ', id, ' ', desc);
+  abrirModalModificar(id, inferior, superior, equivalencia) {
+    console.log('fila seleccionada: ', id, ' ',  inferior,' ',  superior, ' ', equivalencia);
     this.modificarId = id;
-    this.modificarDescripcion = desc;
+    this.modificarInferior = inferior;
+    this.modificarSuperior = superior;
+    this.modificarEquivalencia = equivalencia;
     $('#exampleModal2').modal('show');
   }
   /*-------------------------------------------------------------------------*/
   modificar() {
-    console.log('fila datos a modificar: ', this.modificarId, ' ', this.modificarDescripcion);
-    this.showNotification('Los datos se han modificado con éxito. ', NOTIFY.SUCCESS);
+    let dato = {
+      limiteInferior: this.modificarInferior,
+      limiteSuperior: this.modificarSuperior,
+      montoEquivalencia: this.modificarEquivalencia
+    };
+    this.categoriaService.modificarRegla(this.modificarId,dato).subscribe(
+      response => {
+        console.log('modificar(): ', response);
+        this.showNotification('Regla modificada con éxito!', NOTIFY.SUCCESS);
+        this.listarReglas();
+        this.limpiarModificar();
+      },error => {
+        this.showNotification('Error al modificar regla de asignación.', NOTIFY.DANGER);
+        this.limpiarModificar();
+      }
+    );
   }
   confirmarEliminar(id, desc) {
     $('#exampleModal3').modal('show');

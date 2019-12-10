@@ -85,57 +85,50 @@
                   </div>
                   <!--*******************-->
                   <div class="row">
-                    <label class="col-sm-3 col-form-label">Descripción</label>
+                    <label class="col-sm-3 col-form-label">Límite inferior</label>
                     <div class="col-sm-9">
                       <mat-form-field>
-                        <input matInput type="text" class="form-control form-control-sm" name="modificarDescripcion"
-                          id="modificarDescripcion" [(ngModel)]="modificarDescripcion" required>
+                        <input matInput type="number" class="form-control form-control-sm" name="modificarInferior"
+                          id="modificarInferior" [(ngModel)]="modificarInferior" required>
                       </mat-form-field>
                     </div>
                   </div>
                   <!--*******************-->
+                  <div class="row">
+                      <label class="col-sm-3 col-form-label">Límite superior</label>
+                      <div class="col-sm-9">
+                        <mat-form-field>
+                          <input matInput type="number" class="form-control form-control-sm" name="modificarSuperior"
+                            id="modificarSuperior" [(ngModel)]="modificarSuperior" required>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <!--*******************-->
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Monto equivalencia</label>
+                        <div class="col-sm-9">
+                          <mat-form-field>
+                            <input matInput type="number" class="form-control form-control-sm" name="modificarEquivalencia"
+                              id="modificarEquivalencia" [(ngModel)]="modificarEquivalencia" required>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <!--*******************-->
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                   <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal"
-                    [disabled]="((modificarDescripcion ))?false:true">
+                    [disabled]="((modificarInferior && modificarSuperior && modificarEquivalencia ))?false:true">
                     Guardar</button>
                 </div>
               </div>
             </div>
           </div>
           <!-------------------------END MODIFICAR REGLA--------------------------->
-          <!------------------------- ELIMINAR CATEGORÍA--------------------------->
-          <div class="modal fade modal-warning" id="exampleModal3" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar esta categoría?</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">´
-                  <!--*******************-->
-                  <!--*******************-->
-                  <!--*******************-->
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-primary" (click)="eliminar()" data-dismiss="modal">
-                    Eliminar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-------------------------END ELIMINAR CATEGORIA--------------------------->
         </div>
-        <!--<div class="container-fluid">-->
         <br>
         <div class="row">
           <div class="col-md-12">
-            <!--tabla sin buscador integrado-->
             <div class="table-responsive">
               <table class="table">
                 <thead>
@@ -156,9 +149,9 @@
                     <!--td>{{row[3]}}</td-->
                     <td class="text-right">
                       <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
-                        (click)="abrirModalModificar(row[0],row[1])"><i class="material-icons">dvr</i></a>
-                      <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
-                        (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>
+                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3])"><i class="tiny material-icons">edit</i></a>
+                      <!--a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                        (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a-->
                     </td>
                   </tr>
                   <mat-paginator [length]="length" [pageSize]="pageSize"
@@ -167,13 +160,9 @@
                 </tbody>
               </table>
             </div>
-
           </div>
-          <!--end tabla sin buscador integrado-->
         </div>
-        <!-- end col-md-12 -->
       </div>
-      <!-- end row -->
     </div>
   </div>
 

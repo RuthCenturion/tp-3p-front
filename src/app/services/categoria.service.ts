@@ -34,9 +34,13 @@ export class CategoriaService {
   obtenerRegla(idRegla): Observable<any> {
     return this.http.get(this.reglasUrl+'/id/'+idRegla);
   }
-  //
+  // retorna la regla generada
   agregarRegla(regla: any): Observable<any> {
     return this.http.post(this.reglasUrl+'/add', regla/*, httpOptions*/);
+  }
+  //retorna la regla modificada
+  modificarRegla(idRegla:any, regla: any): Observable<any> {
+    return this.http.put(this.reglasUrl+'/edit/'+idRegla, regla);
   }
   getCategoria(): Observable<any> {
     return this.http.get(this.categoriaUrl);

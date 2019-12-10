@@ -16,7 +16,7 @@ export const AdministracionRoutes: Routes = [
     {
       path: '',
       children: [ {
-        path: 'categoria',
+        path: 'regla-asignacion',
         component: CategoriaComponent
     }]},
     {
