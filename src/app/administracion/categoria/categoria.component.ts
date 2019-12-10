@@ -24,6 +24,11 @@ declare const $: any;
 export class CategoriaComponent implements OnInit {
   public tableData1: TableData;
   public dataTable: DataTable;
+
+  montoEquivalencia: any;
+  limiteInferior: any;
+  limiteSuperior: any;
+
   idCategoria: any;
   descripcion: any;
   modificarId: any;
@@ -53,21 +58,50 @@ export class CategoriaComponent implements OnInit {
     public dialog: MatDialog,
     private toast: ToastrService) {
     this.dataTable = {
-      headerRow: ['Id', 'Descripción', 'Acciones'],
+      headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
       footerRow: ['Id', 'Descripción', 'Acciones'],
       dataRows: this.listaCategoria
     };
     this.tableData1 = {
-      headerRow: ['Id', 'Descripción', 'Acciones'],
+      headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
       dataRows: this.listaCategoria
     };
   }
 
   /*-------------------------------------------------------------------------*/
-  ngOnInit() {
-    this.listarCategoriasPaginado(undefined);
-  }
+  listarReglas(){
+    this.categoriaService.listarReglas().subscribe(
+      response => {
+        console.log('listarReglas(): ', response);
 
+        this.listaCategoria = new Array<any>();
+        this.lista = new Array<any>();
+        this.length = response.totalDatos;
+        response.data.reglas.forEach(regla => {
+          this.lista.push(regla);
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(regla.id);
+          this.listaAtributos.push(regla.limiteInferior);
+          this.listaAtributos.push(regla.limiteSuperior);
+          this.listaAtributos.push(regla.montoEquivalencia);
+          this.listaCategoria.push(this.listaAtributos);
+         /* this.dataTable = {
+            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
+            footerRow: ['Id', 'Descripción', 'Acciones'],
+            dataRows: this.listaCategoria
+          };*/
+          this.tableData1 = {
+            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
+            dataRows: this.listaCategoria
+          };
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+      }
+    );
+
+  }
   /*-------------------------------------------------------------------------*/
   ngAfterViewInit() {
     $('#datatables').DataTable({
@@ -151,19 +185,19 @@ export class CategoriaComponent implements OnInit {
             this.listaAtributos.push(cat.descripcion);
             this.listaCategoria.push(this.listaAtributos);
             this.dataTable = {
-              headerRow: ['Id', 'Descripción', 'Acciones'],
+              headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
               footerRow: ['Id', 'Descripción', 'Acciones'],
               dataRows: this.listaCategoria
             };
             this.tableData1 = {
-              headerRow: ['Id', 'Descripción', 'Acciones'],
+              headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
               dataRows: this.listaCategoria
             };
           });
         } else {
           this.listaCategoria = [];
           this.tableData1 = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
+            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
             dataRows: this.listaCategoria
           };
         }
@@ -172,7 +206,7 @@ export class CategoriaComponent implements OnInit {
         // this.showNotification('Error al obtener categorias' + error, NOTIFY.DANGER);
         this.listaCategoria = [];
         this.tableData1 = {
-          headerRow: ['Id', 'Descripción', 'Acciones'],
+          headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
           dataRows: this.listaCategoria
         };
       }
@@ -199,13 +233,13 @@ export class CategoriaComponent implements OnInit {
           this.listaAtributos.push(cat.descripcion);
           this.listaCategoria.push(this.listaAtributos);
           this.dataTable = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
+            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
             footerRow: ['Id', 'Descripción', 'Acciones'],
             dataRows: this.listaCategoria
           };
           this.length = this.listaCategoria.length;
           this.tableData1 = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
+            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
             dataRows: this.listaCategoria
           };
         });
@@ -218,19 +252,30 @@ export class CategoriaComponent implements OnInit {
 
   /*-------------------------------------------------------------------------*/
   limpiar() {
-    this.descripcion = null;
     this.tableData1.dataRows = [];
+  }
+  /*-------------------------------------------------------------------------*/
+  limpiarAgregar() {
+    this.limiteInferior = null;
+    this.limiteSuperior = null;
+    this.montoEquivalencia = null;
   }
 
   /*-------------------------------------------------------------------------*/
   agregar() {
     let dato = {
-      descripcion: this.descripcion
+      limiteInferior: this.limiteInferior,
+      limiteSuperior: this.limiteSuperior,
+      montoEquivalencia: this.montoEquivalencia
     };
-    this.categoriaService.agregarCategoria(dato).subscribe(
+    this.categoriaService.agregarRegla(dato).subscribe(
       response => {
-        this.showNotification('Categoría creada con éxito!', NOTIFY.SUCCESS);
-        this.listarCategorias();
+        this.showNotification('Regla nueva creada con éxito!', NOTIFY.SUCCESS);
+        this.listarReglas();
+        this.limpiarAgregar();
+      },error => {
+        this.showNotification('Error al crear regla de asignación nueva', NOTIFY.DANGER);
+        this.limpiarAgregar();
       }
     );
   }
@@ -326,12 +371,12 @@ export class CategoriaComponent implements OnInit {
           this.listaAtributos.push(cat.descripcion);
           this.listaCategoria.push(this.listaAtributos);
           this.dataTable = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
+            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
             footerRow: ['Id', 'Descripción', 'Acciones'],
             dataRows: this.listaCategoria
           };
           this.tableData1 = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
+            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
             dataRows: this.listaCategoria
           };
         });
@@ -340,5 +385,10 @@ export class CategoriaComponent implements OnInit {
         this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
       }
     );
+  }
+  /*-------------------------------------------------------------------------*/
+  ngOnInit() {
+ //   this.listarCategoriasPaginado(undefined);
+    this.listarReglas();
   }
 }

@@ -22,9 +22,22 @@ export class CategoriaService {
   private pacienteUrl = SERVICE_REST + 'clientes';
   private clienteUrl = this.urlBase + 'clientes';
   private conceptoUrl = this.urlBase + 'vales';
+  private reglasUrl = this.urlBase + 'reglas';
 
   constructor(private http: HttpClient) { }
-  // --------------------- CATEGORIAS ---------------------
+  // --------------------- REGLAS ASIGNACIÓN ---------------------
+  // retorna todas las reglas 
+  listarReglas(): Observable<any> {
+    return this.http.get(this.reglasUrl+'/all');
+  }
+  // retorna la regla especificada por el parámetro idRegla
+  obtenerRegla(idRegla): Observable<any> {
+    return this.http.get(this.reglasUrl+'/id/'+idRegla);
+  }
+  //
+  agregarRegla(regla: any): Observable<any> {
+    return this.http.post(this.reglasUrl+'/add', regla/*, httpOptions*/);
+  }
   getCategoria(): Observable<any> {
     return this.http.get(this.categoriaUrl);
   }

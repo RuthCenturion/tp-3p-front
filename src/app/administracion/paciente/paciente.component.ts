@@ -44,7 +44,7 @@ export class PacienteComponent implements OnInit {
 
   constructor(private service: CategoriaService) {
     this.tableData1 = {
-      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.'],
       dataRows: this.listaPacientes
     };
   }
@@ -66,7 +66,7 @@ export class PacienteComponent implements OnInit {
             this.listaAtributos.push(paciente.fechaNacimiento); // 7
             this.listaPacientes.push(this.listaAtributos);
             this.tableData1 = {
-              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.'],
               dataRows: this.listaPacientes
             };
           });
@@ -90,10 +90,10 @@ export class PacienteComponent implements OnInit {
    /* if (typeof this.clienteApellido !== 'undefined' || typeof this.clienteNombre === 'undefined') {
       filtro = filtro + 'parametro=' + this.clienteApellido;
     }*/
-    if (typeof this.clienteNombre !== 'undefined' /*|| typeof this.clienteApellido === 'undefined'*/) {
+    if (typeof this.clienteNombre !== 'undefined' &&  this.clienteNombre !== null) {
       filtro = filtro + 'parametro=' + this.clienteNombre;
     }
-    if (typeof this.clienteNombre === 'undefined'/* && typeof this.clienteApellido === 'undefined'*/) {
+    if (typeof this.clienteNombre === 'undefined' || typeof this.clienteNombre === null) {
       filtro = '?';
     }
     console.log('filtro: ', filtro);
@@ -114,14 +114,14 @@ export class PacienteComponent implements OnInit {
               this.listaAtributos.push(paciente.fechaNacimiento); // 7
               this.listaPacientes.push(this.listaAtributos);
               this.tableData1 = {
-                headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.'],
                 dataRows: this.listaPacientes
               };
             });
           } else {
             this.listaPacientes=[];
             this.tableData1 = {
-              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+              headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.'],
               dataRows: this.listaPacientes
             };
             this.showNotification(response.message, NOTIFY.WARNING);
@@ -129,7 +129,7 @@ export class PacienteComponent implements OnInit {
         } else {
           this.listaPacientes=[];
           this.tableData1 = {
-            headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+            headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.'],
             dataRows: this.listaPacientes
           };
           this.showNotification(response.message, NOTIFY.WARNING);
@@ -269,7 +269,7 @@ export class PacienteComponent implements OnInit {
     this.clienteNombre = null;
     this.listaPacientes = [];
     this.tableData1 = {
-      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.', 'Acciones'],
+      headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.'],
       dataRows: this.listaPacientes
     };
   }
