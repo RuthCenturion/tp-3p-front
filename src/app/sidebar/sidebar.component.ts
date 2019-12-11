@@ -69,13 +69,13 @@ export const ROUTES: RouteInfo[] = [{
 
     }, {
         path: '/components',
-        title: 'Horarios',
+        title: 'Uso de puntos',
         type: 'sub',
         icontype: 'schedule',
         collapse: 'components',
         children: [
-            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},
-            {path: 'horario-excepcion', title: 'Horario Excepción', ab: 'HE'},
+            {path: 'horario-atencion', title: 'Carga de puntos', ab: 'CP'},
+            {path: 'horario-excepcion', title: 'Utilización de puntos', ab: 'UP'},
            /* {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
             {path: 'panels', title: 'Panels', ab:'P'},
@@ -84,14 +84,14 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}*/
         ]
-    }, {
+    },/* {
         path: '/components',
         title: 'Components',
         type: 'sub',
         icontype: 'apps',
         collapse: 'components',
         children: [
-            {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},            
+           /* {path: 'horario-atencion', title: 'Horario Atención', ab: 'HA'},            
             {path: 'horario-excepcion', title: 'Horario Excepción', ab: 'HE'},
             {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
@@ -101,7 +101,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'icons', title: 'Icons', ab:'I'},
             {path: 'typography', title: 'Typography', ab:'T'}
         ]
-    }, 
+    }, */
     {
         path: '/forms',
         title: 'Forms',
