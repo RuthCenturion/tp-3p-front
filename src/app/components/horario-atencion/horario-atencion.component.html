@@ -188,14 +188,59 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar este horario de
-                    atención?</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
                   <!--*******************-->
+                  <div class="row">
+                    <div class="input-group no-border">
+                      <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
+                        placeholder="Nombre cliente">
+                      <button type="button" class="btn btn-info"
+                        (click)="listarClientePaginado(undefined, buscarClienteNombre)">Buscar</button>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="col-md-12">
+                    <!------------------------- GRILLA--------------------------->
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>{{ tableBuscarCliente.headerRow[0] }}</th>
+                            <th>{{ tableBuscarCliente.headerRow[1] }}</th>
+                            <th>{{ tableBuscarCliente.headerRow[2] }}</th>
+                            <!--th>{{ tableData1.headerRow[3] }}</th>
+                            <th>{{ tableData1.headerRow[4] }}</th>
+                            <th>{{ tableData1.headerRow[5] }}</th>
+                            <th>{{ tableData1.headerRow[6] }}</th>
+                            <th class="disabled-sorting text-right">{{ tableData1.headerRow[7] }}</th-->
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let row of tableBuscarCliente.dataRows">
+                            <td>{{row[0]}}</td>
+                            <td>{{row[1]}}</td>
+                            <td>{{row[2]}}</td>
+                            <!--td>{{row[3]}}</td>
+                            <td>{{row[4]}}</td>
+                            <td>{{row[5]}}</td>
+                            <td>{{row[6]}}</td>
+                            <td class="text-right">
+                              <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                                (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6])"><i
+                                  class="material-icons">dvr</i></a>
+                              <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                                (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>
+                            </td-->
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -225,33 +270,33 @@
               <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
             </div>
             <div class="row">
-                <div class="col-md-6">
-                  <div class="input-group no-border">
-                    <input type="text" value="" class="form-control"  placeholder="Empleado">
-                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-                      <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
-                      <div class="ripple-container"></div>
-                    </button>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group no-border">
-                    <input type="text" value="" class="form-control"  placeholder="Cliente">
-                    <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-                      <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>
-                      <div class="ripple-container"></div>
-                    </button>
-                  </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" placeholder="Empleado">
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
                 </div>
               </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" placeholder="Cliente">
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
+                </div>
+              </div>
+            </div>
             <!------------------------- GRILLA--------------------------->
             <div class="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
-                    <th>{{ tableData1.headerRow[0] }}</th>
-                    <th>{{ tableData1.headerRow[1] }}</th>
-                    <th>{{ tableData1.headerRow[2] }}</th>
+                    <th>{{ tableBuscarCliente.headerRow[0] }}</th>
+                    <th>{{ tableBuscarCliente.headerRow[1] }}</th>
+                    <th>{{ tableBuscarCliente.headerRow[2] }}</th>
                     <th>{{ tableData1.headerRow[3] }}</th>
                     <th>{{ tableData1.headerRow[4] }}</th>
                     <th>{{ tableData1.headerRow[5] }}</th>
