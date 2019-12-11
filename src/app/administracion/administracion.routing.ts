@@ -22,7 +22,7 @@ export const AdministracionRoutes: Routes = [
     {
     path: '',
     children: [ {
-      path: 'subcategoria',
+      path: 'vencimiento-puntos',
       component: SubCategoriaComponent
     }]
     },

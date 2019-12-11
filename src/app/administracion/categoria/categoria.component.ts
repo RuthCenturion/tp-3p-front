@@ -8,12 +8,6 @@ import { NOTIFY } from '../../commons/app-utils';
 import { ModalComponent } from '../modal/modal.component';
 import { PageEvent } from '@angular/material';
 
-declare interface DataTable {
-  headerRow: string[];
-  footerRow: string[];
-  dataRows: string[][];
-}
-
 declare const $: any;
 
 @Component({
@@ -23,7 +17,6 @@ declare const $: any;
 })
 export class CategoriaComponent implements OnInit {
   public tableData1: TableData;
-  public dataTable: DataTable;
 
   montoEquivalencia: any;
   limiteInferior: any;
@@ -36,14 +29,6 @@ export class CategoriaComponent implements OnInit {
   modificarEquivalencia: any;
   modificarId: any;
   /*modificarDescripcion: any;*/
-
-  eliminarId: any;
-  eliminarDescripcion: any;
-
-  editarCategoria: true;
-
-  animal: string;
-  name: string;
 
   listaAtributos: Array<any>;
   listaCategoria: Array<any>;
@@ -60,11 +45,7 @@ export class CategoriaComponent implements OnInit {
     private categoriaService: CategoriaService,
     public dialog: MatDialog,
     private toast: ToastrService) {
-    this.dataTable = {
-      headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
-      footerRow: ['Id', 'Descripción', 'Acciones'],
-      dataRows: this.listaCategoria
-    };
+ 
     this.tableData1 = {
       headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
       dataRows: this.listaCategoria
@@ -75,8 +56,6 @@ export class CategoriaComponent implements OnInit {
   listarReglas(){
     this.categoriaService.listarReglas().subscribe(
       response => {
-        console.log('listarReglas(): ', response);
-
         this.listaCategoria = new Array<any>();
         this.lista = new Array<any>();
         this.length = response.totalDatos;
@@ -88,11 +67,6 @@ export class CategoriaComponent implements OnInit {
           this.listaAtributos.push(regla.limiteSuperior);
           this.listaAtributos.push(regla.montoEquivalencia);
           this.listaCategoria.push(this.listaAtributos);
-         /* this.dataTable = {
-            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
-            footerRow: ['Id', 'Descripción', 'Acciones'],
-            dataRows: this.listaCategoria
-          };*/
           this.tableData1 = {
             headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
             dataRows: this.listaCategoria
@@ -105,65 +79,6 @@ export class CategoriaComponent implements OnInit {
     );
 
   }
-  /*-------------------------------------------------------------------------*/
-  ngAfterViewInit() {
-    $('#datatables').DataTable({
-      'pagingType': 'full_numbers',
-      'lengthMenu': [
-        [10, 25, 50, -1],
-        [10, 25, 50, 'All']
-      ],
-      responsive: true,
-      language: {
-        search: '_INPUT_',
-        searchPlaceholder: 'Search records',
-      }
-
-    });
-    const table = $('#datatables').DataTable();
-
-    // Edit record
-    // EDITAR 
-    table.on('click', '.edit', function (e) {
-      let $tr = $(this).closest('tr');
-      let id = $tr[0].cells[0].innerText;
-      let desc = $tr[0].cells[1].innerText;
-      console.log('fila seleccionada: ', id, '---', desc);
-      alert('You press on Row: ' + id + ' ' + desc + ' ' + '\'s row.');
-      prompt("Please enter preferred tenure in years", "15");
-
-      this.modificarDescripcion = new String(desc);
-      // this.modificarDescripcion = desc;
-      $('#exampleModal2').modal('show');
-      e.preventDefault();
-    });
-
-    // Delete a record
-    //ELIMINAR
-    table.on('click', '.remove', function (e) {
-      const $tr = $(this).closest('tr');
-      table.row($tr).remove().draw();
-      e.preventDefault();
-    });
-    // Like record
-    table.on('click', '.like', function (e) {
-      alert('You clicked on Like button');
-      e.preventDefault();
-    });
-
-    $('.card .material-datatables label').addClass('form-group');
-
-
-
-    // ----
-
-  }
-
-  /*-------------------------------------------------------------------------*/
-  changeDescripcion() {
-    console.log('descripcion seleccionada: ', this.idCategoria);
-  }
-
   /*-------------------------------------------------------------------------*/
   buscar() {
     if (this.descripcion) { //  if (this.idCategoria) {
@@ -187,11 +102,7 @@ export class CategoriaComponent implements OnInit {
             this.listaAtributos.push(cat.idCategoria);
             this.listaAtributos.push(cat.descripcion);
             this.listaCategoria.push(this.listaAtributos);
-            this.dataTable = {
-              headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
-              footerRow: ['Id', 'Descripción', 'Acciones'],
-              dataRows: this.listaCategoria
-            };
+            
             this.tableData1 = {
               headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
               dataRows: this.listaCategoria
@@ -235,11 +146,6 @@ export class CategoriaComponent implements OnInit {
           this.listaAtributos.push(cat.idCategoria);
           this.listaAtributos.push(cat.descripcion);
           this.listaCategoria.push(this.listaAtributos);
-          this.dataTable = {
-            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
-            footerRow: ['Id', 'Descripción', 'Acciones'],
-            dataRows: this.listaCategoria
-          };
           this.length = this.listaCategoria.length;
           this.tableData1 = {
             headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
@@ -315,20 +221,6 @@ export class CategoriaComponent implements OnInit {
       });
   }
   /*-------------------------------------------------------------------------*/
- /* openDialog() {
-    console.log('name: ', this.modificarDescripcion);
-    // this.dialog = new MatDialog();
-    const dialogRef = this.dialog.open(ModalComponent, {
-      width: '250px',
-      data: { name: this.modificarDescripcion, animal: this.animal }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
-    });
-  }*/
-  /*-------------------------------------------------------------------------*/
   abrirModalModificar(id, inferior, superior, equivalencia) {
     console.log('fila seleccionada: ', id, ' ',  inferior,' ',  superior, ' ', equivalencia);
     this.modificarId = id;
@@ -346,7 +238,6 @@ export class CategoriaComponent implements OnInit {
     };
     this.categoriaService.modificarRegla(this.modificarId,dato).subscribe(
       response => {
-        console.log('modificar(): ', response);
         this.showNotification('Regla modificada con éxito!', NOTIFY.SUCCESS);
         this.listarReglas();
         this.limpiarModificar();
@@ -356,24 +247,7 @@ export class CategoriaComponent implements OnInit {
       }
     );
   }
-  confirmarEliminar(id, desc) {
-    $('#exampleModal3').modal('show');
-    this.eliminarId = id;
-    this.eliminarDescripcion = desc;
-  }
-  eliminar() {
-    this.categoriaService.eliminarCategoria(this.eliminarId).subscribe(
-      response => {
-        this.showNotification('Los datos se han eliminado con éxito. ', NOTIFY.SUCCESS);
-        this.listarCategorias();
-      },
-      error => {
-        this.showNotification('Error al eliminar categoría. ', NOTIFY.DANGER);
-      }
-    );
-    
-  }
-
+ 
   /*-------------------------------------------------------------------------*/
   //listaCategorias paginado
   listarCategoriasPaginado(evento: any) {
@@ -394,11 +268,6 @@ export class CategoriaComponent implements OnInit {
           this.listaAtributos.push(cat.idCategoria);
           this.listaAtributos.push(cat.descripcion);
           this.listaCategoria.push(this.listaAtributos);
-          this.dataTable = {
-            headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
-            footerRow: ['Id', 'Descripción', 'Acciones'],
-            dataRows: this.listaCategoria
-          };
           this.tableData1 = {
             headerRow: ['Id', 'Límite Inferior','Límite Inferior', 'Monto equivalencia', 'Acciones'],
             dataRows: this.listaCategoria

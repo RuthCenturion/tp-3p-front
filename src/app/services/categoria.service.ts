@@ -23,6 +23,7 @@ export class CategoriaService {
   private clienteUrl = this.urlBase + 'clientes';
   private conceptoUrl = this.urlBase + 'vales';
   private reglasUrl = this.urlBase + 'reglas';
+  private vencimientosUrl = this.urlBase + 'parametros';
 
   constructor(private http: HttpClient) { }
   // --------------------- REGLAS ASIGNACIÓN ---------------------
@@ -42,6 +43,7 @@ export class CategoriaService {
   modificarRegla(idRegla:any, regla: any): Observable<any> {
     return this.http.put(this.reglasUrl+'/edit/'+idRegla, regla);
   }
+
   getCategoria(): Observable<any> {
     return this.http.get(this.categoriaUrl);
   }
@@ -52,7 +54,6 @@ export class CategoriaService {
       return this.http.get(this.categoriaUrl);
     }
   }
-
   obtenerCategoriaPaginado(descripcion: any, inicio: number, cantidad: number): Observable<any> {
     if (descripcion) {
       return this.http.get(this.categoriaUrl + descripcion);
@@ -61,17 +62,28 @@ export class CategoriaService {
     }
   }
 
-  agregarCategoria(categoria: any): Observable<any> {
-    return this.http.post(this.categoriaUrl, categoria/*, httpOptions*/);
+  // --------------------- VENCIMIENTO DE PUNTOS ---------------------
+  // retorna todos los vencimientos
+  listarVencimientos(): Observable<any> {
+    return this.http.get(this.vencimientosUrl+'/all');
   }
-  eliminarCategoria(id): Observable<any> {
-    let httpParams = new HttpParams();
-    Object.keys(id).forEach(function (key) {
-      httpParams = httpParams.append(key, id[key]);
-    });
-    return this.http.delete(this.categoriaUrl + '/' + id);
+  // retorna el vencimiento nuevo creado
+  agregarVencimiento(vencimiento: any): Observable<any> {
+    return this.http.post(this.vencimientosUrl+'/add', vencimiento);
   }
-  // --------------------- SUB-CATEGORIAS ---------------------
+  // retorna todos o un solo vencimiento filtrando por idVencimiento
+  obtenerVencimiento(idVencimiento): Observable<any> {
+    if (idVencimiento) {
+      return this.http.get(this.vencimientosUrl +'/id/' + idVencimiento);
+    } else {
+      return this.http.get(this.vencimientosUrl +'/all');
+    }
+  }
+  // retorna el vencimiento modificado
+  modificarVencimiento(idVencimiento: any,vencimieto: any): Observable<any> {
+    return this.http.put(this.vencimientosUrl+'/edit/'+idVencimiento, vencimieto);
+  }
+
   getSubCategoria(): Observable<any> {
     return this.http.get(this.subCategoriaUrl);
   }

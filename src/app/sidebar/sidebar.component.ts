@@ -36,7 +36,7 @@ export const ROUTES: RouteInfo[] = [{
             {path: 'cliente', title: 'Cliente', ab: 'C'},
             {path: 'concepto', title: 'Concepto de Uso de Puntos', ab: 'CUP'},
             {path: 'regla-asignacion', title: 'Reglas de Asignación', ab: 'RA'},
-            {path: 'subcategoria', title: 'Sub-Categoria', ab: 'SC'},
+            {path: 'vencimiento-puntos', title: 'Vencimiento de Puntos', ab: 'VP'},
            
            
         ]

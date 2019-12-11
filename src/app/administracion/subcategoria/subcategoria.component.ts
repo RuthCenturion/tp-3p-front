@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA,MatDialogConfig} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 
 import { TableData } from '../../md/md-table/md-table.component';
 import { CategoriaService } from '../../services/categoria.service';
 import { NOTIFY } from '../../commons/app-utils';
-import {ModalComponent} from '../modal/modal.component';
+import { ModalComponent } from '../modal/modal.component';
+import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
 
 declare interface DataTable {
   headerRow: string[];
@@ -24,332 +25,230 @@ export class SubCategoriaComponent implements OnInit {
 
   public tableData1: TableData;
   public dataTable: DataTable;
-  idTipoProducto: any; // --> corresponde al id de la subCategoria
-  idCategoria: any;
-  descripcion: any;
+
+  idVencimiento: any;
+  inicioValidez: any;
+  finValidez: any;
+  duracion: any;
+
   modificarId: any;
-  modificarDescripcion: any;
-  modificarCategoria: any;
-
-  eliminarId: any;
-  eliminarDescripcion: any;
-
-  editarCategoria: true;
-
-  animal: string;
-  name: string;
+  modificarInicioValidez: any;
+  modificarFinValidez: any;
+  modificarDuracion: any;
+  inicioSeleccionado: any;
+  finSeleccionado: any;
+  inicioModificado: any;
+  finModificado: any;
 
   listaAtributos: Array<any>;
-  listaCategoria: Array<any>;
-  listaSubCategoria: Array<any>;
+  listaVencimiento: Array<any>;
   lista: Array<any>;
 
 
   constructor(
     private categoriaService: CategoriaService,
     public dialog: MatDialog,
-    private toast: ToastrService ) {
-    this.dataTable = {
-      headerRow: ['Id', 'Descripción', 'Categoría', 'Acciones'],
-      footerRow: ['Id', 'Descripción', 'Categoría', 'Acciones'],
-      dataRows: this.listaSubCategoria
-    };
+    private toast: ToastrService) {
+
     this.tableData1 = {
-      headerRow: ['Id', 'Descripción', 'Categoría', 'Acciones'],
-      dataRows: this.listaSubCategoria
+      headerRow: ['Id', 'Inicio validez', 'Fin Validez', 'Días duración', 'Acciones'],
+      dataRows: this.listaVencimiento
     };
   }
-
   /*-------------------------------------------------------------------------*/
-  ngOnInit() {
-    this.idCategoria = null;
-    this.descripcion = null;
-    this.listarCategorias();
-    this.listarSubCategorias();
-  }
-
-  /*-------------------------------------------------------------------------*/
- /* ngAfterViewInit() {
-    $('#datatables').DataTable({
-      'pagingType': 'full_numbers',
-      'lengthMenu': [
-        [10, 25, 50, -1],
-        [10, 25, 50, 'All']
-      ],
-      responsive: true,
-      language: {
-        search: '_INPUT_',
-        searchPlaceholder: 'Search records',
+  listarVencimientos() {
+    this.categoriaService.listarVencimientos().subscribe(
+      response => {
+        console.log('listarVencimientos(): ', response);
+        this.listaVencimiento = new Array<any>();
+        this.lista = new Array<any>();
+        response.data.parametros.forEach(vencimiento => {
+          this.lista.push(vencimiento);
+          this.listaAtributos = new Array<any>();
+          this.listaAtributos.push(vencimiento.id);
+          this.listaAtributos.push(vencimiento.fechaInicioValidez);
+          this.listaAtributos.push(vencimiento.fechaFinValidez);
+          this.listaAtributos.push(vencimiento.diasDuracion);
+          this.listaVencimiento.push(this.listaAtributos);
+          this.tableData1 = {
+            headerRow: ['Id', 'Inicio validez', 'Fin Validez', 'Días duración', 'Acciones'],
+            dataRows: this.listaVencimiento
+          };
+        });
+      },
+      error => {
+        this.showNotification('Error al obtener vencimientos', NOTIFY.DANGER);
       }
-
-    });
-    const table = $('#datatables').DataTable();
-    // Edit record
-    // EDITAR
-    table.on('click', '.edit', function (e) {
-      let $tr = $(this).closest('tr');
-      let id=$tr[0].cells[0].innerText;
-      let desc=$tr[0].cells[1].innerText;
-      console.log('fila seleccionada: ', id, '---', desc);
-      alert('You press on Row: ' + id + ' ' + desc + ' ' +  '\'s row.');
-      prompt("Please enter preferred tenure in years", "15");
-      this.modificarDescripcion = new String(desc);
-      // this.modificarDescripcion = desc;
-       $('#exampleModal2').modal('show');
-       e.preventDefault();
-    });
-
-    // Delete a record
-    //ELIMINAR
-    table.on('click', '.remove', function (e) {
-      const $tr = $(this).closest('tr');
-      table.row($tr).remove().draw();
-      e.preventDefault();
-    });
-    // Like record
-    table.on('click', '.like', function (e) {
-      alert('You clicked on Like button');
-      e.preventDefault();
-    });
-
-    $('.card .material-datatables label').addClass('form-group');
-  }*/
-
-  /*-------------------------------------------------------------------------*/
-  changeDescripcion() {
-    console.log('descripcion seleccionada: ', this.idCategoria);
+    );
   }
-
   /*-------------------------------------------------------------------------*/
   buscar() {
-    if (this.idCategoria) {
-      this.obtenerCategoria(this.idCategoria);
+    if (this.idVencimiento) {
+      this.obtenerVencimiento(this.idVencimiento);
     } else {
-      this.listarCategorias();
+      this.listarVencimientos();
     }
   }
   /*-------------------------------------------------------------------------*/
-  obtenerCategoria(id) {
-    this.categoriaService.obtenerCategoria(id).subscribe(
+  obtenerVencimiento(id) {
+    this.categoriaService.obtenerVencimiento(id).subscribe(
       cat => {
-        this.listaCategoria = new Array<any>();
+        this.listaVencimiento = new Array<any>();
         this.listaAtributos = new Array<any>();
         this.listaAtributos.push(cat.idCategoria);
         this.listaAtributos.push(cat.descripcion);
-        this.listaCategoria.push(this.listaAtributos);
-        this.dataTable = {
-          headerRow: ['Id', 'Descripción', 'Acciones'],
-          footerRow: ['Id', 'Descripción', 'Acciones'],
-          dataRows: this.listaCategoria
-        };
+        this.listaVencimiento.push(this.listaAtributos);
         this.tableData1 = {
-          headerRow: ['Id', 'Descripción', 'Acciones'],
-          dataRows: this.listaCategoria
+          headerRow: ['Id', 'Inicio validez', 'Fin Validez', 'Días duración', 'Acciones'],
+          dataRows: this.listaVencimiento
         };
       },
       error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+        this.showNotification('Error al obtener vencimiento', NOTIFY.DANGER);
       }
     );
-  }
-
-  /*-------------------------------------------------------------------------*/
-  listarCategorias() {
-  /*  this.listaCategoria = [ ['1', 'cat1'],
-      ['2', 'cat2'],
-      ['3', 'cat3'],
-      ['4', 'cat4'],
-      ['5', 'cat5'],
-      ['6', 'cat6']
-    ];*/
-
-   this.categoriaService.obtenerCategoria(this.idCategoria).subscribe(
-      response => {
-        this.listaCategoria = new Array<any>();
-        this.lista = new Array<any>();
-        response.lista.forEach(cat => {
-          this.lista.push(cat);
-          this.listaAtributos = new Array<any>();
-          this.listaAtributos.push(cat.idCategoria);
-          this.listaAtributos.push(cat.descripcion);
-          this.listaCategoria.push(this.listaAtributos);
-         /* this.dataTable = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
-            footerRow: ['Id', 'Descripción', 'Acciones'],
-            dataRows: this.listaCategoria
-          };
-          this.tableData1 = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
-            dataRows: this.listaCategoria
-          };*/
-        });
-      },
-      error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
-      }
-    );
-  }
-  /*-------------------------------------------------------------------------*/
-  listarSubCategorias() {
-    this.categoriaService.getSubCategoria().subscribe(
-      response => {
-        this.listaSubCategoria = new Array<any>();
-        this.lista = new Array<any>();
-        response.lista.forEach(cat => {
-          this.lista.push(cat);
-          this.listaAtributos = new Array<any>();
-          this.listaAtributos.push(cat.idTipoProducto);
-          this.listaAtributos.push(cat.descripcion);
-          this.listaAtributos.push(cat.idCategoria.descripcion);
-          this.listaAtributos.push(cat.idCategoria.idCategoria);
-          this.listaSubCategoria.push(this.listaAtributos);
-         /* this.dataTable = {
-            headerRow: ['Id', 'Descripción', 'Acciones'],
-            footerRow: ['Id', 'Descripción', 'Acciones'],
-            dataRows: this.listaCategoria
-          };*/
-          this.tableData1 = {
-            headerRow: ['Id', 'Descripción', 'Categoría', 'idCategoria', 'Acciones'],
-            dataRows: this.listaSubCategoria
-          };
-        });
-      },
-      error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
-      }
-    );
-   /* this.tableData1 = {
-      headerRow: ['Id', 'Descripción', 'Categoría', 'Id Categoria', 'Acciones'],
-      dataRows: this.listaSubCategoria
-    };*/
-  }
+  } 
   /*-------------------------------------------------------------------------*/
   limpiar() {
-    this.idCategoria = null;
+    this.idVencimiento = null;
+    this.inicioValidez = null;
+    this.finValidez = null;
+    this.duracion = null;
     this.tableData1.dataRows = [];
   }
-
   /*-------------------------------------------------------------------------*/
- agregar() {
-   let dato = {
-     descripcion: this.descripcion,
-     idCategoria: {
-       idCategoria: this.idCategoria
-     }
-   };
-   console.log('subCategoria a agregar: ', dato);
-   this.categoriaService.agregarSubCategoria(dato).subscribe(
-     response => {
-       console.log('lo creado: ', response);
-       this.showNotification('Categoría creada con éxito!', NOTIFY.SUCCESS);
-       this.listarSubCategorias();
-       this.descripcion = null;
-       this.idCategoria = null;
-     },
-     error => {
-      this.showNotification('Error al agregar SubCategoría', NOTIFY.DANGER);
-      this.descripcion = null;
-       this.idCategoria = null;
-    }
-   );
- }
- cancelarAgregar() {
-   this.descripcion = null;
-   this.idCategoria = null;
- }
+  agregar() {
+    let dato = {
+      fechaInicioValidez:this.fechaCadena( this.inicioValidez),
+      fechaFinValidez: this.fechaCadena( this.finValidez),
+      diasDuracion: this.duracion
+    };
+    this.categoriaService.agregarVencimiento(dato).subscribe(
+      response => {
+        this.showNotification('Vencimiento nuevo creado con éxito!', NOTIFY.SUCCESS);
+        this.listarVencimientos();
+        this.cancelarAgregar(); // limpia el modal
+      },
+      error => {
+        this.showNotification('Error al agregar vencimiento nuevo', NOTIFY.DANGER);
+        this.cancelarAgregar();
+      }
+    );
+  }
   /*-------------------------------------------------------------------------*/
-  showNotification( mensaje: any, color: any) {
+  cancelarAgregar() {
+    this.inicioValidez = null;
+    this.finValidez = null;
+    this.duracion = null;
+  }
+  /*-------------------------------------------------------------------------*/
+  showNotification(mensaje: any, color: any) {
     const type = ['', 'info', 'success', 'warning', 'danger', 'rose', 'primary'];
     $.notify({
-        icon: 'notifications',
-        message: mensaje
+      icon: 'notifications',
+      message: mensaje
     }, {
-        type: type[color],
-        timer: 3000,
-        placement: {
-            from: 'top',
-            align: 'right'
-        },
-        template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0} alert-with-icon" role="alert">' +
-          // tslint:disable-next-line: max-line-length
-          '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
-          '<i class="material-icons" data-notify="icon">notifications</i> ' +
-          '<span data-notify="title">{1}</span> ' +
-          '<span data-notify="message">{2}</span>' +
-          '<div class="progress" data-notify="progressbar">' +
-          // tslint:disable-next-line: max-line-length
-            '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
-          '</div>' +
-          '<a href="{3}" target="{4}" data-notify="url"></a>' +
+      type: type[color],
+      timer: 3000,
+      placement: {
+        from: 'top',
+        align: 'right'
+      },
+      template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0} alert-with-icon" role="alert">' +
+        // tslint:disable-next-line: max-line-length
+        '<button mat-raised-button type="button" aria-hidden="true" class="close" data-notify="dismiss">  <i class="material-icons">close</i></button>' +
+        '<i class="material-icons" data-notify="icon">notifications</i> ' +
+        '<span data-notify="title">{1}</span> ' +
+        '<span data-notify="message">{2}</span>' +
+        '<div class="progress" data-notify="progressbar">' +
+        // tslint:disable-next-line: max-line-length
+        '<div class="progress-bar progress-bar-{0}" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>' +
+        '</div>' +
+        '<a href="{3}" target="{4}" data-notify="url"></a>' +
         '</div>'
     });
-}
+  }
   /*-------------------------------------------------------------------------*/
- /* openDialog() {
-    console.log('name: ', this.modificarDescripcion);
-   // this.dialog = new MatDialog();
-    const dialogRef = this.dialog.open(ModalComponent, {
-      width: '250px',
-      data: {name: this.modificarDescripcion, animal: this.animal}
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.animal = result;
-    });
-  }*/
-  /*-------------------------------------------------------------------------*/
-  abrirModalModificar(id, desc, cat, idCat) {
-    console.log('fila seleccionada: ', id, ' ', desc, ' ', cat, ' ', idCat);
+  abrirModalModificar(id, inicio, fin, duracion) {
+    let fechaInicio= new Date(inicio);
+    let inicioAux = fechaInicio.setDate(fechaInicio.getDate() +1);
+    let fechaFin= new Date(fin);
+    let finAux = fechaFin.setDate(fechaFin.getDate() +1);
+    
     this.modificarId = id;
-    this.modificarDescripcion = desc;
-    //this.modificarCategoria = idCat;
-    this.modificarCategoria = idCat;
+    this.modificarInicioValidez = new Date(inicioAux);    
+    this.modificarFinValidez = new Date(finAux);
+    this.modificarDuracion = duracion;
+    
+    this.inicioSeleccionado = new Date(inicioAux);
+    this.finSeleccionado = new Date(finAux);    
+   
     $('#exampleModal2').modal('show');
   }
   /*-------------------------------------------------------------------------*/
   modificar() {
-    console.log('fila datos a modificar: ', this.modificarId, ' ', this.modificarDescripcion, ' ', this.modificarCategoria );
-    // llamar al service
-    let dato = {
-      idTipoProducto: this.modificarId,
-      descripcion: this.modificarDescripcion,
-      idCategoria: {
-        idCategoria: this.modificarCategoria
-      }
+    let dato : any;
+    dato = {
+      fechaInicioValidez: '',
+      fechaFinValidez: '',
+      diasDuracion: ''
     };
-    this.categoriaService.modificarSubCategoria(dato).subscribe(
+    let inicioSeleccionadoCadena = this.fechaCadena(this.inicioSeleccionado);
+    let inicioNuevoCadena = this.fechaCadena(this.modificarInicioValidez);
+    let finSeleccionadoCadena = this.fechaCadena(this.finSeleccionado);
+    let finNuevoCadena = this.fechaCadena(this.modificarFinValidez);
+
+    if(inicioSeleccionadoCadena === inicioNuevoCadena){
+      dato.fechaInicioValidez = inicioSeleccionadoCadena;
+    }else{
+      dato.fechaInicioValidez= this.fechaCadena(this.modificarInicioValidez);
+    }
+    if(finSeleccionadoCadena === finNuevoCadena){
+      dato.fechaFinValidez= finSeleccionadoCadena;
+    }else {
+      dato.fechaFinValidez = this.fechaCadena(this.modificarFinValidez);
+    }
+    dato.diasDuracion= this.modificarDuracion;
+    this.categoriaService.modificarVencimiento(this.modificarId,dato).subscribe(
       response => {
-        console.log('lo creado: ', response);
-        this.showNotification('Categoría creada con éxito!', NOTIFY.SUCCESS);
-        this.listarSubCategorias();
-        this.descripcion = null;
-        this.idCategoria = null;
+        if(response.status === 0){
+          this.showNotification('Vencimiento modificado con éxito!', NOTIFY.SUCCESS);
+          this.listarVencimientos();
+        }else {
+          this.showNotification(response.message, NOTIFY.DANGER);
+          this.listarVencimientos();
+        }
       },
       error => {
-       this.showNotification('Error al agregar SubCategoría', NOTIFY.DANGER);
-       this.descripcion = null;
-        this.idCategoria = null;
-     }
-    );
-    // this.showNotification('Los datos se han modificado con éxito. ', NOTIFY.SUCCESS);
-  }
-  confirmarEliminar(id, desc) {
-    $('#exampleModal3').modal('show');
-    this.eliminarId = id;
-    this.eliminarDescripcion = desc;
-  }
-  eliminar() {
-    //  this.showNotification('FALTA IMPLEMENTAR LLAMADO AL BACK ', NOTIFY.WARNING);
-    this.categoriaService.eliminarSubCategoria(this.eliminarId).subscribe(
-      response => {
-        this.showNotification('Sub-Categoría eliminada con éxito!', NOTIFY.SUCCESS);
-        this.listarSubCategorias();
-      },
-      error => {
-        this.showNotification('Error al eliminar SubCategoría', NOTIFY.DANGER);
+        this.showNotification('Error al modificar vencimiento', NOTIFY.DANGER);
+      // this.limpiar();
       }
     );
   }
- 
+  /*-------------------------------------------------------------------------*/
+  fechaCadena(fecha): any {
+    let d = new Date(fecha);
+    d = new Date(d.getTime());
+    let year = d.getFullYear();
+    let mes = d.getMonth() + 1;
+    let dia = d.getDate();
+    let mesCadena = '';
+    let diaCadena = '';
+    if (mes.toString().length == 1) {
+      mesCadena = '0' + mes;
+    } else {
+      mesCadena = mes.toString();
+    }
+    if (dia.toString().length == 1) {
+      diaCadena = '0' + dia;
+    } else {
+      diaCadena = dia.toString();
+    }
+    return (year.toString() +'-'+ mesCadena + '-' + diaCadena);
+  }
+  /*-------------------------------------------------------------------------*/
+  ngOnInit() {
+    this.listarVencimientos();
+  }
+
 }
