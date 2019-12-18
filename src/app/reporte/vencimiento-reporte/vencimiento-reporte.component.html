@@ -1,0 +1,94 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="btn-group" role="group" aria-label="First group">
+        <div class="mr-auto p-2 bd-highlight btn-izquierda">
+          <h4>Clientes con Puntos a Vencer</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title mb-0">
+      <div class="container-fluid">
+        <!--*******************-->
+        <div class="container-fluid-filtros">
+          <!-- inicio grupo de botones-->
+          <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group" role="group" aria-label="First group">
+              <div class="mr-auto p-2 bd-highlight btn-izquierda">
+                <button type="button" class="btn btn-secondary" (click)="toggleFiltro()">
+                  Opciones de filtrado<i class="material-icons">keyboard_arrow_down</i>
+                </button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-light btn-limpiar" (click)="limpiar()"> Limpiar
+                  <i class="material-icons">delete_outline</i>
+                </button>
+              </div>
+            </div>
+            <br>
+            <div class="input-group btn-derecha">
+              <button type="button" class="btn btn-fill btn-sm btn-buscar" (click)="getVencimientos()">
+                <i class="material-icons">search</i>&nbsp;Buscar</button>
+            </div>
+          </div>
+          <!-- end grupo de botones-->
+          <!--inicio filtros de búsqueda-->
+          <div *ngIf="mostrarFiltro">
+            <div class="card card-body">
+              <!--*******************-->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="input-group no-border">
+                    <input type="number" min="1" value="" class="form-control" [(ngModel)]="diasVencimiento"
+                      placeholder="Días para vencer">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--end filtros de búsqueda-->
+          <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group" role="group" aria-label="First group">
+              <div class="mr-auto p-2 bd-highlight btn-izquierda">
+                <button type="button" class="btn btn-light btn-limpiar" (click)="exportarPdf()"> Excel
+                  <i class="material-icons">file_copy</i>
+                </button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-light btn-limpiar" (click)="exportarPdf()"> PDF
+                  <i class="material-icons">picture_as_pdf</i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <!------------------------- GRILLA--------------------------->
+        <div class="row">
+          <div class="col-md-12">
+            <div class="table-responsive">
+              <table class="table" id="excel-table">
+                <thead>
+                  <tr>
+                    <th>{{ tableData1.headerRow[0] }}</th>
+                    <th>{{ tableData1.headerRow[1] }}</th>
+                    <th>{{ tableData1.headerRow[2] }}</th>
+                    <th>{{ tableData1.headerRow[3] }}</th>
+                    <th>{{ tableData1.headerRow[4] }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of tableData1.dataRows">
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
