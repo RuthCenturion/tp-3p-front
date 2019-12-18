@@ -17,6 +17,7 @@ export class HorarioService {
     private horarioExcepcionUrl = SERVICE_REST + 'horarioExcepcion';
     private urlBase = 'http://gy7228.myfoscam.org:8080/rest/';
     private clienteUrl = this.urlBase + 'clientes';
+    private bolsaPuntosUrl = this.urlBase +'bolsas'
 
     constructor(private http: HttpClient) { }
     // ----------------------------------
@@ -35,6 +36,17 @@ export class HorarioService {
             return this.http.get(this.clienteUrl +'/all');
         }
     }
+    agregarUsoPuntos(uso: any): Observable<any> {
+      /*  const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json',
+                'usuario': 'gustavo'
+            })
+        };*/
+        return this.http.post(this.bolsaPuntosUrl+'/add', uso/*, httpOptions*/);
+    }
+
+
 
     // --------------------- CATEGORIAS ---------------------
     getHorarioAtencion(): Observable<any> {

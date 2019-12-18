@@ -182,7 +182,7 @@
             </div>
           </div>
           <!-------------------------END MODIFICAR HORARIO--------------------------->
-          <!------------------------- ELIMINAR HORARIO--------------------------->
+          <!-------------------------BUSCAR CLIENTE--------------------------->
           <div class="modal fade modal-warning" id="exampleModal3" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -213,9 +213,9 @@
                             <th>{{ tableBuscarCliente.headerRow[0] }}</th>
                             <th>{{ tableBuscarCliente.headerRow[1] }}</th>
                             <th>{{ tableBuscarCliente.headerRow[2] }}</th>
-                            <!--th>{{ tableData1.headerRow[3] }}</th>
-                            <th>{{ tableData1.headerRow[4] }}</th>
-                            <th>{{ tableData1.headerRow[5] }}</th>
+                            <th>{{ tableBuscarCliente.headerRow[3] }}</th>
+                            <th>Seleccionar</th>
+                            <!--th>{{ tableData1.headerRow[5] }}</th>
                             <th>{{ tableData1.headerRow[6] }}</th>
                             <th class="disabled-sorting text-right">{{ tableData1.headerRow[7] }}</th-->
                           </tr>
@@ -225,17 +225,26 @@
                             <td>{{row[0]}}</td>
                             <td>{{row[1]}}</td>
                             <td>{{row[2]}}</td>
-                            <!--td>{{row[3]}}</td>
-                            <td>{{row[4]}}</td>
+                            <td>{{row[3]}}</td>
+                            <!--td>{{row[4]}}</td>
                             <td>{{row[5]}}</td>
-                            <td>{{row[6]}}</td>
+                            <td>{{row[6]}}</td-->
                             <td class="text-right">
-                              <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                              <!--a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
                                 (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6])"><i
                                   class="material-icons">dvr</i></a>
                               <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
-                                (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>
-                            </td-->
+                                (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a-->
+                                <div class="form-check">
+                                  <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" value=""
+                                      (click)="seleccionarVariosCliente(row )">
+                                    <span class="form-check-sign">
+                                      <span class="check"></span>
+                                    </span>
+                                  </label>
+                                </div>
+                            </td>
                           </tr>
                         </tbody>
                       </table>
@@ -243,54 +252,50 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                   <button type="button" class="btn btn-primary" (click)="eliminar()" data-dismiss="modal">
-                    Eliminar</button>
+                    Eliminar</button-->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="cancelarBuscarCliente()">Cancelar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarCliente()"
+                    [disabled]="!(listaClienteSeleccionados.length === 1)">
+                    Aceptar</button>
                 </div>
               </div>
             </div>
           </div>
-          <!-------------------------END ELIMINAR SUB-CATEGORIA--------------------------->
+          <!-------------------------END BUSCAR CLIENTE--------------------------->
         </div>
         <!-------------------------NUEVO--------------------------->
         <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="col-md-8 col-sm-4">
-                <mat-form-field>
-                  <mat-select placeholder="Seleccionar" name="city" [(ngModel)]="idCategoria"
-                    (ngModelChange)="changeDescripcion()">
-                    <mat-option *ngFor="let city of lista" [value]="city.idCategoria">
-                      {{ city.descripcion }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()">Buscar</button>
-              <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
-            </div>
-            <div class="row">
+          <div class="col-md-12">            
+            <br>
+            <div class="row">              
               <div class="col-md-6">
                 <div class="input-group no-border">
-                  <input type="text" value="" class="form-control" placeholder="Empleado">
-                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
-                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal2">search</i>
-                    <div class="ripple-container"></div>
-                  </button>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="input-group no-border">
-                  <input type="text" value="" class="form-control" placeholder="Cliente">
+                  <input type="text" value="" class="form-control" [(ngModel)]="clienteNombre" placeholder="Cliente">
                   <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
                     <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>
                     <div class="ripple-container"></div>
                   </button>
                 </div>
               </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="number" value="" class="form-control" [(ngModel)]="monto" placeholder="Monto">                 
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8 col-sm-4">
+                <button mat-raised-button class="btn btn-primary btn-sm" (click)="agregar()"
+                [disabled]="((clienteNombre && monto))?false:true">Agregar</button>
+                <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
+              </div>
+              
             </div>
             <!------------------------- GRILLA--------------------------->
-            <div class="table-responsive">
+            <!--div class="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
@@ -323,7 +328,7 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </div-->
 
           </div>
           <!--end tabla sin buscador integrado-->
