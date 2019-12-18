@@ -50,7 +50,7 @@
           <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group" role="group" aria-label="First group">
               <div class="mr-auto p-2 bd-highlight btn-izquierda">
-                <button type="button" class="btn btn-light btn-limpiar" (click)="exportarPdf()"> Excel
+                <button type="button" class="btn btn-light btn-limpiar" (click)="exportarExcel()"> Excel
                   <i class="material-icons">file_copy</i>
                 </button>&nbsp;&nbsp;
                 <button type="button" class="btn btn-light btn-limpiar" (click)="exportarPdf()"> PDF
@@ -64,8 +64,8 @@
         <!------------------------- GRILLA--------------------------->
         <div class="row">
           <div class="col-md-12">
-            <div class="table-responsive">
-              <table class="table" id="excel-table">
+            <div class="table-responsive" id="pdfTable" #pdfTable>
+              <table class="table" id="export-excel">
                 <thead>
                   <tr>
                     <th>{{ tableData1.headerRow[0] }}</th>

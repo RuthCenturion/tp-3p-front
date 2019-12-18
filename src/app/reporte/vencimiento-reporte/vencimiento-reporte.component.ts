@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ReporteService } from 'src/app/services/reporte.service';
 import { MatDialog } from '@angular/material';
 import { ToastrService } from 'ngx-toastr';
 import { TableData } from 'src/app/md/md-table/md-table.component';
 import * as XLSX from 'xlsx';
 import { NOTIFY } from '../../commons/app-utils';
+import * as jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-vencimiento-reporte',
@@ -12,6 +13,8 @@ import { NOTIFY } from '../../commons/app-utils';
   styleUrls: ['./vencimiento-reporte.component.css']
 })
 export class VencimientoReporteComponent implements OnInit {
+
+  @ViewChild('pdfTable', { static: false }) pdfTable: ElementRef;
 
   public tableData1: TableData;
 
@@ -23,7 +26,7 @@ export class VencimientoReporteComponent implements OnInit {
   mostrarFiltro: any;
 
   /*name of the excel-file which will be downloaded. */
-  fileName = 'ExcelSheet.xlsx';
+  fileName = 'vencimiento-reporte.xlsx';
 
   constructor(private reporteService: ReporteService,
     public dialog: MatDialog,
@@ -88,9 +91,9 @@ export class VencimientoReporteComponent implements OnInit {
     }
   }
 
-  exportarPdf() {
+  exportarExcel() {
     /* table id is passed over here */
-    let element = document.getElementById('excel-table');
+    let element = document.getElementById('export-excel');
     const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
 
     /* generate workbook and add the worksheet */
@@ -99,6 +102,26 @@ export class VencimientoReporteComponent implements OnInit {
 
     /* save to file */
     XLSX.writeFile(wb, this.fileName);
+  }
+
+  exportarPdf() {
+    const doc = new jsPDF('l', 'mm', 'a4');
+    doc.setFontSize(11);
+
+    const specialElementHandlers = {
+      '#editor': function (element, renderer) {
+        return true;
+      }
+    };
+
+    const pdfTable = this.pdfTable.nativeElement;
+
+    doc.fromHTML(pdfTable.innerHTML, 15, 15, {
+      width: 190,
+      'elementHandlers': specialElementHandlers
+    });
+
+    doc.save('vencimiento-reporte.pdf');
   }
 
   ngOnInit() {
