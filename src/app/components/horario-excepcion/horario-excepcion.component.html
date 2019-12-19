@@ -1,258 +1,386 @@
 <div class="main-content">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card ">
-          <div class="card-body ">
-            <div class="row">
-              <div class="col-md-9">
-                <button mat-raised-button type="submit" class="btn btn-fill btn-rose" data-toggle="modal"
-                  data-target="#exampleModal">Agregar nuevo horario</button>
-              </div>
-            </div>
-          </div>
+    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="btn-group" role="group" aria-label="First group">
+        <div class="mr-auto p-2 bd-highlight btn-izquierda">
+          <h4>Utilización de Puntos</h4>
         </div>
       </div>
-      <!------------------------- AGREGAR HORARIO--------------------------->
-      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Agregar Horario Exepción</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Especialista</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <!--input matInput type="text" [(ngModel)]="idEmpleado" required-->
-                    <mat-select placeholder="Seleccionar" name="dia" [(ngModel)]="idEmpleado" required>
-                      <mat-option *ngFor="let l of listaEmpleados" [value]="l.idPersona">
-                        {{l.nombreEmpleado}}
-                      </mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Fecha </label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput [matDatepicker]="picker" placeholder="Seleccionar fecha" (click)="picker.open()"
-                      [(ngModel)]="fecha" required>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
-                [(ngModel)]="flagEsHabilitar"(ngModelChange)="onChangeHabilitar()">
-                <mat-radio-button class="example-radio-button" *ngFor="let op of opciones" [value]="op.value">
-                  {{op.viewValue}}
-                </mat-radio-button>
-              </mat-radio-group>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Hora apertura</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <!--input matInput type="text" [(ngModel)]="descripcion" required-->
-                    <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" 
-                      required [(ngModel)]="horaApertura" [disabled]="!mostrarHoras">
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Hora cierre</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" 
-                        [(ngModel)]="horaCierre" required [disabled]="!mostrarHoras">
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-              <div class="row">
-                <label class="col-sm-3 col-form-label">Intervalo</label>
-                <div class="col-sm-9">
-                  <mat-form-field>
-                    <input matInput type="number" [(ngModel)]="intervalo" [required]= "!mostrarHoras" [disabled]="!mostrarHoras">
-                  </mat-form-field>
-                </div>
-              </div>
-              <!--*******************-->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                (click)="limpiarAgregar()">Cancelar</button>
-              <button type="button" class="btn btn-primary" (click)="agregar()" data-dismiss="modal"
-                [disabled]="((fecha && idEmpleado) && ( (flagEsHabilitar === 'S' && horaCierre && horaApertura && intervalo) || (flagEsHabilitar === 'N'))) ?false:true">
-                Guardar</button>
-            </div>
-          </div>
-        </div>
+      <div class="input-group">
+        <button type="button" class="btn btn-fill btn-agregar" data-toggle="modal" data-target="#exampleModal">
+          <i class="material-icons">add</i>&nbsp;Agregar</button>
       </div>
-      <!-------------------------END AGREGAR HORARIO--------------------------->
-      <!------------------------- MODIFICAR HORARIO--------------------------->
-      <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modificar Horario de excepción</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!--*******************-->
-              <div class="row">
-                  <label class="col-sm-3 col-form-label">Especialista</label>
-                  <div class="col-sm-9">
-                    <mat-form-field>
-                      <input matInput type="text" [(ngModel)]="modificarNombreEmpleado" disabled>
-                      <!--mat-select placeholder="Seleccionar" name="dia" [(ngModel)]="idEmpleado" required>
-                        <mat-option *ngFor="let l of listaEmpleados" [value]="l.idPersona">
-                          {{l.nombreEmpleado}}
-                        </mat-option>
-                      </mat-select-->
-                    </mat-form-field>
-                  </div>
-                </div>
-                <!--*******************-->
-                <div class="row">
-                  <label class="col-sm-3 col-form-label">Fecha </label>
-                  <div class="col-sm-9">
-                    <mat-form-field>
-                      <input matInput type="text" [(ngModel)]="modificarFecha" disabled>
-                      <!--input matInput [matDatepicker]="pickerTo"  (click)="picker.open()"
-                        [(ngModel)]="modificarFecha" required disabled>
-                      <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-                      <mat-datepicker #pickerTo></mat-datepicker-->
-                    </mat-form-field>
-                  </div>
-                </div>
-                <!--*******************-->
-                <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
-                  [(ngModel)]="modificarFlagEsHabilitar"(ngModelChange)="onChangeHabilitarModificar()">
-                  <mat-radio-button class="example-radio-button" *ngFor="let op of opciones" [value]="op.value">
-                    {{op.viewValue}}
-                  </mat-radio-button>
-                </mat-radio-group>
-                <!--*******************-->
-                <div class="row">
-                  <label class="col-sm-3 col-form-label">Hora apertura</label>
-                  <div class="col-sm-9">
-                    <mat-form-field>
-                      <!--input matInput type="text" [(ngModel)]="descripcion" required-->
-                      <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" 
-                        required [(ngModel)]="modificarHoraApertura" [disabled]="!mostrarHoras">
-                    </mat-form-field>
-                  </div>
-                </div>
-                <!--*******************-->
-                <div class="row">
-                  <label class="col-sm-3 col-form-label">Hora cierre</label>
-                  <div class="col-sm-9">
-                    <mat-form-field>
-                      <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" 
-                          [(ngModel)]="modificarHoraCierre" required [disabled]="!mostrarHoras">
-                    </mat-form-field>
-                  </div>
-                </div>
-                <!--*******************-->
-                <div class="row">
-                  <label class="col-sm-3 col-form-label">Intervalo</label>
-                  <div class="col-sm-9">
-                    <mat-form-field>
-                      <input matInput type="number" [(ngModel)]="modificarIntervalo" required>
-                    </mat-form-field>
-                  </div>
-                </div>
-              <!--*******************-->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal"
-                [disabled]="((modificarHoraApertura && modificarHoraCierre && modificarIntervalo ))?false:true">
-                Guardar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-------------------------END MODIFICAR HORARIO--------------------------->
-      <!------------------------- ELIMINAR HORARIO--------------------------->
-      <div class="modal fade modal-warning" id="exampleModal3" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Está seguro de que desea eliminar este horario de atención?
-              </h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <!--*******************-->
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-              <button type="button" class="btn btn-primary" (click)="eliminar()" data-dismiss="modal">
-                Eliminar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-------------------------END ELIMINAR HORARIO--------------------------->
     </div>
-    <!--<div class="container-fluid">-->
-    <div class="row">
-      <div class="col-md-12">
-        <!--tabla sin buscador integrado-->
-        <div class="card">
-          <div class="card-header card-header-icon card-header-rose">
-            <div class="card-icon">
-              <i class="material-icons">assignment</i>
+  </div>
+  <div class="card">
+    <div class="card-title mb-0">
+      <div class="container-fluid">
+        <!------------------------- MODALES DE AGREGAR Y MODIFICAR--------------------------->
+        <div class="row">
+          <!------------------------- AGREGAR HORARIO--------------------------->
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Agregar Sub-Categoría</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Especialista</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <!--input matInput type="text" [(ngModel)]="idEmpleado" required-->
+                        <mat-select placeholder="Seleccionar" name="dia" [(ngModel)]="idEmpleado" required>
+                          <mat-option *ngFor="let l of listaEmpleados" [value]="l.idPersona">
+                            {{l.nombreEmpleado}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Día</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <mat-select placeholder="Seleccionar" name="dia" [(ngModel)]="dia" required>
+                          <mat-option *ngFor="let l of listaDias" [value]="l.value">
+                            {{l.viewValue}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Hora apertura</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <!--input matInput type="text" [(ngModel)]="descripcion" required-->
+                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" required
+                          [(ngModel)]="horaApertura">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Hora cierre</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00"
+                          [(ngModel)]="horaCierre" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Intervalo</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="number" [(ngModel)]="intervalo" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="cancelarAgregar()">Cancelar</button>
+                  <button type="button" class="btn btn-primary" (click)="agregar()" data-dismiss="modal"
+                    [disabled]="((idEmpleado && dia && horaApertura && horaCierre && intervalo))?false:true">
+                    Guardar</button>
+                </div>
+              </div>
             </div>
-            <h4 class="card-title ">Lista de horarios de exepción</h4>
           </div>
-          <div class="card-body">
+          <!-------------------------END AGREGAR HORARIO--------------------------->
+          <!------------------------- MODIFICAR HORARIO--------------------------->
+          <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Modificar Horario de atención</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Id</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="text" name="modificarIdEmpleado" id="modificarIdEmpleado"
+                          [(ngModel)]="modificarIdEmpleado" disabled>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Especialista</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="text" name="modificarNombreEmpleado" [(ngModel)]="modificarNombreEmpleado"
+                          disabled>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Día</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="text" [(ngModel)]="modificarDia" disabled>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Hora apertura</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <!--input matInput type="text" [(ngModel)]="descripcion" required-->
+                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" required
+                          [(ngModel)]="modificarHoraApertura">
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Hora cierre</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00"
+                          [(ngModel)]="modificarHoraCierre" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="row">
+                    <label class="col-sm-3 col-form-label">Intervalo</label>
+                    <div class="col-sm-9">
+                      <mat-form-field>
+                        <input matInput type="number" [(ngModel)]="modificarIntervalo" required>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal"
+                    [disabled]="((modificarHoraApertura && modificarHoraCierre && modificarIntervalo ))?false:true">
+                    Guardar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-------------------------END MODIFICAR HORARIO--------------------------->
+          <!-------------------------BUSCAR CLIENTE--------------------------->
+          <div class="modal fade modal-warning" id="exampleModal3" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Buscar cliente</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!--*******************-->
+                  <div class="row">
+                    <div class="input-group no-border">
+                      <input type="text" value="" class="form-control" [(ngModel)]="buscarClienteNombre"
+                        placeholder="Nombre cliente">
+                      <button type="button" class="btn btn-info"
+                        (click)="listarClientePaginado(undefined, buscarClienteNombre)">Buscar</button>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="col-md-12">
+                    <!------------------------- GRILLA--------------------------->
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>{{ tableBuscarCliente.headerRow[0] }}</th>
+                            <th>{{ tableBuscarCliente.headerRow[1] }}</th>
+                            <th>{{ tableBuscarCliente.headerRow[2] }}</th>
+                            <th>{{ tableBuscarCliente.headerRow[3] }}</th>
+                            <th>Seleccionar</th>
+                            <!--th>{{ tableData1.headerRow[5] }}</th>
+                            <th>{{ tableData1.headerRow[6] }}</th>
+                            <th class="disabled-sorting text-right">{{ tableData1.headerRow[7] }}</th-->
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let row of tableBuscarCliente.dataRows">
+                            <td>{{row[0]}}</td>
+                            <td>{{row[1]}}</td>
+                            <td>{{row[2]}}</td>
+                            <td>{{row[3]}}</td>
+                            <!--td>{{row[4]}}</td>
+                            <td>{{row[5]}}</td>
+                            <td>{{row[6]}}</td-->
+                            <td class="text-right">
+                              <!--a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
+                                (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6])"><i
+                                  class="material-icons">dvr</i></a>
+                              <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
+                                (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a-->
+                                <div class="form-check">
+                                  <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" value=""
+                                      (click)="seleccionarVariosCliente(row )">
+                                    <span class="form-check-sign">
+                                      <span class="check"></span>
+                                    </span>
+                                  </label>
+                                </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" (click)="eliminar()" data-dismiss="modal">
+                    Eliminar</button-->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="cancelarBuscarCliente()">Cancelar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarCliente()"
+                    [disabled]="!(listaClienteSeleccionados.length === 1)">
+                    Aceptar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-------------------------END BUSCAR CLIENTE--------------------------->
+          <!-------------------------BUSCAR CONCEPTO--------------------------->
+          <div class="modal fade modal-warning" id="exampleModal4" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Buscar concepto</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!--*******************-->
+                  <div class="row">
+                    <div class="input-group no-border">
+                      <!--input type="text" value="" class="form-control" [(ngModel)]="buscarConceptoNombre"
+                        placeholder="Nombre cliente"-->
+                      <button type="button" class="btn btn-info"
+                        (click)="listarConceptoPaginado(undefined, buscarClienteNombre)">Buscar</button>
+                    </div>
+                  </div>
+                  <!--*******************-->
+                  <div class="col-md-12">
+                    <!------------------------- GRILLA--------------------------->
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>{{ tableBuscarConcepto.headerRow[0] }}</th>
+                            <th>{{ tableBuscarConcepto.headerRow[1] }}</th>
+                            <th>{{ tableBuscarConcepto.headerRow[2] }}</th>
+                            <th>Seleccionar</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let row of tableBuscarConcepto.dataRows">
+                            <td>{{row[0]}}</td>
+                            <td>{{row[1]}}</td>
+                            <td>{{row[2]}}</td>
+                            <td class="text-right">
+                              <div class="form-check">
+                                  <label class="form-check-label">
+                                    <input class="form-check-input" type="checkbox" value=""
+                                      (click)="seleccionarVariosConceptos(row )">
+                                    <span class="form-check-sign">
+                                      <span class="check"></span>
+                                    </span>
+                                  </label>
+                                </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" (click)="eliminar()" data-dismiss="modal">
+                    Eliminar</button-->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="cancelarBuscarConcepto()">Cancelar</button>
+                  <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="aceptarConcepto()"
+                    [disabled]="!(listaConceptosSeleccionados.length === 1)">
+                    Aceptar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-------------------------END BUSCAR CONCEPTO--------------------------->
+        </div>
+        <!-------------------------NUEVO--------------------------->
+        <div class="row">
+          <div class="col-md-12">            
+            <br>
+            <div class="row">              
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="clienteNombre" placeholder="Cliente">
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal3">search</i>
+                    <div class="ripple-container"></div>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="input-group no-border">
+                  <input type="text" value="" class="form-control" [(ngModel)]="conceptoNombre" placeholder="Concepto"> 
+                  <button mat-raised-button type="submit" class="btn btn-white btn-round btn-just-icon">
+                    <i class="material-icons" data-toggle="modal" data-target="#exampleModal4">search</i>
+                    <div class="ripple-container"></div>
+                  </button>                
+                </div>
+              </div>
+            </div>
             <div class="row">
               <div class="col-md-8 col-sm-4">
-                <mat-form-field>
-                  <mat-select placeholder="Seleccionar" name="city" [(ngModel)]="idCategoria"
-                    (ngModelChange)="changeDescripcion()">
-                    <mat-option *ngFor="let city of lista" [value]="city.idCategoria">
-                      {{ city.descripcion }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+                <button mat-raised-button class="btn btn-primary btn-sm" (click)="agregar()"
+                [disabled]="((clienteNombre && conceptoNombre))?false:true">Agregar</button>
+                <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
               </div>
-              <button mat-raised-button class="btn btn-primary btn-sm" (click)="buscar()">Buscar</button>
-              <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
+              
             </div>
-            <div class="table-responsive">
+            <!------------------------- GRILLA--------------------------->
+            <!--div class="table-responsive">
               <table class="table">
                 <thead>
                   <tr>
-                    <th>{{ tableData1.headerRow[0] }}</th>
-                    <th>{{ tableData1.headerRow[1] }}</th>
-                    <th>{{ tableData1.headerRow[2] }}</th>
+                    <th>{{ tableBuscarCliente.headerRow[0] }}</th>
+                    <th>{{ tableBuscarCliente.headerRow[1] }}</th>
+                    <th>{{ tableBuscarCliente.headerRow[2] }}</th>
                     <th>{{ tableData1.headerRow[3] }}</th>
                     <th>{{ tableData1.headerRow[4] }}</th>
                     <th>{{ tableData1.headerRow[5] }}</th>
                     <th>{{ tableData1.headerRow[6] }}</th>
-                    <th>{{ tableData1.headerRow[7] }}</th>
-                    <th class="disabled-sorting text-right">{{ tableData1.headerRow[8] }}</th>
+                    <th class="disabled-sorting text-right">{{ tableData1.headerRow[7] }}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -264,10 +392,9 @@
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
                     <td>{{row[6]}}</td>
-                    <td>{{row[7]}}</td>
                     <td class="text-right">
                       <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
-                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])"><i
+                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6])"><i
                           class="material-icons">dvr</i></a>
                       <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
                         (click)="confirmarEliminar(row[0],row[1])"><i class="material-icons">delete</i></a>
@@ -275,13 +402,12 @@
                   </tr>
                 </tbody>
               </table>
-            </div>
+            </div-->
+
           </div>
+          <!--end tabla sin buscador integrado-->
         </div>
-        <!--end tabla sin buscador integrado-->
       </div>
-      <!-- end col-md-12 -->
     </div>
-    <!-- end row -->
   </div>
 </div>

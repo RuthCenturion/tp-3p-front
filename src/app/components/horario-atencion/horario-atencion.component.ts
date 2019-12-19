@@ -386,8 +386,8 @@ export class HorarioAtencionComponent implements OnInit {
     this.listaBuscarClientes = new Array<any>();
     this.listaClienteSeleccionados = new Array<any>();
     this.listaNombreClienteSeleccionados = new Array<any>();
-    this.listarEmpleados();
-    this.listarHorarioAtencion();
+    /*this.listarEmpleados();
+    this.listarHorarioAtencion();*/
   }
 
 }

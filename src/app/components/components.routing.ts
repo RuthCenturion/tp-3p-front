@@ -15,7 +15,7 @@ export const ComponentsRoutes: Routes = [
     {
         path: '',
         children: [{
-            path: 'horario-atencion',
+            path: 'carga-puntos',
             component: HorarioAtencionComponent
         }]
     }, {

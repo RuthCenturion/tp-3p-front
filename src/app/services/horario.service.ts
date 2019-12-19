@@ -18,7 +18,8 @@ export class HorarioService {
     private urlBase = 'http://gy7228.myfoscam.org:8080/rest/';
     private clienteUrl = this.urlBase + 'clientes';
     private bolsaPuntosUrl = this.urlBase +'bolsas'
-
+    private conceptoUrl = this.urlBase +'vales'
+    
     constructor(private http: HttpClient) { }
     // ----------------------------------
     getClienteBuscadorPaginado(url): Observable<any> {
@@ -45,7 +46,23 @@ export class HorarioService {
         };*/
         return this.http.post(this.bolsaPuntosUrl+'/add', uso/*, httpOptions*/);
     }
-
+    // retorna todos los conceptos
+    getConceptoBuscador( filtro): Observable<any> {
+        let param = {
+            "startIndexPage": 0,
+            "pageSize": 10
+        }
+        if (filtro !== '') {
+            return this.http.post(this.conceptoUrl + '/getByPage' + filtro, param);
+        } else {
+            return this.http.get(this.conceptoUrl +'/all');
+        }
+    }
+    // retorna el uso creado
+    agregarUsoPuntosBolsa(uso: any): Observable<any> {
+        console.log('a agregar: ', uso);
+        return this.http.put(this.bolsaPuntosUrl+'/use', uso);
+    }
 
 
     // --------------------- CATEGORIAS ---------------------
