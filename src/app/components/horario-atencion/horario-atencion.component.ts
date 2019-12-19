@@ -134,6 +134,9 @@ export class HorarioAtencionComponent implements OnInit {
           this.clienteId = '';
           this.monto = '';
         }else{
+          this.clienteId = '';
+          this.monto = '';
+          this.clienteNombre = '';
           this.showNotification(response.message,NOTIFY.DANGER);
         }
       }

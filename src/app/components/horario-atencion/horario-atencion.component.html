@@ -6,10 +6,10 @@
           <h4>Carga de Puntos</h4>
         </div>
       </div>
-      <div class="input-group">
+      <!--div class="input-group">
         <button type="button" class="btn btn-fill btn-agregar" data-toggle="modal" data-target="#exampleModal">
           <i class="material-icons">add</i>&nbsp;Agregar</button>
-      </div>
+      </div-->
     </div>
   </div>
   <div class="card">
@@ -17,171 +17,6 @@
       <div class="container-fluid">
         <!------------------------- MODALES DE AGREGAR Y MODIFICAR--------------------------->
         <div class="row">
-          <!------------------------- AGREGAR HORARIO--------------------------->
-          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Agregar Sub-Categoría</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Especialista</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <!--input matInput type="text" [(ngModel)]="idEmpleado" required-->
-                        <mat-select placeholder="Seleccionar" name="dia" [(ngModel)]="idEmpleado" required>
-                          <mat-option *ngFor="let l of listaEmpleados" [value]="l.idPersona">
-                            {{l.nombreEmpleado}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Día</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <mat-select placeholder="Seleccionar" name="dia" [(ngModel)]="dia" required>
-                          <mat-option *ngFor="let l of listaDias" [value]="l.value">
-                            {{l.viewValue}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Hora apertura</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <!--input matInput type="text" [(ngModel)]="descripcion" required-->
-                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" required
-                          [(ngModel)]="horaApertura">
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Hora cierre</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00"
-                          [(ngModel)]="horaCierre" required>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Intervalo</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="intervalo" required>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                    (click)="cancelarAgregar()">Cancelar</button>
-                  <button type="button" class="btn btn-primary" (click)="agregar()" data-dismiss="modal"
-                    [disabled]="((idEmpleado && dia && horaApertura && horaCierre && intervalo))?false:true">
-                    Guardar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-------------------------END AGREGAR HORARIO--------------------------->
-          <!------------------------- MODIFICAR HORARIO--------------------------->
-          <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modificar Horario de atención</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Id</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="text" name="modificarIdEmpleado" id="modificarIdEmpleado"
-                          [(ngModel)]="modificarIdEmpleado" disabled>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Especialista</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="text" name="modificarNombreEmpleado" [(ngModel)]="modificarNombreEmpleado"
-                          disabled>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Día</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="text" [(ngModel)]="modificarDia" disabled>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Hora apertura</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <!--input matInput type="text" [(ngModel)]="descripcion" required-->
-                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00" required
-                          [(ngModel)]="modificarHoraApertura">
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Hora cierre</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="time" id="appt" name="appt" min="09:00" max="18:00"
-                          [(ngModel)]="modificarHoraCierre" required>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                  <div class="row">
-                    <label class="col-sm-3 col-form-label">Intervalo</label>
-                    <div class="col-sm-9">
-                      <mat-form-field>
-                        <input matInput type="number" [(ngModel)]="modificarIntervalo" required>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!--*******************-->
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-primary" (click)="modificar()" data-dismiss="modal"
-                    [disabled]="((modificarHoraApertura && modificarHoraCierre && modificarIntervalo ))?false:true">
-                    Guardar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-------------------------END MODIFICAR HORARIO--------------------------->
           <!-------------------------BUSCAR CLIENTE--------------------------->
           <div class="modal fade modal-warning" id="exampleModal3" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -292,7 +127,7 @@
                 [disabled]="((clienteNombre && monto))?false:true">Agregar</button>
                 <button mat-raised-button class="btn btn-info btn-sm" (click)="limpiar()">Limpiar</button>
               </div>
-              
+              <br>              
             </div>
             <!------------------------- GRILLA--------------------------->
             <!--div class="table-responsive">
