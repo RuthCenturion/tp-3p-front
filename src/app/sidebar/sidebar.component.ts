@@ -96,15 +96,13 @@ export const ROUTES: RouteInfo[] = [{
         { path: 'bolsa-punto-reporte', title: 'Rep. Bolsa de Puntos', ab: 'RBP' },
         { path: 'vencimiento-reporte', title: 'Rep. Vencimiento de Puntos', ab: 'RVP' }
     ]
-},
-
-}, {
+}/*, {
     path: '/charts',
     title: 'Charts',
     type: 'link',
     icontype: 'timeline'
 
-    }*/
+    }
         ]
             {path: 'user', title: 'User Page', ab:'UP'}
             {path: 'login', title: 'Login Page', ab:'LP'},
@@ -123,7 +121,7 @@ export const ROUTES: RouteInfo[] = [{
         type: 'link',
         title: 'Calendar',
         path: '/calendar',
-    },{
+    },{*/
 ];
 @Component({
     selector: 'app-sidebar-cmp',
