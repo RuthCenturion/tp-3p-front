@@ -8,13 +8,16 @@ import { NOTIFY } from '../../commons/app-utils';
 import * as jsPDF from 'jspdf';
 import { HorarioService } from 'src/app/services/horario.service';
 
+declare const $: any;
+
 @Component({
   selector: 'app-bolsa-punto-reporte',
   templateUrl: './bolsa-punto-reporte.component.html',
   styleUrls: ['./bolsa-punto-reporte.component.css']
 })
-export class BolsaPuntoReporteComponent implements OnInit {
 
+export class BolsaPuntoReporteComponent implements OnInit {
+ 
   @ViewChild('pdfTable', { static: false }) pdfTable: ElementRef;
 
   public tableData1: TableData;
