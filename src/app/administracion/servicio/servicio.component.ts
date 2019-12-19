@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PageEvent } from '@angular/material';
 
 import { TableData } from '../../md/md-table/md-table.component';
 import { CategoriaService } from '../../services/categoria.service';
@@ -43,6 +44,13 @@ export class ServicioComponent implements OnInit {
   listaSubCategoria: Array<any>;
   listaServicios: Array<any>;
 
+   // MatPaginator Inputs
+   length: number;
+   pageSize = 5;
+ // MatPaginator Output
+   pageEvent: PageEvent;
+ 
+
   public tableData1: TableData;
 
   constructor(private service: CategoriaService) {
@@ -54,8 +62,34 @@ export class ServicioComponent implements OnInit {
   /*-------------------------------------------------------------------------*/
  
   /*-------------------------------------------------------------------------*/
-  listarConceptos() {
-    this.service.listarConceptos().subscribe(
+  listarConceptos(evento:any) {
+    console.log('evento: ', evento);
+    /*  POST /rest/clientes/getByPage?parametro=ban
+    {
+    "startIndexPage":3,
+    "pageSize":2
+    }*/
+    let inicio: number;
+    if(evento == undefined) {
+      inicio = 0
+    } else {
+      inicio  = 1+ evento.pageIndex;// * this.pageSize;
+    }
+    let param = {
+      "startIndexPage": inicio,//0,
+      "pageSize": this.pageSize//10
+    };
+    this.service.listarConceptos(0, 0).subscribe(
+      response =>{
+        if(response.data.vales.length >0){
+          this.length = response.data.vales.length
+        }else {
+          this.length=0
+        }
+      }
+    );
+
+    this.service.listarConceptos(inicio, this.pageSize).subscribe(
       response => {
         this.listaServicios = new Array<any>();
         this.listaAtributos = new Array<any>();
@@ -96,7 +130,7 @@ export class ServicioComponent implements OnInit {
     this.service.agregarConcepto(dato).subscribe(
       response => {
         this.showNotification('Concepto creado con éxito!', NOTIFY.SUCCESS);
-        this.listarConceptos();
+        this.listarConceptos(undefined);
         this.descripcion = null;
         this.cantidadRequerida = null;
         //this.nombre = null;
@@ -142,7 +176,7 @@ export class ServicioComponent implements OnInit {
     this.service.eliminarServicio(this.eliminarId).subscribe(
       response => {
         this.showNotification('Servicio eliminado con éxito!', NOTIFY.SUCCESS);
-        this.listarConceptos();
+        this.listarConceptos(undefined);
       },
       error => {
         this.showNotification('Error al eliminar Servicio', NOTIFY.DANGER);
@@ -184,7 +218,7 @@ export class ServicioComponent implements OnInit {
     this.nombre = null;
   //  this.existenciaProducto = null;
     //this.listarServicios();
-    this.listarConceptos()
+    this.listarConceptos(undefined);
   }
 
 }

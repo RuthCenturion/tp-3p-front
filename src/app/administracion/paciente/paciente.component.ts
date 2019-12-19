@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { PageEvent } from '@angular/material';
 
 import { TableData } from '../../md/md-table/md-table.component';
 import { CategoriaService } from '../../services/categoria.service';
@@ -36,7 +37,13 @@ export class PacienteComponent implements OnInit {
   modificarTipoPersona: any;
   modificarFechaNacimiento: any;
 
+  // MatPaginator Inputs
+  length: number;
+  pageSize = 5;
+// MatPaginator Output
+  pageEvent: PageEvent;
   eliminarId: any;
+  
   public tableData1: TableData;
   listaAtributos: Array<any>;
   listaPacientes: Array<any>;
@@ -75,16 +82,23 @@ export class PacienteComponent implements OnInit {
     );
   }
   /*-------------------------------------------------------------------------*/
-  listarClientesPaginado() {
+  listarClientesPaginado(evento:any) {
+    console.log('evento: ', evento);
     /*  POST /rest/clientes/getByPage?parametro=ban
     {
     "startIndexPage":3,
     "pageSize":2
     }*/
+    let inicio: number;
+    if(evento == undefined) {
+      inicio = 0
+    } else {
+      inicio  = evento.pageIndex * this.pageSize;
+    }
     console.log('para filtrar: ', this.clienteNombre, '--', this.clienteApellido);
     let param = {
-      "startIndexPage": 0,
-      "pageSize": 10
+      "startIndexPage": inicio,//0,
+      "pageSize": this.pageSize//10
     };
     let filtro = '?';
    /* if (typeof this.clienteApellido !== 'undefined' || typeof this.clienteNombre === 'undefined') {
@@ -97,11 +111,28 @@ export class PacienteComponent implements OnInit {
       filtro = '?';
     }
     console.log('filtro: ', filtro);
+    // primero se obiene el total de elementos buscados
+    // esto para poder paginar
+    let paramTotal = {
+      "startIndexPage":0,
+      "pageSize": 0
+    };
+    this.service.buscarClientes(paramTotal, filtro).subscribe(
+      response => {
+        this.listaPacientes = new Array<any>();
+        if (response.data.clientes !== null) {
+          if (response.data.clientes.length > 0) {
+            this.length = response.data.clientes.length ;
+          }
+        }
+      }
+    )
     this.service.buscarClientes(param, filtro).subscribe(
       response => {
         this.listaPacientes = new Array<any>();
         if (response.data.clientes !== null) {
           if (response.data.clientes.length > 0) {
+          //  this.length = response.data.clientes.length;
             response.data.clientes.forEach(paciente => {
               this.listaAtributos = new Array<any>();
               this.listaAtributos.push(paciente.id); // 0
@@ -272,6 +303,8 @@ export class PacienteComponent implements OnInit {
       headerRow: ['Id', 'Nombre', 'Apellido', 'Nº Documento', 'Teléfono', 'Email', 'Fecha Nac.'],
       dataRows: this.listaPacientes
     };
+    this.length = 0;
+    this.pageSize = 5;
   }
   /*-------------------------------------------------------------------------*/
   limpiarAgregar() {
@@ -307,7 +340,7 @@ export class PacienteComponent implements OnInit {
   ngOnInit() {
     //this.listarPacientes();
     this.mostrarFiltro = false;
-    this.listarClientes();
+    this.listarClientesPaginado(undefined);
   }
 
 }

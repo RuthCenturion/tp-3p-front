@@ -117,6 +117,10 @@
                   <td>{{row[1]}}</td>
                   <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{row[2]}}</td>
                 </tr>
+                <mat-paginator [length]="length"  
+                      [pageSize]="pageSize" 
+                      (page)="pageEvent = listarConceptos($event)" >
+                    </mat-paginator>
               </tbody>
             </table>
           </div>

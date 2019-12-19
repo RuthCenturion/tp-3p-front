@@ -118,8 +118,8 @@ export class CategoriaService {
     return this.http.delete(this.subCategoriaUrl + '/' + id);
   }
   // --------------------- CONCEPTO DE USO DE PUNTOS ---------------------
-  listarConceptos(): Observable<any> {
-    return this.http.get(this.conceptoUrl+ '/all');
+  listarConceptos(page, size): Observable<any> {
+    return this.http.get(this.conceptoUrl+ '/paginado?page='+page+'&size='+size);
   }
   getConceptos(): Observable<any> {
     return this.http.get(this.conceptoUrl+ '/all');

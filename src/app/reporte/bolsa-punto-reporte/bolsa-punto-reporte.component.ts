@@ -7,6 +7,7 @@ import * as XLSX from 'xlsx';
 import { NOTIFY } from '../../commons/app-utils';
 import * as jsPDF from 'jspdf';
 import { HorarioService } from 'src/app/services/horario.service';
+declare const $: any;
 
 @Component({
   selector: 'app-bolsa-punto-reporte',

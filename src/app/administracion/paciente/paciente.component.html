@@ -174,22 +174,18 @@
                     <td>{{row[3]}}</td>
                     <!--td>{{row[4]}}</td-->
                     <td>{{row[5]}}</td>
-                    <td>{{row[6]}}</td>
-                    <!--td>{{row[7]}}</td-->
-                    <!--td class="text-right">
-                      <a href="javascript:void(0)" class="btn btn-link btn-warning btn-just-icon edit"
-                        (click)="abrirModalModificar(row[0],row[1],row[2],row[3],row[4],row[5],row[6],row[7])"><i
-                          class="material-icons">dvr</i></a>
-                      <a href="javascript:void(0)" class="btn btn-link btn-danger btn-just-icon remove"
-                        (click)="confirmarEliminar(row[0])"><i class="material-icons">delete</i></a>
-                    </td-->
+                    <td>{{row[6]}}</td> 
                   </tr>
+                 
+                    <mat-paginator [length]="length"  
+                      [pageSize]="pageSize" 
+                      (page)="pageEvent = listarClientesPaginado($event)" >
+                    </mat-paginator>
+                   
+                  
                 </tbody>
               </table>
-              <div class="d-flex justify-content-center"> 
-                  <mat-paginator [length]="length" [pageSize]="pageSize" (page)="pageEvent = listarReservaPaginado($event)" >
-                  </mat-paginator>
-                </div>
+              
             </div>
             <!--end tabla sin buscador integrado-->
           </div>
