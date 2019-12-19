@@ -18,7 +18,9 @@ export class HorarioService {
     private urlBase = 'http://gy7228.myfoscam.org:8080/rest/';
     private clienteUrl = this.urlBase + 'clientes';
     private bolsaPuntosUrl = this.urlBase +'bolsas'
-    private conceptoUrl = this.urlBase +'vales'
+    private conceptoUrl = this.urlBase +'vales';
+    private reglasUrl = this.urlBase +'reglas'
+    
     
     constructor(private http: HttpClient) { }
     // ----------------------------------
@@ -60,10 +62,12 @@ export class HorarioService {
     }
     // retorna el uso creado
     agregarUsoPuntosBolsa(uso: any): Observable<any> {
-        console.log('a agregar: ', uso);
         return this.http.put(this.bolsaPuntosUrl+'/use', uso);
     }
-
+    // retorna la equivalencia de puntos de monto enviado como parámetro
+    consultarEquivalencia(montoEquivalencia): Observable<any> {
+        return this.http.get(this.reglasUrl+'/equivalencia/' + montoEquivalencia);        
+    }
 
     // --------------------- CATEGORIAS ---------------------
     getHorarioAtencion(): Observable<any> {

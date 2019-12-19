@@ -76,6 +76,7 @@ export const ROUTES: RouteInfo[] = [{
         children: [
             {path: 'carga-puntos', title: 'Carga de puntos', ab: 'CP'},
             {path: 'horario-excepcion', title: 'Utilización de puntos', ab: 'UP'},
+            {path: 'regular', title: 'Equivalencia de puntos', ab:'EP'},
            /* {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
             {path: 'panels', title: 'Panels', ab:'P'},
