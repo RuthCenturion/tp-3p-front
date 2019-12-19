@@ -9,7 +9,7 @@ export const FormsRoutes: Routes = [
     {
       path: '',
       children: [ {
-        path: 'regular',
+        path: 'equivalencia',
         component: RegularFormsComponent
     }]}, {
     path: '',

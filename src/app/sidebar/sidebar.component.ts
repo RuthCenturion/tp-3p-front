@@ -56,7 +56,7 @@ export const ROUTES: RouteInfo[] = [{
     type: 'link',
     icontype: 'description'
 
-}, {
+},/* {
     path: '/reserva',
     title: 'Reserva',
     type: 'link',
@@ -67,16 +67,16 @@ export const ROUTES: RouteInfo[] = [{
     type: 'link',
     icontype: 'monetization_on'
 
-    }, {
-        path: '/components',
+    }*/, {
+        path: '/puntos',
         title: 'Uso de puntos',
         type: 'sub',
         icontype: 'schedule',
         collapse: 'components',
         children: [
             {path: 'carga-puntos', title: 'Carga de puntos', ab: 'CP'},
-            {path: 'horario-excepcion', title: 'Utilización de puntos', ab: 'UP'},
-            {path: 'regular', title: 'Equivalencia de puntos', ab:'EP'},
+            {path: 'uso-puntos', title: 'Utilización de puntos', ab: 'UP'},
+            {path: 'equivalencia', title: 'Equivalencia de puntos', ab:'EP'},
            /* {path: 'buttons', title: 'Buttons', ab:'B'},
             {path: 'grid', title: 'Grid System', ab:'GS'},
             {path: 'panels', title: 'Panels', ab:'P'},

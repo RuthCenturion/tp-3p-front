@@ -22,13 +22,13 @@ export const ComponentsRoutes: Routes = [
     }, {
         path: '',
         children: [{
-            path: 'horario-excepcion',
+            path: 'uso-puntos',
             component: HorarioExcepcionComponent
         }]
     },{
         path: '',
         children: [{
-            path: 'regular',
+            path: 'equivalencia',
             component: RegularFormsComponent
         }]
     },

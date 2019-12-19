@@ -74,7 +74,7 @@ export class CategoriaComponent implements OnInit {
         });
       },
       error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+        this.showNotification('Error al obtener reglas', NOTIFY.DANGER);
       }
     );
 
@@ -154,7 +154,7 @@ export class CategoriaComponent implements OnInit {
         });
       },
       error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+        this.showNotification('Error al obtener reglas', NOTIFY.DANGER);
       }
     );
   }
@@ -275,7 +275,7 @@ export class CategoriaComponent implements OnInit {
         });
       },
       error => {
-        this.showNotification('Error al obtener categorias', NOTIFY.DANGER);
+        this.showNotification('Error al obtener reglas', NOTIFY.DANGER);
       }
     );
   }

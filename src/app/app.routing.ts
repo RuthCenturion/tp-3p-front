@@ -22,7 +22,7 @@ export const AppRoutes: Routes = [
         path: 'horario',
         loadChildren: './horario/horario.module#HorarioModule'
     }, */{
-                path: 'components',
+                path: 'puntos',
                 loadChildren: './components/components.module#ComponentsModule'
             }, {
                 path: 'reserva',

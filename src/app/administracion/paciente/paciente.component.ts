@@ -189,7 +189,7 @@ export class PacienteComponent implements OnInit {
     this.service.agregarCliente(dato).subscribe(
       response => {
         this.showNotification('Cliente creado con éxito!', NOTIFY.SUCCESS);
-        this.listarClientes();
+        this.listarClientesPaginado(undefined);
         this.limpiarAgregar();
       },
       error => {
