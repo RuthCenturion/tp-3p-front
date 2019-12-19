@@ -14,6 +14,7 @@ import { SweetAlertComponent } from './sweetalert/sweetalert.component';
 import { TypographyComponent } from './typography/typography.component';
 import { HorarioAtencionComponent } from './horario-atencion/horario-atencion.component';
 import { HorarioExcepcionComponent } from './horario-excepcion/horario-excepcion.component';
+import { RegularFormsComponent } from '../forms/regularforms/regularforms.component';
 
 @NgModule({
   imports: [
@@ -31,7 +32,8 @@ import { HorarioExcepcionComponent } from './horario-excepcion/horario-excepcion
       SweetAlertComponent,
       TypographyComponent,
       HorarioAtencionComponent,
-      HorarioExcepcionComponent
+      HorarioExcepcionComponent,
+      RegularFormsComponent
   ]
 })
 
