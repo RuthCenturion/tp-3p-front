@@ -106,7 +106,6 @@ export class VencimientoReporteComponent implements OnInit {
 
   exportarPdf() {
     const doc = new jsPDF('l', 'mm', 'a4');
-    doc.setFontSize(11);
 
     const specialElementHandlers = {
       '#editor': function (element, renderer) {
