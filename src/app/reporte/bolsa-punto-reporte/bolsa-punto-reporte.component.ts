@@ -9,8 +9,6 @@ import * as jsPDF from 'jspdf';
 import { HorarioService } from 'src/app/services/horario.service';
 declare const $: any;
 
-declare const $: any;
-
 @Component({
   selector: 'app-bolsa-punto-reporte',
   templateUrl: './bolsa-punto-reporte.component.html',
