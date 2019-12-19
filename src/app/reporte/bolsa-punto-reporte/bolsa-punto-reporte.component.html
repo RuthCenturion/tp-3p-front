@@ -37,6 +37,8 @@
                 </button>&nbsp;&nbsp;
                 <button type="button" class="btn btn-light btn-limpiar" (click)="exportarPdf()"> PDF
                   <i class="material-icons">picture_as_pdf</i>
+                </button>&nbsp;&nbsp;
+                <button type="button" class="btn btn-light btn-limpiar" (click)="getBolsaPuntos(null)"> LISTAR TODO
                 </button>
               </div>
             </div>
@@ -115,39 +117,38 @@
             </div>
           </div>
           <!-------------------------END BUSCAR CLIENTE--------------------------->
+        </div>
+        <!------------------------- GRILLA--------------------------->
+        <div class="row">
+          <div class="col-md-12">
 
-          <!------------------------- GRILLA--------------------------->
-          <div class="row">
-            <div class="col-md-12">
-
-              <div class="table-responsive" id="pdfTable" #pdfTable>
-                <table class="table" id="export-excel">
-                  <thead>
-                    <tr>
-                      <th>{{ tableData1.headerRow[0] }}</th>
-                      <th>{{ tableData1.headerRow[1] }}</th>
-                      <th>{{ tableData1.headerRow[2] }}</th>
-                      <th>{{ tableData1.headerRow[3] }}</th>
-                      <th>{{ tableData1.headerRow[4] }}</th>
-                      <th>{{ tableData1.headerRow[5] }}</th>
-                      <th>{{ tableData1.headerRow[6] }}</th>
-                      <th>{{ tableData1.headerRow[7] }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let row of tableData1.dataRows">
-                      <td>{{row[0]}}</td>
-                      <td>{{row[1]}}</td>
-                      <td>{{row[2]}}</td>
-                      <td>{{row[3]}}</td>
-                      <td>{{row[4]}}</td>
-                      <td>{{row[5]}}</td>
-                      <td>{{row[6]}}</td>
-                      <td>{{row[7]}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+            <div class="table-responsive" id="pdfTable" #pdfTable>
+              <table class="table" id="export-excel">
+                <thead>
+                  <tr>
+                    <th>{{ tableData1.headerRow[0] }}</th>
+                    <th>{{ tableData1.headerRow[1] }}</th>
+                    <th>{{ tableData1.headerRow[2] }}</th>
+                    <th>{{ tableData1.headerRow[3] }}</th>
+                    <th>{{ tableData1.headerRow[4] }}</th>
+                    <th>{{ tableData1.headerRow[5] }}</th>
+                    <th>{{ tableData1.headerRow[6] }}</th>
+                    <th>{{ tableData1.headerRow[7] }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let row of tableData1.dataRows">
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td>{{row[6]}}</td>
+                    <td>{{row[7]}}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
