@@ -9,13 +9,14 @@ import { SweetAlertComponent } from './sweetalert/sweetalert.component';
 import { TypographyComponent } from './typography/typography.component';
 import { HorarioAtencionComponent } from './horario-atencion/horario-atencion.component';
 import { HorarioExcepcionComponent } from './horario-excepcion/horario-excepcion.component';
+import { RegularFormsComponent } from '../forms/regularforms/regularforms.component';
 
 
 export const ComponentsRoutes: Routes = [
     {
         path: '',
         children: [{
-            path: 'horario-atencion',
+            path: 'carga-puntos',
             component: HorarioAtencionComponent
         }]
     }, {
@@ -24,7 +25,14 @@ export const ComponentsRoutes: Routes = [
             path: 'horario-excepcion',
             component: HorarioExcepcionComponent
         }]
-    }, {
+    },{
+        path: '',
+        children: [{
+            path: 'regular',
+            component: RegularFormsComponent
+        }]
+    },
+     {
         path: '',
         children: [{
             path: 'buttons',

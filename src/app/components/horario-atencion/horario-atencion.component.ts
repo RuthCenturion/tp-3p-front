@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TableData } from '../../md/md-table/md-table.component';
+import { PageEvent } from '@angular/material';
+
 import { NOTIFY } from '../../commons/app-utils';
 import { HorarioService } from '../../services/horario.service';
 
@@ -13,12 +15,17 @@ declare const $: any;
 export class HorarioAtencionComponent implements OnInit {
 
   public tableData1: TableData;
+  public tableBuscarCliente: TableData;
 
   idEmpleado: any;
   dia: any;
   horaApertura: any;
   horaCierre: any;
   intervalo: any;
+  buscarClienteNombre: any;
+  clienteId: any;
+  clienteNombre: any;
+  monto: any;
 
   modificariIdPersonaHorarioAgenda: any;
   modificarIdEmpleado: any;
@@ -30,9 +37,19 @@ export class HorarioAtencionComponent implements OnInit {
 
   eliminarId: any;
 
+  // MatPaginator Inputs
+ length;
+ pageSize = 5;
+ lengthBuscadorCliente;
+ // MatPaginator Output
+ pageEvent: PageEvent;
+
   listaAtributos: Array<any>;
   listaEmpleados: Array<any>;
   listaHorarios: Array<any>;
+  listaBuscarClientes: Array<any>;
+  listaClienteSeleccionados: Array<any>;
+  listaNombreClienteSeleccionados: Array<any>;
 
   listaDias = [
     { value: '0', viewValue: 'Domingo' },
@@ -49,13 +66,17 @@ export class HorarioAtencionComponent implements OnInit {
       headerRow: ['Id', 'Id Esp.', 'Especialista', 'Día', 'Apertura', 'Cierre', 'Intervalo', 'Acciones'],
       dataRows: this.listaHorarios
     };
+    this.tableBuscarCliente = {
+      headerRow: ['Id', 'Nombre','Nro. Documento', 'Email'],
+      dataRows: this.listaBuscarClientes
+    };
   }
   /*-------------------------------------------------------------------------*/
   listarEmpleados() {
     this.service.listarEmpleados().subscribe(
       response => {
         this.listaEmpleados = new Array<any>();
-        if (response.totalDatos > 0 ) {
+        if (response.totalDatos > 0) {
           response.lista.forEach(persona => {
             if (/*persona.flagVendedor !== 'N' &&*/ persona.idLocalDefecto !== null) {
               this.listaEmpleados.push(
@@ -101,7 +122,29 @@ export class HorarioAtencionComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   agregar() {
-    console.log('horario a agregar: ', this.idEmpleado, '', this.dia, '', this.horaApertura, '', this.horaCierre, '', this.intervalo);
+    let dato={
+      clienteId: this.clienteId,
+      monto: this.monto
+    };
+    this.service.agregarUsoPuntos(dato).subscribe(
+      response=>{
+        console.log('lo agregado: ', response);
+        if(response.status === 0){
+          this.showNotification(response.message,NOTIFY.SUCCESS);
+          this.clienteId = '';
+          this.monto = '';
+        }else{
+          this.clienteId = '';
+          this.monto = '';
+          this.clienteNombre = '';
+          this.showNotification(response.message,NOTIFY.DANGER);
+        }
+      }
+    ), error => {
+      this.showNotification(error, NOTIFY.DANGER);
+    };
+    
+  /*  console.log('horario a agregar: ', this.idEmpleado, '', this.dia, '', this.horaApertura, '', this.horaCierre, '', this.intervalo);
     let aperturaString = this.horaApertura.toString();
     let aperturaCadena = aperturaString.split(':').join('');
     let cierreString = this.horaCierre.toString();
@@ -126,7 +169,7 @@ export class HorarioAtencionComponent implements OnInit {
       error => {
         this.showNotification('Error al crear horario de atención!', NOTIFY.DANGER);
       }
-    );
+    );*/
   }
   /*-------------------------------------------------------------------------*/
   cancelarAgregar() {
@@ -137,7 +180,7 @@ export class HorarioAtencionComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   abrirModalModificar(idHorario, idEmpleado, nombre, dia, apertura, cierre, minutos) {
-    console.log('fila seleccionada: ', idHorario, '', idEmpleado,  nombre, ' ', dia, ' ', apertura, ' ', cierre, '', minutos);
+    console.log('fila seleccionada: ', idHorario, '', idEmpleado, nombre, ' ', dia, ' ', apertura, ' ', cierre, '', minutos);
     this.modificariIdPersonaHorarioAgenda = idHorario;
     this.modificarIdEmpleado = idEmpleado;
     this.modificarNombreEmpleado = nombre;
@@ -174,12 +217,12 @@ export class HorarioAtencionComponent implements OnInit {
         this.limpiarModificar();
       },
       error => {
-       this.showNotification('Error al modificar horario', NOTIFY.DANGER);
-       this.limpiarModificar();
-     }
+        this.showNotification('Error al modificar horario', NOTIFY.DANGER);
+        this.limpiarModificar();
+      }
     );
   }
-  
+
   /*-------------------------------------------------------------------------*/
   confirmarEliminar(id, desc) {
     $('#exampleModal3').modal('show');
@@ -196,6 +239,105 @@ export class HorarioAtencionComponent implements OnInit {
         this.showNotification('Error al eliminar horario', NOTIFY.DANGER);
       }
     );
+  }
+  /*-------------------------------------------------------------------------*/
+  listarClientePaginado(evento, buscarClienteNombre) {
+    // getClienteBuscador  --- de servicio
+    // getClienteBuscadorPaginado --- de servicio
+    let filtros = '';
+    if (buscarClienteNombre !== undefined && buscarClienteNombre !== null) {
+      filtros = '?parametro=' + buscarClienteNombre;
+    }
+    this.service.getClienteBuscador(filtros).subscribe(
+      response => {
+        console.log('listarCliente en buscador(): ', response);
+        this.listaHorarios = new Array<any>();
+        console.log('lista de horarios de atencion: ', response);
+        if (response.data.clientes.length > 0) {
+          response.data.clientes.forEach(cliente => {
+            this.listaAtributos = new Array<any>();
+            this.listaAtributos.push(cliente.id); // 0
+            // especialista
+            this.listaAtributos.push(cliente.nombre +' '+cliente.apellido); // 1
+            this.listaAtributos.push(cliente.nroDocumento); // 2
+            this.listaAtributos.push(cliente.email); // 3
+            // dia
+         /*   
+            this.listaAtributos.push(horario.horaApertura); // 4
+            this.listaAtributos.push(horario.horaCierre); // 5
+            this.listaAtributos.push(horario.intervaloMinutos); // 6*/
+            this.listaHorarios.push(this.listaAtributos);
+
+            this.tableBuscarCliente = {
+              headerRow: ['Id', 'Nombre','Nro. Documento', 'Email'],
+              dataRows: this.listaHorarios
+            };
+          });
+        }
+
+      });
+
+  }
+  /*-------------------------------------------------------------------------*/
+  seleccionarVariosCliente(clienteSeleccionado){
+    // clienteSeleccionado 0 == id
+    // clienteSeleccionado 1 == nombre
+    // clienteSeleccionado 2 == numero documento
+    // clienteSeleccionado 3 == email
+    console.log('cliente seleccionado: ', clienteSeleccionado);
+  //  console.log('idSeleccionado: ', idSeleccionado);
+    console.log('lista de id seleccionados: ', this.listaClienteSeleccionados);
+
+    // si no hay elementos en la lista --> agregar
+    if (this.listaClienteSeleccionados.length === 0) {
+      this.listaClienteSeleccionados.push(clienteSeleccionado[0]);
+      this.listaNombreClienteSeleccionados.push(clienteSeleccionado[1]);
+    } else {
+      // si el id ya está en la lista, no agregar y sacar de la lista, porque des-seleccionó en el check
+      if (this.listaClienteSeleccionados.includes(clienteSeleccionado[0])) {
+        let posicion = this.listaClienteSeleccionados.indexOf(clienteSeleccionado[0]);
+        console.log('se encuentra en la posicion: ', this.listaClienteSeleccionados.indexOf(clienteSeleccionado[0]));
+        // se elimina de la lista
+        this.listaClienteSeleccionados.splice(posicion, 1);
+        this.listaNombreClienteSeleccionados.splice(posicion, 1);
+      } else {
+        this.listaClienteSeleccionados.push(clienteSeleccionado[0]);
+        this.listaNombreClienteSeleccionados.push(clienteSeleccionado[1]);
+      }
+    }
+    // solo si hay un elemento seleccionado se puede habilitar el boton de aceptar
+    console.log('lista de id seleccionados al final: ', this.listaClienteSeleccionados);
+  }
+   /*-------------------------------------------------------------------------*/
+   aceptarCliente() {
+    // obtener el cliente con el unico id que esta en la lista 'listaSeleccionados'
+    this.clienteId = this.listaClienteSeleccionados[0];
+    this.clienteNombre = this.listaNombreClienteSeleccionados[0];
+    // limpiar la grilla del buscadorEmpleado
+    this.buscarClienteNombre = null;
+    this.listaBuscarClientes = [];
+    this.tableBuscarCliente = {
+      headerRow: ['Id', 'Nombre','Nro. Documento', 'Email'],
+      dataRows: this.listaBuscarClientes
+    };
+    $('#exampleModal3').modal('hide');
+    // se elimina lo seleccionado
+    this.listaClienteSeleccionados = [];
+    this.listaNombreClienteSeleccionados = [];
+    this.lengthBuscadorCliente = 0;
+  }
+   /*-------------------------------------------------------------------------*/
+   cancelarBuscarCliente() {
+    this.buscarClienteNombre = null;
+    // this.fila = null;
+    this.lengthBuscadorCliente = 0;
+    this.listaClienteSeleccionados = [];
+    this.listaNombreClienteSeleccionados = [];
+    this.listaBuscarClientes = [];
+    this.tableBuscarCliente = {
+      headerRow: ['Id', 'Nombre','Nro. Documento', 'Email'],
+      dataRows: this.listaBuscarClientes
+    };
   }
   /*-------------------------------------------------------------------------*/
   showNotification(mensaje: any, color: any) {
@@ -225,12 +367,12 @@ export class HorarioAtencionComponent implements OnInit {
     });
   }
   /*-------------------------------------------------------------------------*/
-  limpiarAgregar() {
-    this.idEmpleado = null;
-    this.dia = null;
-    this.horaApertura = null;
-    this.horaCierre = null;
-    this.intervalo = null;
+  limpiar() {
+    this.clienteNombre = null;
+    this.monto = null;
+    this.clienteId = null;
+    /*this.horaCierre = null;
+    this.intervalo = null;*/
   }
   /*-------------------------------------------------------------------------*/
   limpiarModificar() {
@@ -244,8 +386,11 @@ export class HorarioAtencionComponent implements OnInit {
   }
   /*-------------------------------------------------------------------------*/
   ngOnInit() {
-    this.listarEmpleados();
-    this.listarHorarioAtencion();
+    this.listaBuscarClientes = new Array<any>();
+    this.listaClienteSeleccionados = new Array<any>();
+    this.listaNombreClienteSeleccionados = new Array<any>();
+    /*this.listarEmpleados();
+    this.listarHorarioAtencion();*/
   }
 
 }

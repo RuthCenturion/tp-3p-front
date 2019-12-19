@@ -16,7 +16,7 @@ declare const $: any;
 @Component({
   selector: 'app-servicio',
   templateUrl: './servicio.component.html',
-  styleUrls: ['./servicio.component.css']
+  styleUrls: ['./servicio.component.css'] 
 })
 export class ServicioComponent implements OnInit {
   public tableDataServicio: TableData;
